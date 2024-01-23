@@ -1,5 +1,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import Button from "react-bootstrap/Button";
+import "bootstrap/dist/css/bootstrap.min.css"
 
 export default function Home() {
   return (
@@ -27,7 +29,6 @@ export default function Home() {
           </a>
         </div>
       </div>
-
       <div className={styles.center}>
         <Image
           className={styles.logo}
@@ -38,7 +39,6 @@ export default function Home() {
           priority
         />
       </div>
-
       <div className={styles.grid}>
         <a
           href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
@@ -90,6 +90,17 @@ export default function Home() {
           </p>
         </a>
       </div>
+      <Button variant="primary">
+        Primary
+      </Button>{" "}
+      <Button variant="secondary">Secondary</Button>{" "}
+      <Button variant="success">Success</Button>{" "}
+      <Button variant="warning">Warning</Button>{" "}
+      <Button variant="danger">Danger</Button>{" "}
+      <Button variant="info">Info</Button>{" "}
+      <Button variant="light">Light</Button>{" "}
+      <Button variant="dark">Dark</Button>
+      <Button variant="link">Link</Button>
     </main>
   );
 }
