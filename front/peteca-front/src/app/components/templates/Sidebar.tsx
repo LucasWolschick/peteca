@@ -1,4 +1,5 @@
 import {
+  faBars,
   faBox,
   faCalendar,
   faChartLine,
@@ -12,8 +13,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Sidebar() {
   return (
     <>
-      <div className="d-flex flex-column flex-shrink-0 p-3 text-bg-secondary card-img-overlay col-3">
-        <ul className="nav nav-pills flex-column mb-auto">
+      <aside className="sidebar open sidebar-sticky background-container bg-purple">
+        <div
+          className="d-flex justify-content-center align-items-center text-white fa-2x py-3 d-none"
+          id="sidebar-handle"
+        >
+          <FontAwesomeIcon icon={faBars} className="d-none"></FontAwesomeIcon>
+        </div>
+        <ul className="nav nav-pills nav-flush flex-column mb-auto p-4">
           <li className="">
             <a
               href="#"
@@ -79,50 +86,7 @@ export default function Sidebar() {
             </a>
           </li>
         </ul>
-        <hr />
-        <div className="dropdown">
-          <a
-            href="#"
-            className="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <img
-              src="https://github.com/mdo.png"
-              alt=""
-              width="32"
-              height="32"
-              className="rounded-circle me-2"
-            />
-            <strong>mdo</strong>
-          </a>
-          <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
-            <li>
-              <a className="dropdown-item" href="#">
-                New project...
-              </a>
-            </li>
-            <li>
-              <a className="dropdown-item" href="#">
-                Settings
-              </a>
-            </li>
-            <li>
-              <a className="dropdown-item" href="#">
-                Profile
-              </a>
-            </li>
-            <li>
-              <hr className="dropdown-divider" />
-            </li>
-            <li>
-              <a className="dropdown-item" href="#">
-                Sign out
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      </aside>
     </>
   );
 }

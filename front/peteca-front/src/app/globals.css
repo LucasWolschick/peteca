@@ -1,0 +1,83 @@
+main {
+  display: flex;
+  flex-wrap: nowrap;
+  max-height: 100vh;
+}
+
+.bg-purple {
+  background-color: blueviolet;
+}
+
+.sidebar {
+  transition: ease all 0.5s;
+  min-width: max(4vw, 65px);
+  min-height: max(100vh);
+}
+
+.sidebar.open {
+  min-width: max(11vw, 280px);
+  transition: ease all 0.5s;
+}
+
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#sidebar-handle {
+  cursor: pointer;
+}
+
+#sidebar-handle a {
+  display: none;
+}
+
+.open #sidebar-handle a {
+  display: inherit;
+  filter: brightness(100);
+  margin-left: 1rem;
+}
+
+#content {
+  width: 100%;
+}
+
+#content.open .navbar-brand {
+  display: none;
+}
+
+#content .navbar-brand {
+  display: inherit;
+}
+
+#sidebar-handle {
+  cursor: pointer;
+}
+
+#sidebar-handle a {
+  display: none;
+}
+
+.open #sidebar-handle a {
+  display: inherit;
+  filter: brightness(100);
+  margin-left: 1rem;
+}
+
+.secondary-sidebar .btn-toggle {
+  width: 100%;
+  box-shadow: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.secondary-sidebar .btn-toggle:after {
+  font-family: "Font Awesome 5 Pro";
+  content: "\f078";
+  rotate: 180deg;
+}
+
+.secondary-sidebar .btn-toggle.collapsed:after {
+  rotate: 0deg;
+}
