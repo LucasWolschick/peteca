@@ -1,7 +1,7 @@
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
-export default function TemplateSistema() {
+export default function SystemTemplate() {
   return (
     <>
       <main role="main" className="min-vh-100 overflow-hidden">
