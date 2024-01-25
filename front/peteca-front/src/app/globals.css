@@ -3,6 +3,7 @@
   --light-gray: #d9d9d9;
   --dark-blue: #0f1447;
   --violet: #0e0017;
+  --violet-blue: #363FAD;
 }
 
 main {
@@ -29,13 +30,11 @@ main {
 
 .sidebar {
   transition: ease all 0.5s;
-  min-width: max(4vw, 65px);
   min-height: max(100vh);
   z-index: 1;
 }
 
 .sidebar.open {
-  min-width: max(11vw, 280px);
   transition: ease all 0.5s;
 }
 
@@ -100,4 +99,8 @@ main {
 
 .secondary-sidebar .btn-toggle.collapsed:after {
   rotate: 0deg;
+}
+
+.text-purple {
+  color: var(--violet-blue) !important;
 }
