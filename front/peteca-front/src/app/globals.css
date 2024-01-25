@@ -1,8 +1,8 @@
 :root {
   --dark-gray: #444;
-  --light-gray:#D9D9D9;
-  --dark-blue:#0F1447;
-  --violet:#0E0017;
+  --light-gray: #d9d9d9;
+  --dark-blue: #0f1447;
+  --violet: #0e0017;
 }
 
 main {
@@ -12,14 +12,18 @@ main {
 }
 
 .bg-purple {
-  background: linear-gradient(0deg, var(--dark-blue) 47.24%, var(--violet) 113.41%); 
+  background: linear-gradient(
+    0deg,
+    var(--dark-blue) 47.24%,
+    var(--violet) 113.41%
+  );
 }
 
-.bg-light-gray{
+.bg-light-gray {
   background-color: var(--light-gray);
 }
 
-.bg-dark-gray{
+.bg-dark-gray {
   background-color: var(--dark-gray);
 }
 
@@ -27,7 +31,7 @@ main {
   transition: ease all 0.5s;
   min-width: max(4vw, 65px);
   min-height: max(100vh);
-  z-index:1;
+  z-index: 1;
 }
 
 .sidebar.open {

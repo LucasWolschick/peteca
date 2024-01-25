@@ -1,47 +1,23 @@
 import { Navbar, Container } from "react-bootstrap";
-import Image from 'next/image'
+import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser, faUser } from "@fortawesome/free-solid-svg-icons";
 export default function Header() {
   return (
     <>
       <header>
         <nav className="background-container navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-light-gray border-bottom box-shadow">
           <div className="container-fluid position-relative">
-            <a href="/" > 
-            <Image src={'/logo.png'} alt='Peteca' width={145} height={48} />
+            <a href="/">
+              <Image src={"/logo.png"} alt="Peteca" width={145} height={48} />
               {/* <img src="/public/next.svg" alt="Peteca" height="30" /> */}
             </a>
-            <div className="collapse navbar-collapse">
-              <div className="text-end ms-auto">Feliz aniversário Caio!</div>
-              <ul className="navbar-nav">
-                <li className="nav-item dropdown">
-                  <a
-                    className="nav-link dropdown-toggle"
-                    href="#"
-                    id="user-dropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img
-                      src=""
-                      width="38"
-                      height="38"
-                      alt="Avatar"
-                      className="rounded-circle shadow-4"
-                    />
-                  </a>
-                  <ul
-                    className="dropdown-menu dropdown-menu-end"
-                    aria-labelledby="user-dropdown"
-                  >
-                    <li>
-                      <a className="dropdown-item" href="">
-                        <i className="fas fa-power-off"></i>
-                        Sair
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+            <div className="d-none d-sm-block ms-auto me-2">
+              <p className="mb-0">Caio</p>
+              <a className="mt-0 text-decoration-none text-dark">SAIR</a>
+            </div>
+            <div className="d-none d-sm-block">
+              <FontAwesomeIcon icon={faCircleUser} color="black" size="3x" />
             </div>
           </div>
         </nav>
