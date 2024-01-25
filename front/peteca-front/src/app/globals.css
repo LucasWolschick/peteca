@@ -33,10 +33,6 @@ main {
   z-index: 1;
 }
 
-.sidebar.open {
-  transition: ease all 0.5s;
-}
-
 .sidebar .nav-link {
   display: flex;
   align-items: center;
