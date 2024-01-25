@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Sidebar() {
   return (
     <>
-      <aside className="sidebar open sidebar-sticky background-container bg-purple">
+      <aside className="sidebar open sidebar-sticky background-container bg-dark-gray col-2">
         <div
           className="d-flex justify-content-center align-items-center text-white fa-2x py-3 d-none"
           id="sidebar-handle"
@@ -24,7 +24,7 @@ export default function Sidebar() {
           <li className="">
             <a
               href="#"
-              className="nav-link text-white active justify-content-between d-flex align-items-center"
+              className="nav-link text-white justify-content-between d-flex align-items-center"
               aria-current="page"
             >
               <FontAwesomeIcon icon={faHouse} size="2x" />

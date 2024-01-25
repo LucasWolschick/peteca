@@ -1,16 +1,17 @@
 import { Navbar, Container } from "react-bootstrap";
-
+import Image from 'next/image'
 export default function Header() {
   return (
     <>
       <header>
-        <nav className="background-container navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+        <nav className="background-container navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-light-gray border-bottom box-shadow">
           <div className="container-fluid position-relative">
-            {/* <a href="/" className="navbar-brand"> */}
-              <img src="imagens/logo.png" alt="Peteca" height="30" />{" "}
-            {/* </a> */}
+            <a href="/" > 
+            <Image src={'/logo.png'} alt='Peteca' width={145} height={48} />
+              {/* <img src="/public/next.svg" alt="Peteca" height="30" /> */}
+            </a>
             <div className="collapse navbar-collapse">
-              <div className="text-end ms-auto">Nome do usuário (Olá, Caio)</div>
+              <div className="text-end ms-auto">Feliz aniversário Caio!</div>
               <ul className="navbar-nav">
                 <li className="nav-item dropdown">
                   <a
