@@ -7,7 +7,7 @@ export default function Sidebar() {
     <>
       <aside className="d-flex flex-column min-vh-100 bg-light-gray col-12 p-3">
         <div className="d-flex justify-content-center align-self-center p-3">
-          <Image src={"/logo.png"} alt="Peteca" width={145} height={48} />
+          <Image src={"/logo.svg"} alt="Peteca" width={145} height={48} />
         </div>
 
         <hr className="text-purple"></hr>

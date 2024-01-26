@@ -19,7 +19,7 @@ export default function Header() {
       <header>
         <nav className="d-flex flex-column navbar justify-content-center bg-light-gray">
           <div className="container-fluid align-items-center justify-content-between ms-2 ">
-            <Image src={"/logo.png"} alt="Peteca" width={145} height={48} />
+            <Image src={"/logo.svg"} alt="Peteca" width={145} height={48} />
             <User />
           </div>
           <div className="flex-row justify-content-center text-purple">
