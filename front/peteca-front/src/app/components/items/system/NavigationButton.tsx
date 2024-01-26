@@ -9,7 +9,7 @@ export default function NavigationButton(props: NavigationButtonProps) {
         className="nav-link text-purple gap-3 d-flex align-items-center"
       >
         <FontAwesomeIcon icon={props.icon} size="1x" />
-        {props.transparent ? props.text : ""}
+        {props.text}
       </a>
     </li>
   );
@@ -18,5 +18,4 @@ export default function NavigationButton(props: NavigationButtonProps) {
 export interface NavigationButtonProps {
   icon: IconProp;
   text: string;
-  transparent: boolean;
 }

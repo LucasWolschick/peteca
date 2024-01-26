@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import Navigation from "./Navigation";
-import User from "../items/User";
+import User from "../../items/system/User";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 
 export default function Header() {
   function updateNavbar() {
@@ -36,7 +35,7 @@ export default function Header() {
             className="d-flex flex-column ms-2 me-auto nav d-none"
             id="nav-header"
           >
-            <Navigation text={true} />
+            <Navigation />
           </ul>
         </nav>
       </header>

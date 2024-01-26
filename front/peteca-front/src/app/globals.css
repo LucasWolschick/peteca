@@ -1,9 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
 :root {
   --dark-gray: #444;
   --light-gray: #d9d9d9;
   --dark-blue: #0f1447;
   --violet: #0e0017;
-  --violet-blue: #363FAD;
+  --violet-blue: #363fad;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
 }
 
 main {
@@ -25,22 +31,6 @@ main {
 
 .bg-dark-gray {
   background-color: var(--dark-gray);
-}
-
-.sidebar {
-  transition: ease all 0.5s;
-  min-height: max(100vh);
-  z-index: 1;
-}
-
-.sidebar .nav-link {
-  display: flex;
-  align-items: center;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-#content {
-  width: 100%;
 }
 
 .text-purple {
