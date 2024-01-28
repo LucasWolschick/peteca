@@ -5,15 +5,14 @@ import Navigation from "./Navigation";
 import User from "../../items/system/User";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from "react";
 
 export default function Header() {
-  function updateNavbar() {
-    let el = document.getElementById("nav-header");
+  const [isOpen, setIsOpen] = useState(false);
 
-    if (el?.classList.contains("d-none")) el.classList.remove("d-none");
-    else el?.classList.add("d-none");
-  }
-
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <>
       <header>
@@ -25,15 +24,16 @@ export default function Header() {
           <div className="flex-row justify-content-center text-purple">
             <a
               onClick={() => {
-                updateNavbar();
+                handleClick();
               }}
             >
               <FontAwesomeIcon icon={faBars} size="2x" />
             </a>
           </div>
           <ul
-            className="d-flex flex-column ms-2 me-auto nav d-none"
-            id="nav-header"
+            className={
+              isOpen ? "d-flex flex-column ms-2 me-auto nav" : "d-none"
+            }
           >
             <Navigation />
           </ul>

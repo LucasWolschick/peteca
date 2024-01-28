@@ -10,8 +10,8 @@ export default function Home() {
     <>
       <main role="main" className="min-vh-100 overflow-hidden">
         <div className="min-vw-100">
-          <LoginTemplate></LoginTemplate>
-          {/* <SystemTemplate></SystemTemplate> */}
+          {/* <LoginTemplate></LoginTemplate> */}
+          <SystemTemplate></SystemTemplate>
         </div>
       </main>
     </>
