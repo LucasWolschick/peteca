@@ -1,5 +1,5 @@
-import Image from "next/image";
-
+// The component User shows a photo of the current logged user in the system, with a <a> tag
+// Tha <a> tag goes to logout
 export default function User() {
   return (
     <div className="d-flex flex-row justify-content-between align-items-center text-purple text-decoration-none p-3">

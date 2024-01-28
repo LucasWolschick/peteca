@@ -8,11 +8,15 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 
 export default function Header() {
+  // The useState here is used to open/close the header below
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
+
+  // The header below only appears when it is a mobile device, otherwise, shows a sidebar
   return (
     <>
       <header>

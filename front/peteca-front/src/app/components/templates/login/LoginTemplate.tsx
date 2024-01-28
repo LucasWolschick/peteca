@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+// The LoginTemplate is used in the parts where you need:
+// login, forgot password and reset password
 export default function LoginTemplate() {
   return (
     <>

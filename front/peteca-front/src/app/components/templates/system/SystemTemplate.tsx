@@ -1,6 +1,8 @@
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
+// The SystemTemplate will be used mostly, since it will be in almost all the screens
+// It is the logged part of the system
 export default function SystemTemplate() {
   return (
     <>
