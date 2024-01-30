@@ -1,19 +1,26 @@
+import Home from "@/app/page";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Fragment } from "react";
+import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 
 // For the NavigationButton, we use the FontAwesomeIcon together
-// The props are simple: we need the icon that you want and a text following the icon 
+// The props are simple: we need the icon that you want and a text following the icon
 export default function NavigationButton(props: NavigationButtonProps) {
+  const route = props.text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
+  
   return (
-    <li>
-      <a
-        href="#"
-        className="nav-link text-purple gap-3 d-flex align-items-center"
-      >
-        <FontAwesomeIcon icon={props.icon} size="1x" />
-        {props.text}
-      </a>
-    </li>
+    <>
+      <li>
+        <Link
+          to={"/" + route}
+          className="nav-link text-purple gap-3 d-flex align-items-center"
+        >
+          <FontAwesomeIcon icon={props.icon} size="1x" />
+          {props.text}
+        </Link>
+      </li>
+    </>
   );
 }
 

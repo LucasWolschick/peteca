@@ -8,6 +8,8 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import NavigationButton from "../../items/system/NavigationButton";
+import Home from "@/app/page";
+import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 
 // The Navigation component is made of NavigationButton's, and it is used in the Header and Sidebar
 // It has all the areas that the system has
@@ -25,4 +27,3 @@ export default function Navigation() {
     </>
   );
 }
-
