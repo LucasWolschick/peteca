@@ -36,7 +36,7 @@ app.listen(port, () => {
 });
 
 const UserDB = async () => {
-    const User = await require("../database/userdb");
+    const User = await require("../database/models/userdb");
     return User;
 };
 
