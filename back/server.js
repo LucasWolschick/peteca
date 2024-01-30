@@ -1,7 +1,7 @@
 const configdb = {
-    database: 'peteca',
-    username: 'postgres',
-    password: 'saxrto32',
+    database: 'nome do database',
+    username: 'nome do usuario',
+    password: 'senha',
     host: '127.0.0.1',
     dialect: 'postgres'
 }
