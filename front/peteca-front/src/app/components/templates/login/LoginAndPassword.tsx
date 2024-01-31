@@ -1,4 +1,4 @@
-// LogInAndPassword is the page to login,
+// LogInAndPassword is the page to login and enter the Forgot Password and Reset Password pages
 export default function LoginAndPassword() {
   return (
     <>
