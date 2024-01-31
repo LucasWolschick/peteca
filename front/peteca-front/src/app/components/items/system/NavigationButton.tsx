@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 
 // For the NavigationButton, we use the FontAwesomeIcon together
 // The props are simple: we need the icon that you want and a text following the icon
+// The Link tag is used for routing the pages
 export default function NavigationButton(props: NavigationButtonProps) {
   const route = props.text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
   

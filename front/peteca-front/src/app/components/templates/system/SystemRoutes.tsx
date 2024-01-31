@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
+// All the routes the system has 
 export default function SystemRoutes() {
   return (
     <>

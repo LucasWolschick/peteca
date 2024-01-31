@@ -1,5 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
+
+// All the routes that the login template has
 export default function LoginRoutes()
 {
     return (
