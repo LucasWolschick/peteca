@@ -36,3 +36,7 @@ main {
 .text-purple {
   color: var(--violet-blue) !important;
 }
+
+.rounded{
+  border-radius: 30px;
+}

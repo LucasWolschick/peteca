@@ -11,17 +11,15 @@ import LoginTemplate from "./components/templates/login/LoginTemplate";
 config.autoAddCss = false;
 
 export default function Home() {
-  const isLogged = true;
+  const isLogged = false;
 
   return (
     <React.StrictMode>
-      <BrowserRouter>
         <main role="main" className="min-vh-100 overflow-hidden">
           <div className="min-vw-100">
             {isLogged ? <SystemTemplate /> : <LoginTemplate />}
           </div>
         </main>
-      </BrowserRouter>
     </React.StrictMode>
   );
 }

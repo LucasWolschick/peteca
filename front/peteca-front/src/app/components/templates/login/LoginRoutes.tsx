@@ -7,10 +7,10 @@ export default function LoginRoutes()
     return (
         <>
             <Routes>
-                <Route path="/login"></Route>
-                <Route path="/forgotpassword"></Route>
-                <Route path="/resetpassword"></Route>
-                <Route path="/emailsent"></Route>
+                <Route path="/login" element={<h1>Teste</h1>} ></Route>
+                <Route path="/forgotpassword" element={<h1>Teste</h1>} ></Route>
+                <Route path="/resetpassword" element={<h1>Teste</h1>} ></Route>
+                <Route path="/emailsent" element={<h1>Teste</h1>} ></Route>
             </Routes>
         </>
     );
