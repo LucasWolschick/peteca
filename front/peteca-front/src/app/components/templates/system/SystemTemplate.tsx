@@ -14,7 +14,7 @@ export default function SystemTemplate() {
         <div className="d-md-none">
           <Header />
         </div>
-        <div className="col-md-9 col-12 min-vh-100 text-white">
+        <div className="col-md-9 col-12 min-vh-100 text-white p-5">
           <SystemRoutes />
         </div>
       </div>
