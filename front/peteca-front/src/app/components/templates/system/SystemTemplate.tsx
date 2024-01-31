@@ -1,5 +1,6 @@
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import SystemRoutes from "./SystemRoutes";
 
 // The SystemTemplate will be used mostly, since it will be in almost all the screens
 // It is the logged part of the system
@@ -13,7 +14,9 @@ export default function SystemTemplate() {
         <div className="d-md-none">
           <Header />
         </div>
-        <div className="col-md-9 col-12 min-vh-100 text-white"></div>
+        <div className="col-md-9 col-12 min-vh-100 text-white">
+          <SystemRoutes />
+        </div>
       </div>
     </>
   );
