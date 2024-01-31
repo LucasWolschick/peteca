@@ -1,12 +1,5 @@
-const configdb = {
-    database: 'nome do database',
-    username: 'nome do usuario',
-    password: 'senha',
-    host: '127.0.0.1',
-    dialect: 'postgres'
-}
- 
 const {Sequelize, DataTypes, Model} = require('sequelize');
+const configdb = require('../configdb')
 const sequelize = new Sequelize(configdb);
 
 class User extends Model {}
@@ -47,11 +40,6 @@ User.init({
         type: DataTypes.DATEONLY,
         allowNull: true
     },
-    permissoes:{
-        //Ver se vai manter em modo array
-        type: DataTypes.ARRAY(DataTypes.STRING(100)),
-        allowNull: true
-    },
     imagem: {
         //Nao existe PATH em sequelize
         type: DataTypes.STRING,
@@ -59,6 +47,7 @@ User.init({
     }
 }, {sequelize,
     modelName: 'User',
+    timestamps: false,
     freezeTableName: true}
 );
 User.sync({alter: true});
