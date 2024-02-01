@@ -55,3 +55,8 @@ main {
 .form-switch .form-check-input:checked {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='white'/%3e%3c/svg%3e");
 }
+
+.btn-primary {
+  background-color: var(--violet-blue) !important;
+  border-color: var(--violet-blue) !important;
+}
