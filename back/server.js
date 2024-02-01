@@ -1,6 +1,7 @@
 const express = require('express');
 const {Sequelize} = require('sequelize');
 const configdb = require('../database/configdb');
+const { sequelize } = require('../database/models/user');
 const app = express();
 const port = 8080;
 
@@ -31,8 +32,9 @@ app.listen(port, () => {
 const UserDB = async () => {
     const User = await require("../database/models/user");
     const Permissions = await require("../database/models/permissions");
-    User.belongsToMany(Permissions, {through: 'UserPermissions'});
-    Permissions.belongsToMany(User, {through: 'UserPermissions'});
+    User.belongsToMany(Permissions, {through: 'UserPermissions', timestamps:false});
+    Permissions.belongsToMany(User, {through: 'UserPermissions', timestamps:false});
+    sequelize.sync({alter: true});
     return User;
 };
 

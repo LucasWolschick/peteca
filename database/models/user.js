@@ -38,7 +38,7 @@ User.init({
     },
     data_nascimento:{
         type: DataTypes.DATEONLY,
-        allowNull: true
+        allowNull: false
     },
     imagem: {
         //Nao existe PATH em sequelize
@@ -50,6 +50,5 @@ User.init({
     timestamps: false,
     freezeTableName: true}
 );
-User.sync({alter: true});
 
 module.exports = User;

@@ -2,7 +2,7 @@ const configdb = {
     database: 'database',
     username: 'postgres',
     password: 'senha',
-    host: 'myhost',
+    host: 'host',
     dialect: 'postgres'
 };
 
