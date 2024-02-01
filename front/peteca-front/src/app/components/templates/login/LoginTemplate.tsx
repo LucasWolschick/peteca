@@ -1,6 +1,9 @@
 import Image from "next/image";
 import LoginRoutes from "./LoginRoutes";
 import LoginAndPassword from "./LoginAndPassword";
+import PasswordRecovery from "./PasswordRecovery";
+import RedefinePassword from "./RedefinePassword";
+import RedefinitionConfirmation from "./RedefinitionConfirmation";
 
 // The LoginTemplate is used in the parts where you need:
 // login, forgot password and reset password
@@ -13,7 +16,7 @@ export default function LoginTemplate() {
         </div>
         <div>
           {/* {<LoginRoutes />} */}
-          <LoginAndPassword></LoginAndPassword>
+          <RedefinitionConfirmation></RedefinitionConfirmation>
         </div>
       </div>
     </>
