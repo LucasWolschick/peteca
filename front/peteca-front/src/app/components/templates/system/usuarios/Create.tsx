@@ -70,7 +70,9 @@ export default function Create() {
               <input className="form-check-input" type="checkbox" />
               <label className="form-check-label">Visualizar registros</label>
             </div>
-            <button className="btn btn-primary btn-sm rounded-5 col-8 mt-2">Salvar</button>
+            <div className="mt-2 text-center">
+              <button className="btn btn-primary btn-sm rounded-5 col-8 ">Salvar</button>
+            </div>
 
           </div>
         </div>
