@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import SystemTemplate from "./SystemTemplate";
 
 // All the routes the system has 
 export default function SystemRoutes() {
