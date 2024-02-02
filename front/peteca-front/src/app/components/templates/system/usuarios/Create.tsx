@@ -1,8 +1,18 @@
 import Title from "@/app/components/items/system/Title";
 import { faChevronLeft, faUser, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { url } from "inspector";
+import { useState } from "react";
 
 export default function Create() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  
+  
   return (
     <>
       <div className="container-fluid">
@@ -10,8 +20,11 @@ export default function Create() {
         <div className="row mt-3 align-items-center">
           <div className="col-md-4">
             <div className="row justify-content-center align-items-center">
-              <FontAwesomeIcon icon={faUserCircle} size="10x" />
-              <button className="btn btn-primary btn-sm rounded-5 col-8 mt-3">Alterar foto</button>
+              <div className="text-center" id="userImage" >
+                <FontAwesomeIcon icon={faUserCircle} size="10x" />
+              </div>
+              <button className="btn btn-primary btn-sm rounded-5 col-8 mt-3" onClick={handleClick}>Alterar foto</button>
+              <input className="d-none" type="file" id="userImage"></input>
             </div>
           </div>
           <div className="col-md-4 mt-md-0 mt-3">
@@ -25,7 +38,7 @@ export default function Create() {
             </div>
             <div>
               <label>Endereço de e-mail</label>
-              <input type="text" className="form-control-sm form-control" />
+              <input type="email" className="form-control-sm form-control" />
             </div>
             <div>
               <label>Registro acadêmico</label>
