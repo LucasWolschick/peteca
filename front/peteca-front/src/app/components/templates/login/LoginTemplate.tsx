@@ -16,7 +16,7 @@ export default function LoginTemplate() {
         </div>
         <div>
           {/* {<LoginRoutes />} */}
-          <RedefinitionConfirmation></RedefinitionConfirmation>
+          <RedefinePassword />
         </div>
       </div>
     </>
