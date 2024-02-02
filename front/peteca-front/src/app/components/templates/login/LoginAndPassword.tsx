@@ -1,50 +1,43 @@
+import { faLock } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LoginInput from "../../items/login/LoginInput";
+import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
+import LoginButton from "../../items/login/LoginButton";
+import LoginTitle from "../../items/login/LoginTitle";
+
 // LogInAndPassword is the page to login and enter the Forgot Password and Reset Password pages
 export default function LoginAndPassword() {
   return (
     <>
-      <div>
-        <h3 className="text-warning d-flex justify-content-center align-self-center">
-          LOG IN
-        </h3>
-      </div>
-      <div>
-        <h3 className="text-light d-flex justify-content-center align-self-center">
-          ENTRE EM SUA CONTA PARA GERIR SEU GRUPO PET
-        </h3>
-      </div>
+      <LoginTitle title="LOG IN" />
+      <h3 className="text-light text-center fw-bolder">
+        ENTRE EM SUA CONTA PARA GERIR SEU GRUPO PET
+      </h3>
       <div className="row justify-content-center align-self-center">
-        <div className="col-6">
+        <div className="col-md-6 col-12">
           <div className="row justify-content-center align-self-center m-3">
-            <div className="col-8">
-              <input
-                type="text"
-                placeholder="E-mail"
-                className="form-control form-control-md p-3 mb-3"
-              />
+            <div className="col-md-8 col-12">
+              <LoginInput text="Endereço de e-mail" icon={faEnvelope} placeholder="example@domain.com" type="email" />
             </div>
-            <div className="col-8">
-              <input
-                type="password"
-                placeholder="Senha"
-                className="form-control form-control-md p-3"
-              />
+            <div className="col-md-8 col-12">
+              <LoginInput text="Sua senha" icon={faLock} placeholder="**********" type="password" />
             </div>
-            <div className="col-8 mt-3">
+            <div className="col-md-8 col-12">
               <div className="form-check">
-                <input className="form-check-input" type="checkbox" value=""/>
+                <input className="form-check-input" type="checkbox" value="" />
                 <label className="text-light form-check-label">
                   Lembre de mim
                 </label>
               </div>
-            </div>    
+            </div>
           </div>
           <div className="row justify-content-center align-self-center m-3">
-            <button className="btn btn-primary btn-md rounded-4 p-2 mb-2 col-8">
-              Entrar
-            </button>
-            <button className="btn btn-primary btn-md rounded-4 p-2 col-8">
-              Esqueci minha senha
-            </button>
+            <div className="col-md-8 col-12">
+              <LoginButton text="Entrar" class="btn-primary" />
+            </div>
+            <div className="col-md-8 col-12 mt-3">
+              <LoginButton text="Esqueci minha senha" class="btn-warning" />
+            </div>
           </div>
         </div>
       </div>
