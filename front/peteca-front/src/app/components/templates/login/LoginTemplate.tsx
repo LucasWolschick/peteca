@@ -16,8 +16,8 @@ export default function LoginTemplate() {
         </div>
         <div>
           {/* {<LoginRoutes />} */}
-          <LoginAndPassword />
-            {/* <PasswordRecovery /> */}
+          {/* <LoginAndPassword /> */}
+            <PasswordRecovery />
           {/* <RedefinePassword />  */}
         </div>
       </div>
