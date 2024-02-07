@@ -15,11 +15,13 @@ export default function Home() {
 
   return (
     <React.StrictMode>
+      <BrowserRouter>
         <main role="main" className="min-vh-100 overflow-hidden">
           <div className="min-vw-100">
-            {isLogged ? <SystemTemplate /> : <LoginTemplate />}
+            {!isLogged ? <SystemTemplate /> : <LoginTemplate />}
           </div>
         </main>
+      </BrowserRouter>
     </React.StrictMode>
   );
 }
