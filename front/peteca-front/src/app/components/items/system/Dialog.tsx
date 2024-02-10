@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-export default function Dialog() {
+export default function Dialog(props: DialogProps) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -11,23 +11,27 @@ export default function Dialog() {
   return (
     <>
       <button className="btn btn-danger btn-sm rounded-5 col-8" onClick={handleShow}>
-        Remover usuário
+        {props.text}
       </button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Body>E o pix cai quando?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Cancelar
           </Button>
           <Button variant="primary" onClick={handleClose}>
-            Save Changes
+            Confirmar
           </Button>
         </Modal.Footer>
       </Modal>
     </>
   );
+}
+
+export interface DialogProps {
+  text: string
 }

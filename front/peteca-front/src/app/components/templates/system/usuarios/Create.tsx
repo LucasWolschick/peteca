@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 export default function Create() {
+  const isAdmin = true;
+
   return (
     <>
       <div className="container-fluid">
@@ -14,13 +16,13 @@ export default function Create() {
             <div className="row justify-content-center align-items-center">
               <div className="text-center" id="userImage" >
                 <FontAwesomeIcon icon={faUserCircle} size="10x" />
+                <input className="d-none" type="file" id="userImage"></input>
               </div>
-              <div className="text-center flex-column">
+              <div className="text-center d-flex flex-column align-items-center gap-2">
                 <button className="btn btn-primary btn-sm rounded-5 col-8 mt-3">Alterar foto</button>
-                <Dialog />
-                <Dialog />
+                {isAdmin && <Dialog text="Reiniciar senha" />}
+                {isAdmin && <Dialog text="Descadastrar" />}
               </div>
-              <input className="d-none" type="file" id="userImage"></input>
             </div>
           </div>
           <div className="col-md-4 mt-md-0 mt-3">
