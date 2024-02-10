@@ -1,18 +1,10 @@
+import Dialog from "@/app/components/items/system/Dialog";
 import Title from "@/app/components/items/system/Title";
-import { faChevronLeft, faUser, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { url } from "inspector";
 import { useState } from "react";
 
 export default function Create() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
-
-  
-  
   return (
     <>
       <div className="container-fluid">
@@ -23,7 +15,11 @@ export default function Create() {
               <div className="text-center" id="userImage" >
                 <FontAwesomeIcon icon={faUserCircle} size="10x" />
               </div>
-              <button className="btn btn-primary btn-sm rounded-5 col-8 mt-3" onClick={handleClick}>Alterar foto</button>
+              <div className="text-center flex-column">
+                <button className="btn btn-primary btn-sm rounded-5 col-8 mt-3">Alterar foto</button>
+                <Dialog />
+                <Dialog />
+              </div>
               <input className="d-none" type="file" id="userImage"></input>
             </div>
           </div>
@@ -86,7 +82,6 @@ export default function Create() {
             <div className="mt-2 text-center">
               <button className="btn btn-primary btn-sm rounded-5 col-8 ">Salvar</button>
             </div>
-
           </div>
         </div>
       </div>
