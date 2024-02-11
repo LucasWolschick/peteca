@@ -11,21 +11,25 @@ export default function Dialog(props: DialogProps) {
   return (
     <>
       <button className="btn btn-danger btn-sm rounded-5 col-8" onClick={handleShow}>
-        {props.text}
+        {props.buttonText}
       </button>
 
-      <Modal centered show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>E o pix cai quando?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Confirmar
-          </Button>
+      <Modal centered show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false} className='rounded-5'>
+        <Modal.Body>{props.text}</Modal.Body>
+        <Modal.Footer className='container-fluid justify-content-between'>
+          <div className='col-lg-5 col-12'>
+            <button className="btn btn-danger btn-md rounded-5 col-12" onClick={handleClose}>
+              Cancelar
+            </button>
+          </div>
+          <div className='col-lg-5 col-12'>
+            <button className="btn btn-primary btn-md rounded-5 col-12" onClick={handleClose}>
+              {props.buttonText}
+            </button>
+          </div>
         </Modal.Footer>
       </Modal>
     </>
@@ -33,5 +37,6 @@ export default function Dialog(props: DialogProps) {
 }
 
 export interface DialogProps {
-  text: string
+  text: string,
+  buttonText: string
 }

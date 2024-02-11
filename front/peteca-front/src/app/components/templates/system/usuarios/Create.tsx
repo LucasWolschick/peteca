@@ -6,11 +6,12 @@ import { useState } from "react";
 
 export default function Create() {
   const isAdmin = true;
+  const isNew = true;
 
   return (
     <>
       <div className="container-fluid">
-        <Title title="Cadastrar usuário" />
+        {isNew ? <Title title="Cadastrar usuário" /> : <Title title="Editar usuário" />}
         <div className="row mt-3 align-items-center">
           <div className="col-md-4">
             <div className="row justify-content-center align-items-center">
@@ -20,8 +21,10 @@ export default function Create() {
               </div>
               <div className="text-center d-flex flex-column align-items-center gap-2">
                 <button className="btn btn-primary btn-sm rounded-5 col-8 mt-3">Alterar foto</button>
-                {isAdmin && <Dialog text="Reiniciar senha" />}
-                {isAdmin && <Dialog text="Descadastrar" />}
+                {isAdmin && isNew && <Dialog buttonText="Reiniciar senha" text="Deseja realmente invalidar a senha
+deste usuário?"/>}
+                {isAdmin && isNew && <Dialog buttonText="Descadastrar" text="Deseja realmente descadastrar este
+usuário?" />}
               </div>
             </div>
           </div>
