@@ -16,6 +16,7 @@
 main {
   display: flex;
   flex-wrap: nowrap;
+  max-height: 100vh;
 }
 
 .bg-purple {
@@ -27,11 +28,11 @@ main {
 }
 
 .bg-light-gray {
-  background-color: var(--light-gray);
+  background: var(--light-gray) !important;
 }
 
 .bg-dark-gray {
-  background-color: var(--dark-gray);
+  background: var(--dark-gray) !important;
 }
 
 .text-purple {
@@ -59,4 +60,10 @@ main {
 .btn-primary {
   background-color: var(--violet-blue) !important;
   border-color: var(--violet-blue) !important;
+}
+
+.scrollspy-example {
+  position: relative;
+  height: 50vh;
+  overflow: auto;
 }
