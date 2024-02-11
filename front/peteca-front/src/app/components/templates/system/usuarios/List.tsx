@@ -3,6 +3,8 @@ import Title from "@/app/components/items/system/Title";
 import { faPen, faUser, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+// This page list the users of the system
+// In this page, you can be redirected to the Create page, creating or editing a user
 export default function List() {
     return (
         <>

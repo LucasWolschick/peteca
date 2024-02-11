@@ -4,6 +4,9 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
+// This page has two functions: 
+// The first one is to create a user, the second one is to edit an user that already exists in ths database
+// There are some restrictions when you are not an admin, like removing the user and reseting the user password
 export default function Create() {
   const isAdmin = true;
   const isNew = true;

@@ -2,6 +2,9 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+// Global dialog + button that opens it that pops in the center of the screen
+// Has a confirm and cancel button
+// Has props, button text and the text of the dialog
 export default function Dialog(props: DialogProps) {
   const [show, setShow] = useState(false);
 

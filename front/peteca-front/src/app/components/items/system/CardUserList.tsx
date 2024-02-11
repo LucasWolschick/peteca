@@ -1,6 +1,8 @@
 import { faUserCircle, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+// This component is for the List page, for the users
+// Has some props linked to the user informations
 export default function CardUserList(props: CardUserListProps) {
     return (
         <>
