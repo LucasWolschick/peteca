@@ -2,7 +2,7 @@ import Dialog from "@/app/components/items/system/Dialog";
 import Title from "@/app/components/items/system/Title";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 // This page has two functions: 
 // The first one is to create a user, the second one is to edit an user that already exists in ths database
@@ -11,6 +11,19 @@ export default function Create() {
   const isAdmin = true;
   const isNew = true;
 
+  const [image, setImage] = useState(null)
+
+  const onImageChange = (event: { target: { files: (Blob | MediaSource)[]; }; } | undefined) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]));
+    }
+  }
+
+  const fileUpload = useRef(null);
+
+  const handleUpload = () => {
+    console.log(fileUpload.current.click(), "fileUpload");
+  };
   return (
     <>
       <div className="container-fluid">
@@ -20,8 +33,15 @@ export default function Create() {
             <div className="row justify-content-center align-items-center">
               <div className="text-center" id="userImage" >
                 <FontAwesomeIcon icon={faUserCircle} size="10x" />
-                <input className="d-none" type="file" id="userImage"></input>
+                <input
+                  type="file"
+                  ref={fileUpload}
+                  style={{ opacity: "0" }}
+                  onChange={() => onImageChange()}
+                />
+                <button onClick={() => handleUpload()}>Upload Picture</button>
               </div>
+              <img alt="preview image" src={image} />
               <div className="text-center d-flex flex-column align-items-center gap-2">
                 <button className="btn btn-primary btn-sm rounded-5 col-lg-8 col-md-12 col-8 mt-3">Alterar foto</button>
                 {isAdmin && isNew && <Dialog buttonText="Reiniciar senha" text="Deseja realmente invalidar a senha
