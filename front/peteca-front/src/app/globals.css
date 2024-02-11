@@ -16,7 +16,6 @@
 main {
   display: flex;
   flex-wrap: nowrap;
-  max-height: 100vh;
 }
 
 .bg-purple {
@@ -64,6 +63,6 @@ main {
 
 .scrollspy-example {
   position: relative;
-  height: 50vh;
+  height: 60vh;
   overflow: auto;
 }
