@@ -13,7 +13,7 @@ export default function Create() {
       <div className="container-fluid">
         {isNew ? <Title title="Cadastrar usuário" /> : <Title title="Editar usuário" />}
         <div className="row mt-3 align-items-center">
-          <div className="col-md-4">
+          <div className="col-md-6">
             <div className="row justify-content-center align-items-center">
               <div className="text-center" id="userImage" >
                 <FontAwesomeIcon icon={faUserCircle} size="10x" />
@@ -28,7 +28,7 @@ usuário?" />}
               </div>
             </div>
           </div>
-          <div className="col-md-4 mt-md-0 mt-3">
+          <div className="col-md-6 mt-md-0 mt-3">
             <div>
               <label>Nome</label>
               <input type="text" className="form-control-sm form-control" />
@@ -50,42 +50,48 @@ usuário?" />}
               <input type="text" className="form-control-sm form-control" />
             </div>
           </div>
-          <div className="col-md-4 mt-md-0 mt-3 ">
+          <div className="col-md-12 mt-3 ">
             <strong>Permissões</strong>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" />
-              <label className="form-check-label">Gerir documentos</label>
-            </div>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" />
-              <label className="form-check-label">Gerir cadastros</label>
-            </div>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" />
-              <label className="form-check-label">Gerir caixinha</label>
-            </div>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" />
-              <label className="form-check-label">Gerir estoque</label>
-            </div>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" />
-              <label className="form-check-label">Gerir calendário</label>
-            </div>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" />
-              <label className="form-check-label">Visualizar caixinha</label>
-            </div>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" />
-              <label className="form-check-label">Visualizar documentos</label>
-            </div>
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" />
-              <label className="form-check-label">Visualizar registros</label>
-            </div>
-            <div className="mt-2 text-center">
-              <button className="btn btn-primary btn-sm rounded-5 col-8 ">Salvar</button>
+            <div className="row">
+              <div className="col-lg-4 col-md-6">
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" />
+                  <label className="form-check-label">Gerir documentos</label>
+                </div>
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" />
+                  <label className="form-check-label">Gerir cadastros</label>
+                </div>
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" />
+                  <label className="form-check-label">Gerir caixinha</label>
+                </div>
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" />
+                  <label className="form-check-label">Gerir estoque</label>
+                </div>
+              </div>
+              <div className="col-lg-4 col-md-6">
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" />
+                  <label className="form-check-label">Gerir calendário</label>
+                </div>
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" />
+                  <label className="form-check-label">Visualizar caixinha</label>
+                </div>
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" />
+                  <label className="form-check-label">Visualizar documentos</label>
+                </div>
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" />
+                  <label className="form-check-label">Visualizar registros</label>
+                </div>
+              </div>
+              <div className="col-lg-4 col-md-12 text-md-end text-center mt-auto">
+                <button className="btn btn-primary btn-sm rounded-5 col-lg-12 col-md-6 col-8">Salvar</button>
+              </div>
             </div>
           </div>
         </div>
