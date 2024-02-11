@@ -20,7 +20,7 @@ export default function Create() {
                 <input className="d-none" type="file" id="userImage"></input>
               </div>
               <div className="text-center d-flex flex-column align-items-center gap-2">
-                <button className="btn btn-primary btn-sm rounded-5 col-8 mt-3">Alterar foto</button>
+                <button className="btn btn-primary btn-sm rounded-5 col-lg-8 col-md-12 col-8 mt-3">Alterar foto</button>
                 {isAdmin && isNew && <Dialog buttonText="Reiniciar senha" text="Deseja realmente invalidar a senha
 deste usuário?"/>}
                 {isAdmin && isNew && <Dialog buttonText="Descadastrar" text="Deseja realmente descadastrar este
