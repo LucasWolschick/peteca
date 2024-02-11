@@ -6,6 +6,7 @@
   --dark-blue: #0f1447;
   --violet: #0e0017;
   --violet-blue: #363fad;
+  --green: #07ec76e3;
 }
 
 * {
@@ -26,13 +27,42 @@ main {
 }
 
 .bg-light-gray {
-  background-color: var(--light-gray);
+  background: var(--light-gray) !important;
 }
 
 .bg-dark-gray {
-  background-color: var(--dark-gray);
+  background: var(--dark-gray) !important;
 }
 
 .text-purple {
   color: var(--violet-blue) !important;
+}
+
+.form-switch .form-check-input:checked {
+  background-color: var(--green);
+  border-color: var(--green);
+}
+
+.form-switch .form-check-input:focus {
+  box-shadow: var(--green);
+  border-color: var(--green);
+}
+
+.form-switch .form-check-input:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='gray'/%3e%3c/svg%3e");
+}
+
+.form-switch .form-check-input:checked {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='white'/%3e%3c/svg%3e");
+}
+
+.btn-primary {
+  background-color: var(--violet-blue) !important;
+  border-color: var(--violet-blue) !important;
+}
+
+.scrollspy-example {
+  position: relative;
+  height: 60vh;
+  overflow: auto;
 }
