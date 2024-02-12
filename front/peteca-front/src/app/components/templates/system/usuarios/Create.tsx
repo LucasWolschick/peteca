@@ -16,8 +16,15 @@ export default function Create() {
   const [image, setImage] = useState(null)
 
   const onImageChange = (event: { target: { files: (Blob | MediaSource)[]; }; }) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
+    var file = event.target.files[0];
+
+    if (file) {
+      if (file.size <= 5242880)
+        setImage(URL.createObjectURL(file));
+      else {
+        alert("Selecione um arquivo com tamanho menor que 5mb!");
+        return;
+      }
     }
   }
 
@@ -76,7 +83,7 @@ usuário?" />}
             </div>
             <div>
               <label>Matrícula</label>
-              <input type="text"  className="form-control-sm form-control" />
+              <input type="text" className="form-control-sm form-control" />
             </div>
           </div>
           <div className="col-md-12 mt-3 ">
