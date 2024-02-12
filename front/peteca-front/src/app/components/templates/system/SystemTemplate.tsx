@@ -19,8 +19,8 @@ export default function SystemTemplate() {
         </div>
         <div className="col-md-9 col-12 min-vh-100 text-white p-5">
           {/* <SystemRoutes /> */}
-          <Create />
-          {/* <List /> */}
+          {/* <Create /> */}
+          <List />
           {/* <Details /> */}
         </div>
       </div>
