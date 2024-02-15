@@ -4,6 +4,7 @@ import LoginInput from "../../items/login/LoginInput";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import LoginButton from "../../items/login/LoginButton";
 import LoginTitle from "../../items/login/LoginTitle";
+import { Link } from "react-router-dom";
 
 // LogInAndPassword is the page to login and enter the Forgot Password and Reset Password pages
 export default function LoginAndPassword() {
@@ -36,7 +37,9 @@ export default function LoginAndPassword() {
               <LoginButton text="Entrar" class="btn-primary" />
             </div>
             <div className="col-md-8 col-12 mt-3">
-              <LoginButton text="Esqueci minha senha" class="btn-warning" />
+              <Link to="/forgotpassword">
+                <LoginButton text="Esqueci minha senha" class="btn-warning" />
+              </Link>
             </div>
           </div>
         </div>

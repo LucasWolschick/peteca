@@ -15,10 +15,7 @@ export default function LoginTemplate() {
           <Image src={"/logo.svg"} alt="Peteca" width={362} height={120} />
         </div>
         <div>
-          {/* {<LoginRoutes />} */}
-          {/* <LoginAndPassword /> */}
-            {/* <PasswordRecovery /> */}
-          <RedefinePassword /> 
+          <LoginRoutes />
         </div>
       </div>
     </>

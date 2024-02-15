@@ -2,6 +2,7 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import LoginInput from "../../items/login/LoginInput";
 import LoginTitle from "../../items/login/LoginTitle";
 import LoginButton from "../../items/login/LoginButton";
+import { Link } from "react-router-dom";
 
 export default function PasswordRecovery() {
   return (
@@ -24,7 +25,9 @@ export default function PasswordRecovery() {
               <LoginButton text="Enviar" class="btn-primary" />
             </div>
             <div className="col-md-8 col-12 mt-3">
-              <LoginButton text="Voltar" class="btn-danger" />
+              <Link to="/">
+                <LoginButton text="Voltar" class="btn-danger" />
+              </Link>
             </div>
           </div>
         </div>
