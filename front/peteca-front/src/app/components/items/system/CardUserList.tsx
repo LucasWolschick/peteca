@@ -1,4 +1,4 @@
-import { faUserCircle, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle, faPen, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // This component is for the List page, for the users
@@ -11,10 +11,13 @@ export default function CardUserList(props: CardUserListProps) {
                     <FontAwesomeIcon icon={faUserCircle} size="3x" />
                     <label className="ms-3">{props.name}</label>
                 </div>
-                <div className="d-flex col-12 col-lg-6 align-items-center justify-content-end mt-2 mt-md-0">
+                <div className="d-flex col-12 col-lg-6 align-items-center justify-content-md-end justify-content-center mt-2 mt-md-0">
                     <label className="me-3">{props.email}</label>
                     <a href="#" className="text-dark">
                         <FontAwesomeIcon icon={faPen} size="1x" />
+                    </a>
+                    <a href="#" className="text-dark ms-3">
+                        <FontAwesomeIcon icon={faEye} size="1x" />
                     </a>
                 </div>
             </div>
@@ -22,8 +25,7 @@ export default function CardUserList(props: CardUserListProps) {
     );
 }
 
-export interface CardUserListProps
-{
+export interface CardUserListProps {
     name: string,
     email: string
 }

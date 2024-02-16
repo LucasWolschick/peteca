@@ -66,3 +66,12 @@ main {
   height: 60vh;
   overflow: auto;
 }
+
+.profile-picture {
+  width: 10rem !important;
+  height: 10rem !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  border-radius: 100%;
+}

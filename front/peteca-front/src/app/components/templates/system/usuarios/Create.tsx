@@ -1,7 +1,9 @@
+// @ts-nocheck
 import Dialog from "@/app/components/items/system/Dialog";
 import Title from "@/app/components/items/system/Title";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useMask } from "@react-input/mask";
 import { useRef, useState } from "react";
 
 // This page has two functions: 
@@ -13,17 +15,27 @@ export default function Create() {
 
   const [image, setImage] = useState(null)
 
-  const onImageChange = (event: { target: { files: (Blob | MediaSource)[]; }; } | undefined) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
+  const onImageChange = (event: { target: { files: (Blob | MediaSource)[]; }; }) => {
+    var file = event.target.files[0];
+
+    if (file) {
+      if (file.size <= 5242880)
+        setImage(URL.createObjectURL(file));
+      else {
+        alert("Selecione um arquivo com tamanho menor que 5mb!");
+        return;
+      }
     }
   }
 
   const fileUpload = useRef(null);
 
   const handleUpload = () => {
-    console.log(fileUpload.current.click(), "fileUpload");
+    console.log(fileUpload.current!.click(), "fileUpload");
   };
+
+  const matriculaMask = useMask({ mask: 'ra______', replacement: { _: /\d/ } });
+
   return (
     <>
       <div className="container-fluid">
@@ -31,24 +43,25 @@ export default function Create() {
         <div className="row mt-3 align-items-center">
           <div className="col-md-6">
             <div className="row justify-content-center align-items-center">
-              <div className="text-center" id="userImage" >
-                <FontAwesomeIcon icon={faUserCircle} size="10x" />
-                <input
-                  type="file"
-                  ref={fileUpload}
-                  style={{ opacity: "0" }}
-                  onChange={() => onImageChange()}
-                />
-                <button onClick={() => handleUpload()}>Upload Picture</button>
-              </div>
-              <img alt="preview image" src={image} />
-              <div className="text-center d-flex flex-column align-items-center gap-2">
-                <button className="btn btn-primary btn-sm rounded-5 col-lg-8 col-md-12 col-8 mt-3">Alterar foto</button>
-                {isAdmin && isNew && <Dialog buttonText="Reiniciar senha" text="Deseja realmente invalidar a senha
+              {image != undefined && <div className="profile-picture"
+                style={{
+                  backgroundImage: "url(\"" + image + "\")"
+                }}></div>}
+              {image == undefined && <FontAwesomeIcon icon={faUserCircle} size="10x" />}
+              <input
+                type="file"
+                ref={fileUpload}
+                className="d-none"
+                onChange={onImageChange}
+                accept=".jpg, .jpeg, .png"
+              />
+            </div>
+            <div className="text-center d-flex flex-column align-items-center gap-2">
+              <button type="button" onClick={() => handleUpload()} className="btn btn-primary btn-sm rounded-5 col-lg-8 col-md-12 col-8 mt-3">Alterar foto</button>
+              {isAdmin && isNew && <Dialog buttonText="Reiniciar senha" text="Deseja realmente invalidar a senha
 deste usuário?"/>}
-                {isAdmin && isNew && <Dialog buttonText="Descadastrar" text="Deseja realmente descadastrar este
+              {isAdmin && isNew && <Dialog buttonText="Descadastrar" text="Deseja realmente descadastrar este
 usuário?" />}
-              </div>
             </div>
           </div>
           <div className="col-md-6 mt-md-0 mt-3">
@@ -66,7 +79,7 @@ usuário?" />}
             </div>
             <div>
               <label>Registro acadêmico</label>
-              <input type="text" className="form-control-sm form-control" />
+              <input type="text" ref={matriculaMask} className="form-control-sm form-control" />
             </div>
             <div>
               <label>Matrícula</label>
