@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:saxrto32@127.0.0.1:5432/peteca"
+  url      = env("DATABASE_URL")
 
 }
 
