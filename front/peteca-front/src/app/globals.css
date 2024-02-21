@@ -75,3 +75,7 @@ main {
   background-position: center !important;
   border-radius: 100%;
 }
+
+.rounded{
+  border-radius: 30px;
+}
