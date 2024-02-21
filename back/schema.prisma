@@ -1,0 +1,31 @@
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:saxrto32@127.0.0.1:5432/peteca"
+
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  ingresso DateTime @default(now())
+  nome String @db.VarChar()
+  ra_matricula String @db.VarChar()
+  email String @unique @db.VarChar()
+  verificado Boolean
+  senha String @db.VarChar()
+  admin Boolean
+  data_nascimento DateTime @db.Date
+  imagem String @db.VarChar
+}
+
+model Permissoes {
+  id Int @id @default(autoincrement())
+  nome String @db.VarChar()
+}
+
+model Token {
+  id Int @id @default(autoincrement())
+}
