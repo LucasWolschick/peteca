@@ -1,10 +1,15 @@
-import pool from './database';
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 export async function getUserByEmail(email: string)
 {
     try {
-        const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        return rows[0];
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+        return user;
     } catch (error) {
         console.error('Erro ao buscar usuario por e-mail: ', error);
         throw error;
