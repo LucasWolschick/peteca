@@ -11,17 +11,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
-
-(async () => {
-    const user = await prisma.user.create({
-        data: {
-          nome: 'Caio',
-          ra: '127513',
-          email: 'ra127513@uem.br',
-          verificado: true,
-          senha: '1234',
-          admin: false,
-          imagem: 'path'
-        },
-      })
-})

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dbstart": "npx prisma migrate dev -n database init",
+    "dbstart": "npx prisma migrate dev -n database init && npx run dbteste.js",
     "dev": "npx run server.js"
   },
   "keywords": [],

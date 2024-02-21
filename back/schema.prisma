@@ -10,22 +10,41 @@ generator client {
 
 model User {
   id Int @id @default(autoincrement())
-  ingresso DateTime @default(now())
+  ingresso DateTime @db.Date
   nome String @db.VarChar()
-  ra_matricula String @db.VarChar()
+  ra String? @db.VarChar()
+  matricula String? @db.VarChar()
   email String @unique @db.VarChar()
   verificado Boolean
   senha String @db.VarChar()
   admin Boolean
   data_nascimento DateTime @db.Date
   imagem String @db.VarChar
+
+  token Token?
+  permissoes UserPermissoes[]
 }
 
 model Permissoes {
   id Int @id @default(autoincrement())
   nome String @db.VarChar()
+
+  users UserPermissoes[]
+}
+
+model UserPermissoes {
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  permissao Permissoes @relation(fields: [permissaoId], references: [id])
+  permissaoId Int
+
+  @@id([userId, permissaoId])
 }
 
 model Token {
   id Int @id @default(autoincrement())
+  date DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  userId Int @unique
 }
