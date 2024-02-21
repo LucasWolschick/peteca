@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
         data:{
             ingresso: new Date('2023-09-15'),
             nome: "João Silva",
-            ra: "123456",
+            ra: "ra123456",
             email: "joao.silva@example.com",
             verificado: true,
             senha: "hashedpassword123",
@@ -32,7 +32,7 @@ const prisma = new PrismaClient();
         data:{
             ingresso: new Date('2022-12-01'),
             nome: "Carlos Santos",
-            ra: "987654",
+            ra: "ra987654",
             email: "carlos.santos@example.com",
             verificado: true,
             senha: "hashedpassword789",
@@ -58,7 +58,7 @@ const prisma = new PrismaClient();
         data:{
             ingresso: new Date('2023-03-10'),
             nome: "Pedro Costa",
-            ra: "112233",
+            ra: "ra112233",
             email: "pedro.costa@example.com",
             verificado: false,
             senha: "hashedpasswordDEF",
@@ -84,7 +84,7 @@ const prisma = new PrismaClient();
         data:{
             ingresso: new Date('2022-10-30'),
             nome: "Fernando Souza",
-            ra: "554433",
+            ra: "ra554433",
             email: "fernando.souza@example.com",
             verificado: false,
             senha: "hashedpasswordJKL",
@@ -123,7 +123,7 @@ const prisma = new PrismaClient();
         data:{
             ingresso: new Date('2023-02-14'),
             nome: "Gabriel Oliveira",
-            ra: "334466",
+            ra: "ra334466",
             email: "gabriel.oliveira@example.com",
             verificado: true,
             senha: "hashedpasswordSTU",
