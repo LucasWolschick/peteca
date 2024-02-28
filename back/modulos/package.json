@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc server.ts && node server.js",
+    "start": "tsc ../server.ts && node ../server.js",
     "dbstart": "npx prisma migrate dev -n database --schema ../bd/schema.prisma init && npx run ../bd/dbteste.js"
   },
   "keywords": [],
