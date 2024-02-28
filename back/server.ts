@@ -1,5 +1,5 @@
 import * as express from 'express';
-import passswordResetRoutes from './Login/passwordResetRoutes';
+import passswordResetRoutes from './controller/passwordResetRoutes';
 
 import { PrismaClient } from '@prisma/client'
 
