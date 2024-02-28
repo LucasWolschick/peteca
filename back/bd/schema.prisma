@@ -21,7 +21,6 @@ model User {
   data_nascimento DateTime @db.Date
   imagem String @db.VarChar
 
-  token Token?
   permissoes UserPermissoes[]
 }
 
@@ -39,12 +38,4 @@ model UserPermissoes {
   permissaoId Int
 
   @@id([userId, permissaoId])
-}
-
-model Token {
-  id Int @id @default(autoincrement())
-  date DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-  userId Int @unique
 }
