@@ -20,6 +20,7 @@ model User {
   admin Boolean
   data_nascimento DateTime @db.Date
   imagem String @db.VarChar
+  ativo Boolean @default(true)
 
   permissoes UserPermissoes[]
 }
@@ -38,4 +39,25 @@ model UserPermissoes {
   permissaoId Int
 
   @@id([userId, permissaoId])
+}
+
+model Item {
+  id Int @id @default(autoincrement())
+  nome String @db.VarChar()
+  quantidade Int @db.Integer
+  unidadeMedida String @db.VarChar()
+  local String @db.VarChar()
+
+  campos Campos[]
+}
+
+model Campos {
+  id Int @id @default(autoincrement())
+  nome String @db.VarChar()
+  numero Float? @db.Real
+  data DateTime? @db.Date
+  texto String? @db.Text
+
+  item Item @relation(fields: [itemId], references: [id])
+  itemId Int
 }
