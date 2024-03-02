@@ -18,7 +18,7 @@ export default function LoginAndPassword() {
 
     const email = data.get('email') as string;
     const password = data.get('password') as string;
-    const remember = data.get('remember') === 'on' ? true : false;
+    const remember = data.get('remember') !== null;
 
     console.log({email, password, remember});
     const result = UsuarioAPI.login(email, password, remember);
@@ -46,7 +46,7 @@ export default function LoginAndPassword() {
             </div>
             <div className="col-md-8 col-12">
               <div className="form-check">
-                <input id="remember" className="form-check-input" type="checkbox" value="" />
+                <input name="remember" id="remember" className="form-check-input" type="checkbox" value="" />
                 <label className="text-light form-check-label">
                   Lembre de mim
                 </label>

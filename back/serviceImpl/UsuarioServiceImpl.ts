@@ -23,4 +23,20 @@ export class UserServiceImpl implements UserService {
 
         return this.userRepository.create(user)
     }
+
+    async login(email: string, password: string, remember: boolean): Promise<User> {
+        const user = await this.userRepository.findByEmail(email)
+
+        if(!user) {
+            throw new Error('Usuario nao encontrado')
+        }
+
+        const validPassword = await bcrypt.compare(password, user.senha)
+
+        if(!validPassword) {
+            throw new Error('Usuario nao encontrado')
+        }
+
+        return user
+    }
 }

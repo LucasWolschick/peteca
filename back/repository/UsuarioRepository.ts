@@ -10,4 +10,8 @@ export class UserRepository {
     async create(user: Omit<User, 'id'>): Promise<User> {
         return this.prisma.user.create({ data: user })
     }
+
+    async findByEmail(email: string): Promise<User | null> {
+        return this.prisma.user.findFirst({ where: { email } })
+    }
 }
