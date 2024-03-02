@@ -11,7 +11,7 @@ import LoginTemplate from "./components/templates/login/LoginTemplate";
 config.autoAddCss = false;
 
 export default function Home() {
-  const isLogged = true;
+  const isLogged = false;
 
   return (
     <React.StrictMode>

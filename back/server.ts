@@ -1,14 +1,19 @@
 import * as express from 'express';
+import * as cors from 'cors';
 import passswordResetRoutes from './controller/passwordResetRoutes';
 
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const app = express();
 const PORT = 8080;
 
 app.use(express.json());
+app.use(cors({
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 // Rotas para redefinicao de senhaq
 app.use('/resetpassword', passswordResetRoutes);
