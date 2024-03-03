@@ -7,7 +7,7 @@ export const UsuarioAPI = {
             method: "POST",
             data: {
                 email,
-                senha,
+                password: senha,
                 remember
             }
         });

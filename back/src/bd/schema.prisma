@@ -1,7 +1,6 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-
 }
 
 generator client {
@@ -9,33 +8,42 @@ generator client {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  ingresso DateTime @db.Date
-  nome String @db.VarChar()
-  ra String? @db.VarChar()
-  matricula String? @db.VarChar()
-  email String @unique @db.VarChar()
-  verificado Boolean
-  senha String @db.VarChar()
-  admin Boolean
+  id              Int      @id @default(autoincrement())
+  ingresso        DateTime @db.Date
+  nome            String   @db.VarChar()
+  ra              String?  @db.VarChar()
+  matricula       String?  @db.VarChar()
+  email           String   @unique @db.VarChar()
+  verificado      Boolean
+  senha           String   @db.VarChar()
+  admin           Boolean
   data_nascimento DateTime @db.Date
-  imagem String @db.VarChar
+  imagem          String   @db.VarChar
 
   permissoes UserPermissoes[]
+  tokens     Token[]
 }
 
 model Permissoes {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
   nome String @db.VarChar()
 
   users UserPermissoes[]
 }
 
 model UserPermissoes {
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  permissao Permissoes @relation(fields: [permissaoId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+  userId      Int
+  permissao   Permissoes @relation(fields: [permissaoId], references: [id])
   permissaoId Int
 
   @@id([userId, permissaoId])
+}
+
+model Token {
+  id             Int      @id @default(autoincrement())
+  token          String   @db.VarChar()
+  user           User     @relation(fields: [userId], references: [id])
+  userId         Int
+  data_expiracao DateTime @db.Date
 }
