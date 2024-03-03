@@ -1,5 +1,5 @@
 import * as express from "express";
-import { UserService } from "../serviceImpl/UserService";
+import { UserService } from "../service/UserService";
 import { body, validationResult } from "express-validator";
 import { User } from "@prisma/client";
 

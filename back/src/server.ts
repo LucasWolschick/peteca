@@ -1,11 +1,8 @@
 import * as express from "express";
 import * as cors from "cors";
 import passswordResetRoutes from "./controller/passwordResetRoutes";
-import usuarioController from "./controller/UsuarioController";
-
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import userController from "./controller/UserController";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 const PORT = 8080;
@@ -21,20 +18,8 @@ app.use(
 
 // Rotas para redefinicao de senhaq
 app.use("/resetpassword", passswordResetRoutes);
-app.use("/usuario", usuarioController);
-
-// Middleware para recuperação de erros
-app.use(
-  (
-    err: Error,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    console.error(err.stack);
-    res.status(500).send(err.message);
-  }
-);
+app.use("/user", userController);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
