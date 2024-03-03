@@ -1,12 +1,12 @@
 import * as express from "express";
 import { UserService } from "../service/UserService";
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
+import { UnauthorizedError, ValidationError } from "../errors";
 
 const userService = new UserService();
 
-// prefix: /usuario
 const router = express.Router();
 
 const cadastroValidator = [
@@ -17,8 +17,46 @@ const cadastroValidator = [
   body("senha").notEmpty(),
 ];
 
+export function validateInput(req: Request) {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    throw new ValidationError("Erro de validação", errors.array());
+  }
+}
+
+export function checkAuthenticated(req: any): User {
+  if (!req.user) {
+    throw new UnauthorizedError("Usuário não autenticado");
+  }
+
+  return req.user;
+}
+
+// Middleware that attempts to authenticate the user
+router.use(async (req: any, res, next) => {
+  if (req.headers.authorization) {
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      if (typeof token !== "string") {
+        throw new UnauthorizedError("Token inválido");
+      }
+      const user = await userService.authenticate(token);
+      req.user = user;
+      next();
+    } catch (e) {
+      next(e);
+    }
+  } else {
+    next();
+  }
+});
+
 router.post("/register", cadastroValidator, async (req, res, next) => {
   try {
+    validateInput(req);
+    const creator = checkAuthenticated(req);
+
     const user: Omit<User, "id"> = {
       nome: req.body.nome,
       ra: req.body.ra,
@@ -52,11 +90,7 @@ router.post(
   loginValidator,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
+      validateInput(req);
 
       const { email, password, remember } = req.body;
       const user = await userService.loginToken(email, password, remember);
@@ -68,11 +102,51 @@ router.post(
 );
 
 router.post(
+  "/confirm/:token",
+  param("token").notEmpty(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      validateInput(req);
+
+      const { token } = req.params;
+      await userService.activateAccount(token);
+
+      res.json({ message: "Email confirmado com sucesso" });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.post(
+  "/resetpassword/:token",
+  param("token").notEmpty(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      validateInput(req);
+
+      const { token } = req.params;
+      const { password } = req.body;
+
+      await userService.resetPassword(token, password);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.post(
   "/resetpassword",
   body("email").isEmail(),
   async (req: Request, res: Response, next: NextFunction) => {
-    const { email } = req.body;
-    await userService.resetPassword(email);
+    try {
+      validateInput(req);
+
+      const { email } = req.body;
+      await userService.resetPasswordRequest(email);
+    } catch (e) {
+      next(e);
+    }
   }
 );
 

@@ -1,11 +1,16 @@
 import { Token, User } from "@prisma/client";
-import { UserRepository } from "../repository/UserRepository";
-import * as crypto from "crypto";
 import * as bcrypt from "bcrypt";
-import { TokenRepository } from "../repository/TokenRepository";
-import RepositoryService from "./RepositoryService";
-import { NotFoundError } from "../errors";
+import * as crypto from "crypto";
 import * as jwt from "jsonwebtoken";
+
+import { NotFoundError, UnauthorizedError } from "../errors";
+import { TokenRepository } from "../repository/TokenRepository";
+import { UserRepository } from "../repository/UserRepository";
+import RepositoryService from "./RepositoryService";
+import { ServiceManager } from "./ServiceManager";
+
+const ONE_DAY = 1000 * 60 * 60 * 24;
+const THIRTY_DAYS = 30 * ONE_DAY;
 
 export class UserService {
   private userRepository: UserRepository;
@@ -22,22 +27,83 @@ export class UserService {
 
     user.senha = hashedPassword;
 
-    return this.userRepository.create(user);
+    const createdUser = await this.userRepository.create(user);
+    // TODO: handle already exists
+
+    const token = jwt.sign(
+      { email: createdUser.email, action: "confirm" },
+      process.env.JWT_SECRET
+    );
+
+    await ServiceManager.getEmailService().sendMail(
+      user.email,
+      "Link de confirmação da sua conta no Peteca",
+      `Seu token para confirmar a sua conta é: ${token}`
+    );
+
+    return createdUser;
   }
 
-  async resetPassword(email: string): Promise<void> {
+  async activateAccount(token: string): Promise<void> {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
+      email: string;
+      action: string;
+    };
+
+    if (decoded.action !== "confirm") {
+      throw new NotFoundError("Token inválido");
+    }
+
+    const user = await this.userRepository.findByEmail(decoded.email);
+
+    if (!user) {
+      throw new NotFoundError("Usuário não encontrado");
+    }
+
+    await this.userRepository.update(user.id, { verificado: true });
+  }
+
+  async resetPassword(token: string, password: string): Promise<void> {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
+      email: string;
+      action: string;
+    };
+
+    if (decoded.action !== "reset") {
+      throw new NotFoundError("Token inválido");
+    }
+
+    const user = await this.userRepository.findByEmail(decoded.email);
+
+    if (!user) {
+      throw new NotFoundError("Usuário não encontrado");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await this.userRepository.update(user.id, { senha: hashedPassword });
+    await this.tokenRepository.deleteAllUserTokens(user.id);
+  }
+
+  async resetPasswordRequest(email: string): Promise<void> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new NotFoundError("Usuario nao encontrado");
+      throw new NotFoundError("Usuário não encontrado");
     }
 
-    const token = jwt.sign({ email }, "mySecretKey", { expiresIn: "1h" });
+    const token = jwt.sign(
+      { email: user.email, action: "reset" },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
-    // TODO: send token to user email
-
-    console.log(token);
-    return;
+    await ServiceManager.getEmailService().sendMail(
+      user.email,
+      "Redefinição da sua senha no Peteca",
+      `Seu token para redefinir a senha é: ${token}`
+    );
   }
 
   async loginToken(
@@ -48,16 +114,20 @@ export class UserService {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new NotFoundError("Usuario nao encontrado");
+      throw new NotFoundError("Usuário não encontrado");
     }
 
     const validPassword = await bcrypt.compare(password, user.senha);
 
     if (!validPassword) {
-      throw new NotFoundError("Usuario nao encontrado");
+      throw new NotFoundError("Usuário não encontrado");
     }
 
-    const duration = remember ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 60 * 24;
+    if (!user.verificado) {
+      throw new UnauthorizedError("Usuário não verificado");
+    }
+
+    const duration = remember ? THIRTY_DAYS : ONE_DAY;
     const now = new Date();
     const date = new Date(now.getTime() + duration);
 
@@ -69,5 +139,15 @@ export class UserService {
 
     const token = await this.tokenRepository.create(tok);
     return { user, token };
+  }
+
+  async authenticate(token: string): Promise<User> {
+    const user = await this.userRepository.findByToken(token);
+
+    if (!user) {
+      throw new UnauthorizedError("Usuário não autenticado");
+    }
+
+    return user;
   }
 }

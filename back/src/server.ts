@@ -1,10 +1,15 @@
-import * as express from "express";
 import * as cors from "cors";
+import * as dotenv from "dotenv";
+import * as express from "express";
+
 import userController from "./controller/UserController";
 import { errorHandler } from "./errors";
 
 const app = express();
 const PORT = 8080;
+
+// Env
+dotenv.config();
 
 // Base
 app.use(express.json());
@@ -16,7 +21,7 @@ app.use(
 );
 
 // Routers
-app.use("/user", userController);
+app.use("/api/user", userController);
 
 // Gerenciamento de erros
 app.use(errorHandler);
