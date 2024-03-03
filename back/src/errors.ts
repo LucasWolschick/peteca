@@ -16,6 +16,24 @@ export class AppError extends Error {
   }
 }
 
+export class NotFoundError extends AppError {
+  constructor(message: string | undefined) {
+    super(message ?? "Not found", 404);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message: string | undefined) {
+    super(message ?? "Forbidden", 403);
+  }
+}
+
+export class UnauthorizedError extends AppError {
+  constructor(message: string | undefined) {
+    super(message ?? "Unauthorized", 401);
+  }
+}
+
 export function errorHandler(
   err: Error,
   req: Request,

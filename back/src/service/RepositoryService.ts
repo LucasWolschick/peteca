@@ -1,5 +1,5 @@
 import { TokenRepository } from "../repository/TokenRepository";
-import { UserRepository } from "../repository/UsuarioRepository";
+import { UserRepository } from "../repository/UserRepository";
 import { PrismaClient } from "@prisma/client";
 
 class RepositoryService {

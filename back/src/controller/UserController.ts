@@ -1,6 +1,7 @@
 import * as express from "express";
 import { UserService } from "../service/UserService";
 import { body, validationResult } from "express-validator";
+import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
 
 const userService = new UserService();
@@ -46,20 +47,33 @@ const loginValidator = [
   body("remember").isBoolean(),
 ];
 
-router.post("/login", loginValidator, async (req, res, next) => {
-  try {
-    const errors = validationResult(req);
+router.post(
+  "/login",
+  loginValidator,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const { email, password, remember } = req.body;
+      const user = await userService.loginToken(email, password, remember);
+      res.json(user);
+    } catch (e) {
+      next(e);
     }
-
-    const { email, password, remember } = req.body;
-    const user = await userService.loginToken(email, password, remember);
-    res.json(user);
-  } catch (e) {
-    next(e);
   }
-});
+);
+
+router.post(
+  "/resetpassword",
+  body("email").isEmail(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+    await userService.resetPassword(email);
+  }
+);
 
 export default router;

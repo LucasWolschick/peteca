@@ -1,9 +1,11 @@
 import { Token, User } from "@prisma/client";
-import { UserRepository } from "../repository/UsuarioRepository";
+import { UserRepository } from "../repository/UserRepository";
 import * as crypto from "crypto";
 import * as bcrypt from "bcrypt";
 import { TokenRepository } from "../repository/TokenRepository";
 import RepositoryService from "./RepositoryService";
+import { NotFoundError } from "../errors";
+import * as jwt from "jsonwebtoken";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -23,14 +25,19 @@ export class UserService {
     return this.userRepository.create(user);
   }
 
-  async getUserByToken(token: string): Promise<User | null> {
-    const user = await this.userRepository.findByToken(token);
+  async resetPassword(email: string): Promise<void> {
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new Error("Usuario nao encontrado");
+      throw new NotFoundError("Usuario nao encontrado");
     }
 
-    return user;
+    const token = jwt.sign({ email }, "mySecretKey", { expiresIn: "1h" });
+
+    // TODO: send token to user email
+
+    console.log(token);
+    return;
   }
 
   async loginToken(
@@ -41,13 +48,13 @@ export class UserService {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new Error("Usuario nao encontrado");
+      throw new NotFoundError("Usuario nao encontrado");
     }
 
     const validPassword = await bcrypt.compare(password, user.senha);
 
     if (!validPassword) {
-      throw new Error("Usuario nao encontrado");
+      throw new NotFoundError("Usuario nao encontrado");
     }
 
     const duration = remember ? 1000 * 60 * 60 * 24 * 30 : 1000 * 60 * 60 * 24;
