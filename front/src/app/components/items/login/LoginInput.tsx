@@ -8,13 +8,14 @@ export default function LoginInput(props: LoginInputProps) {
             <label className="text-light text-left">{props.text}</label>
             <div className="input-group mb-3">
                 <span className="input-group-text"><FontAwesomeIcon icon={props.icon} /></span>
-                <input type={props.type} className="form-control" placeholder={props.placeholder} />
+                <input id={props.id} name={props.id} type={props.type} className="form-control" placeholder={props.placeholder} />
             </div>
         </>
     );
 }
 
 export interface LoginInputProps {
+    id: string,
     text: string,
     placeholder: string,
     icon: IconProp,
