@@ -174,6 +174,7 @@ const prisma = new PrismaClient();
             admin: false,
             data_nascimento: new Date('2001-03-15'),
             imagem: "url_da_imagem",
+            ativo: false,
             permissoes:{
                 create:[{
                     permissao:{
@@ -427,6 +428,7 @@ const prisma = new PrismaClient();
             admin: false,
             data_nascimento: new Date('2001-08-20'),
             imagem: "url_da_imagem",
+            ativo: false,
             permissoes:{
                 create:[{
                     permissao:{
@@ -545,6 +547,7 @@ const prisma = new PrismaClient();
             admin: false,
             data_nascimento: new Date('2002-11-18'),
             imagem: "url_da_imagem",
+            ativo: false,
             permissoes:{
                 create:[{
                     permissao:{
@@ -578,6 +581,90 @@ const prisma = new PrismaClient();
             },
         }
     });
+
+    await prisma.item.create({
+        data:{
+            nome: "Canetão",
+            quantidade: 20,
+            unidadeMedida: "UN",
+            local: "Armário do Puff",
+
+        }
+    })
+
+    await prisma.item.create({
+        data:{
+            nome: "Apagador",
+            quantidade: 3,
+            unidadeMedida: "UN",
+            local: "Quadro",
+        }
+    })
+
+    await prisma.item.create({
+        data:{
+            nome: "Resma de Papel",
+            quantidade: 10,
+            unidadeMedida: "UN",
+            local: "Armário dos Livros",
+        }
+    })
+
+    await prisma.item.create({
+        data:{
+            nome: "Tesoura",
+            quantidade: 3,
+            unidadeMedida: "UN",
+            local: "Armário do Puff",
+            campos:{
+                create:[
+                    {
+                        nome: "Instruções de Uso",
+                        texto: "Usar e guardar com cuidado"
+                    },
+                ],
+            },
+        },
+    })
+
+    await prisma.item.create({
+        data:{
+            nome: "Patolino",
+            quantidade: 1,
+            unidadeMedida: "UN",
+            local: "Armario de Livros",
+            campos:{
+                create:[
+                    {
+                        nome: "Data de recebimento",
+                        data: new Date("1998-02-03"),
+                    },
+                ],
+            },
+        },
+    })
+
+    await prisma.item.create({
+        data:{
+            nome: "Panos",
+            quantidade: 20,
+            unidadeMedida: "UN",
+            local: "Caixas organizadoras",
+            campos:{
+                create:[
+                    {
+                        nome: "Quantidade de usos restantes",
+                        numero: 10,
+                    },
+                    {
+                        nome: "Instruções de Uso",
+                        texto: "Lavar após utilizar",
+                    },
+                ],
+            },
+        },
+    })
+
 })();
 
 console.log("Terminou!")
