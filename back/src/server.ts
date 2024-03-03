@@ -15,8 +15,10 @@ app.use(
   })
 );
 
-// Rotas para redefinicao de senhaq
+// Routers
 app.use("/user", userController);
+
+// Gerenciamento de erros
 app.use(errorHandler);
 
 app.listen(PORT, () => {
