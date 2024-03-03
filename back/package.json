@@ -3,28 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "tsc server.ts && node server.js",
-    "dbstart": "npx prisma migrate dev -n database --schema ./bd/schema.prisma init && npx run ./bd/dbteste.js"
+    "start": "tsc --outDir ./out/ ./src/server.ts && node ./out/server.js",
+    "dev": "tsc-watch --outDir ./out/ ./src/server.ts --onSuccess \"node ./out/server.js\"",
+    "dbstart": "npx prisma migrate dev -n database --schema ./src/bd/schema.prisma init && npx run ./src/bd/dbteste.js"
   },
   "dependencies": {
-    "@fortawesome/free-regular-svg-icons": "^6.5.1",
-    "@fortawesome/free-solid-svg-icons": "^6.5.1",
-    "@fortawesome/react-fontawesome": "^0.2.0",
     "@prisma/client": "^5.10.2",
-    "@types/react": "^18.2.56",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
+    "express": "^4.18.3",
     "jsonwebtoken": "^9.0.2",
-    "next": "^14.1.0",
     "pg": "^8.11.3",
-    "react": "^18.2.0",
-    "react-router-dom": "^6.22.1",
-    "typeorm": "^0.3.20",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.11.19"
+    "@types/node": "^20.11.19",
+    "tsc-watch": "^6.0.4"
   }
 }
