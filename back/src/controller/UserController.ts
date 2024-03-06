@@ -34,6 +34,11 @@ export function checkAuthenticated(req: any): User {
   return req.user;
 }
 
+export function init() {
+  // cria conta de administrador no banco de dados caso ela não exista
+  userService.createAdmin().then(() => userService.updateAdminPassword());
+}
+
 // Middleware that attempts to authenticate the user
 router.use(async (req: any, res, next) => {
   if (req.headers.authorization) {
@@ -67,7 +72,6 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
 
       ingresso: new Date(),
       verificado: false,
-      admin: false,
       ativo: true,
       data_nascimento: new Date(2001, 0, 1),
       imagem: "",
@@ -161,5 +165,7 @@ router.get("/me", async (req: Request, res: Response, next: NextFunction) => {
     next(e);
   }
 });
+
+init();
 
 export default router;

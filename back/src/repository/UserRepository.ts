@@ -23,6 +23,10 @@ export class UserRepository {
     return this.prisma.user.findFirst({ where: { email } });
   }
 
+  async findById(id: number): Promise<User | null> {
+    return this.prisma.user.findFirst({ where: { id } });
+  }
+
   async findByToken(token: string): Promise<User | null> {
     return this.prisma.user.findFirst({
       where: {

@@ -8,6 +8,8 @@ import { TokenRepository } from "../repository/TokenRepository";
 import { UserRepository } from "../repository/UserRepository";
 import RepositoryService from "./RepositoryService";
 import { ServiceManager } from "./ServiceManager";
+import { env } from "process";
+import { PermissionsRepository } from "../repository/PermissionsRepository";
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const THIRTY_DAYS = 30 * ONE_DAY;
@@ -15,10 +17,12 @@ const THIRTY_DAYS = 30 * ONE_DAY;
 export class UserService {
   private userRepository: UserRepository;
   private tokenRepository: TokenRepository;
+  private permissionsRepository: PermissionsRepository;
 
   constructor() {
     this.userRepository = RepositoryService.getUserRepository();
     this.tokenRepository = RepositoryService.getTokenRepository();
+    this.permissionsRepository = RepositoryService.getPermissionRepository();
   }
 
   async register(user: Omit<User, "id">): Promise<User> {
@@ -149,5 +153,43 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async createAdmin() {
+    let admin = await this.userRepository.findByEmail(env.EMAIL_USER);
+
+    if (!admin) {
+      const user: Omit<User, "id"> = {
+        ativo: true,
+        verificado: true,
+        data_nascimento: new Date(),
+        email: env.EMAIL_USER,
+        imagem: "",
+        ingresso: new Date(),
+        matricula: "admin",
+        ra: null,
+        nome: "admin",
+        senha: "",
+      };
+
+      admin = await this.userRepository.create(user);
+    }
+
+    if (!this.permissionsRepository.hasPermission(admin.id, "admin")) {
+      await this.permissionsRepository.grantPermission(admin.id, "admin");
+    }
+  }
+
+  async updateAdminPassword() {
+    const admin = await this.userRepository.findByEmail(env.EMAIL_USER);
+
+    if (admin === null) {
+      return;
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(env.ADMIN_PASSWORD, salt);
+
+    await this.userRepository.update(admin.id, { senha: hashedPassword });
   }
 }
