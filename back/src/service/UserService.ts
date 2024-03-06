@@ -188,7 +188,7 @@ export class UserService {
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(env.ADMIN_PASSWORD, salt);
+    const hashedPassword = await bcrypt.hash(env.SENHA_ADMIN, salt);
 
     await this.userRepository.update(admin.id, { senha: hashedPassword });
   }
