@@ -4,8 +4,9 @@ import { body, param, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
 import { UnauthorizedError, ValidationError } from "../errors";
+import { ServiceManager } from "../service/ServiceManager";
 
-const userService = new UserService();
+const userService = ServiceManager.getUserService();
 
 const router = express.Router();
 
@@ -67,13 +68,14 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
       ingresso: new Date(),
       verificado: false,
       admin: false,
+      ativo: true,
       data_nascimento: new Date(2001, 0, 1),
       imagem: "",
     };
 
     const createdUser = await userService.register(user);
 
-    res.json(createdUser);
+    res.json({ id: createdUser.id });
   } catch (e) {
     next(e);
   }
@@ -149,5 +151,15 @@ router.post(
     }
   }
 );
+
+router.get("/me", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = checkAuthenticated(req);
+    const userSemSenha = { ...user, senha: undefined };
+    res.json(userSemSenha);
+  } catch (e) {
+    next(e);
+  }
+});
 
 export default router;
