@@ -3,7 +3,10 @@ import * as dotenv from "dotenv";
 import * as express from "express";
 
 import userController from "./controller/UserController";
+import permissionsController from "./controller/PermissionsController";
 import { errorHandler } from "./errors";
+import { PermissionsRepository } from "./repository/PermissionsRepository";
+import { PrismaClient } from "@prisma/client";
 
 const app = express();
 const PORT = 8080;
@@ -22,6 +25,7 @@ app.use(
 
 // Routers
 app.use("/api/user", userController);
+app.use("/api/permissions", permissionsController);
 
 // Gerenciamento de erros
 app.use(errorHandler);
