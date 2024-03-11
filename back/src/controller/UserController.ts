@@ -73,6 +73,7 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
       ingresso: new Date(),
       verificado: false,
       ativo: true,
+      admin: false,
       data_nascimento: new Date(2001, 0, 1),
       imagem: "",
     };

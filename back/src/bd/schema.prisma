@@ -19,6 +19,7 @@ model User {
   data_nascimento DateTime @db.Date
   imagem          String   @db.VarChar
   ativo           Boolean  @default(true)
+  admin           Boolean  @default(false)
 
   permissoes UserPermissoes[]
   tokens     Token[]

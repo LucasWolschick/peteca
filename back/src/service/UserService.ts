@@ -167,6 +167,7 @@ export class UserService {
         imagem: "",
         ingresso: new Date(),
         matricula: "admin",
+        admin: true,
         ra: null,
         nome: "admin",
         senha: "",
