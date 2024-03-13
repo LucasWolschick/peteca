@@ -14,7 +14,6 @@ export default function LoginAndPassword() {
 
   const navigate = useNavigate();
   const { setIsLogged } = useAuth();
-
   const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (e: any) => {
