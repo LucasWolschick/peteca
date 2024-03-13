@@ -10,6 +10,9 @@ import { UsuarioAPI } from "@/apis/usuarioAPI";
 
 // LogInAndPassword is the page to login and enter the Forgot Password and Reset Password pages
 export default function LoginAndPassword() {
+
+  const [showToast, setShowToast] = useState(false);
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
@@ -26,6 +29,7 @@ export default function LoginAndPassword() {
       console.log(response);
     }).catch((error) => {
       console.error(error);
+      setShowToast(true);
     });
   }
 
@@ -61,6 +65,12 @@ export default function LoginAndPassword() {
               <Link to="/forgotpassword">
                 <LoginButton text="Esqueci minha senha" class="btn-warning" />
               </Link>
+            </div>
+            <div className={`toast ${showToast ? 'show' : ''} mt-3 bg-danger text-white`} role="alert" aria-live="assertive" aria-atomic="true">
+              <div className="toast-body d-flex justify-content-between align-items-center">
+                Login ou senha inválidos.
+                <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={() => setShowToast(false)}></button>
+              </div>
             </div>
           </div>
         </div>
