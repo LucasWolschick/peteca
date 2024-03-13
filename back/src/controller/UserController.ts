@@ -100,8 +100,10 @@ router.post(
       validateInput(req);
 
       const { email, password, remember } = req.body;
-      const user = await userService.loginToken(email, password, remember);
-      res.json(user);
+      const { user, token } = await userService.loginandredirect(email, password, remember);
+
+      // Redireciona o usuário para a página desejada após o login
+      res.json({ user, token, redirect: "/inicio" });
     } catch (e) {
       next(e);
     }

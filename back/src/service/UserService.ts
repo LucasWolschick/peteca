@@ -193,4 +193,14 @@ export class UserService {
 
     await this.userRepository.update(admin.id, { senha: hashedPassword });
   }
+
+  async loginandredirect(email: string, password: string, remember: boolean) {
+    const { user, token } =  await this.loginToken(email, password, remember);
+
+    if (user.verificado) {
+      return { user, token };
+    } else {
+      throw new UnauthorizedError("Usuário não verificado");
+    }
+  }
 }
