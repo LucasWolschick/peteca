@@ -1,3 +1,4 @@
+import ItemRepository from "../repository/ItemRepository";
 import { PermissionsRepository } from "../repository/PermissionsRepository";
 import { TokenRepository } from "../repository/TokenRepository";
 import { UserRepository } from "../repository/UserRepository";
@@ -8,6 +9,7 @@ class RepositoryService {
   private userRepository: UserRepository | null = null;
   private permissionRepository: PermissionsRepository | null = null;
   private prisma: PrismaClient;
+  private itemRepository: ItemRepository | null = null;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
@@ -30,6 +32,15 @@ class RepositoryService {
       this.permissionRepository = new PermissionsRepository(this.prisma);
     return this.permissionRepository;
   }
+
+  getItemRepository(): ItemRepository {
+    if (!this.itemRepository)
+      this.itemRepository = new ItemRepository(this.prisma);
+    return this.itemRepository;
+  }
+
 }
 
 export default new RepositoryService(new PrismaClient());
+
+
