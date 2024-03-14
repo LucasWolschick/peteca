@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal } from "react-bootstrap";
 
-export default function DialogEstoque(props: DialogEstoqueProps) {
+export default function DialogCreateItem(props: DialogCreateItemProps) {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -47,7 +47,7 @@ export default function DialogEstoque(props: DialogEstoqueProps) {
                     </div>
                     <div className='col-lg-5 col-12 '>
                         <button className="btn btn-primary btn-md rounded-5 col-12" onClick={handleClose}>
-                            {props.buttonText}
+                            Salvar
                         </button>
                     </div>
                 </Modal.Footer>
@@ -56,7 +56,7 @@ export default function DialogEstoque(props: DialogEstoqueProps) {
     );
 }
 
-export interface DialogEstoqueProps {
+export interface DialogCreateItemProps {
     title: string,
     buttonType: string,
     buttonText: string,

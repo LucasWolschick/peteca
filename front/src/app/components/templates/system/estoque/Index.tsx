@@ -1,4 +1,5 @@
-import DialogEstoque from "@/app/components/items/system/DialogEstoque";
+import DialogCreateItem from "@/app/components/items/system/DialogCreateItem";
+import DialogEditItem from "@/app/components/items/system/DialogEditItem";
 import Item from "@/app/components/items/system/Item";
 import Title from "@/app/components/items/system/Title";
 
@@ -38,8 +39,8 @@ export default function Index() {
                     </table>
                 </div>
                 <div className="row mt-3 justify-content-around">
-                    <DialogEstoque title={"Adicionar item"} buttonType={"btn-primary"} buttonText={"Adicionar item"} text={"a"} />
-                    <DialogEstoque title={"Editar item"} buttonType={"btn-warning"} buttonText={"Editar item"} text={"a"} />
+                    <DialogCreateItem title={"Adicionar item"} buttonType={"btn-primary"} buttonText={"Adicionar item"} text={"a"} />
+                    <DialogEditItem title={"Editar item"} buttonType={"btn-warning"} buttonText={"Editar item"}  />
                 </div>
             </div>
         </>
