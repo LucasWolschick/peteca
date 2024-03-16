@@ -6,6 +6,7 @@
   --dark-blue: #0f1447;
   --violet: #0e0017;
   --violet-blue: #363fad;
+  --light-violet-blue: #1E256F;
   --green: #07ec76e3;
 }
 
@@ -24,6 +25,10 @@ main {
     var(--dark-blue) 47.24%,
     var(--violet) 113.41%
   );
+}
+
+.bg-light-violet-blue{
+  background: var(--light-violet-blue);
 }
 
 .bg-light-gray {
