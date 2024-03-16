@@ -84,3 +84,7 @@ main {
 .rounded{
   border-radius: 30px;
 }
+
+.table-responsive {
+  height:60vh !important;
+}
