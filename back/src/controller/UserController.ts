@@ -8,13 +8,14 @@ import { ServiceManager } from "../service/ServiceManager";
 import { authMiddleware } from "../authMiddleware";
 
 const userService = ServiceManager.getUserService();
+const permissionsService = ServiceManager.getPermissionsService();
 
 const router = express.Router();
 
 const cadastroValidator = [
   body("nome").notEmpty(),
   body("ra").optional().notEmpty(),
-  body("matricula").optional({checkFalsy: true}),
+  body("matricula").optional({ checkFalsy: true }),
   body("email").isEmail(),
   body("senha").notEmpty(),
 ];
@@ -40,29 +41,20 @@ export function init() {
   userService.createAdmin().then(() => userService.updateAdminPassword());
 }
 
-// Middleware that attempts to authenticate the user
-router.use(async (req: any, res, next) => {
-  if (req.headers.authorization) {
-    try {
-      const token = req.headers.authorization.split(" ")[1];
-      if (typeof token !== "string") {
-        throw new UnauthorizedError("Token inválido");
-      }
-      const user = await userService.authenticate(token);
-      req.user = user;
-      next();
-    } catch (e) {
-      next(e);
-    }
-  } else {
-    next();
-  }
-});
-
 router.post("/register", cadastroValidator, async (req, res, next) => {
   try {
     validateInput(req);
-    const creator = authMiddleware(req, res, next);
+    const creator = checkAuthenticated(req);
+    if (
+      !(await permissionsService.userHasPermission(
+        creator.id,
+        "Gerir Cadastros"
+      ))
+    ) {
+      throw new UnauthorizedError(
+        "Você não tem permissão para criar cadastros"
+      );
+    }
 
     const user: Omit<User, "id"> = {
       nome: req.body.nome,
@@ -74,7 +66,6 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
       ingresso: new Date(),
       verificado: false,
       ativo: true,
-      admin: false,
       data_nascimento: new Date(2001, 0, 1),
       imagem: "",
     };
@@ -100,7 +91,11 @@ router.post(
     try {
       validateInput(req);
       const { email, password, remember } = req.body;
-      const { user, token } = await userService.loginandredirect(email, password, remember);
+      const { user, token } = await userService.loginandredirect(
+        email,
+        password,
+        remember
+      );
 
       // Redireciona o usuário para a página desejada após o login
       res.json({ user, token, redirect: "/inicio" });
@@ -145,7 +140,6 @@ router.post(
   }
 );
 
-
 router.post(
   "/resetpassword",
   body("email").isEmail(),
@@ -154,16 +148,18 @@ router.post(
       validateInput(req);
       const { email } = req.body;
       await userService.resetPasswordRequest(email);
-      res.json({ message: "Solicitação de redefinição de senha enviada com sucesso"})
+      res.json({
+        message: "Solicitação de redefinição de senha enviada com sucesso",
+      });
     } catch (e) {
       next(e);
     }
   }
 );
 
-router.get("/me",  async (req: Request, res: Response, next: NextFunction) => {
+router.get("/me", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = authMiddleware(req, res, next);
+    const user = checkAuthenticated(req);
     const userSemSenha = { ...user, senha: undefined };
     res.json(userSemSenha);
   } catch (e) {
@@ -171,15 +167,17 @@ router.get("/me",  async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.delete("/delete/:id", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.params;
-    await userService.deleteUser(Number(id));
-    res.status(200).json({message: "Usuário deletado com sucesso"});
-  } catch (e) {
-    next(e);
+router.delete(
+  "/delete/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      await userService.deleteUser(Number(id));
+      res.status(200).json({ message: "Usuário deletado com sucesso" });
+    } catch (e) {
+      next(e);
+    }
   }
-}
 );
 
 init();
