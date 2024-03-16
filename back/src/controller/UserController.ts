@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
 import { UnauthorizedError, ValidationError } from "../errors";
 import { ServiceManager } from "../service/ServiceManager";
+import { authMiddleware } from "../authMiddleware";
 
 const userService = ServiceManager.getUserService();
 
@@ -13,7 +14,7 @@ const router = express.Router();
 const cadastroValidator = [
   body("nome").notEmpty(),
   body("ra").optional().notEmpty(),
-  body("matricula").optional().notEmpty(),
+  body("matricula").optional({checkFalsy: true}),
   body("email").isEmail(),
   body("senha").notEmpty(),
 ];
@@ -61,7 +62,7 @@ router.use(async (req: any, res, next) => {
 router.post("/register", cadastroValidator, async (req, res, next) => {
   try {
     validateInput(req);
-    const creator = checkAuthenticated(req);
+    const creator = authMiddleware(req, res, next);
 
     const user: Omit<User, "id"> = {
       nome: req.body.nome,
@@ -98,10 +99,11 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       validateInput(req);
-
       const { email, password, remember } = req.body;
-      const user = await userService.loginToken(email, password, remember);
-      res.json(user);
+      const { user, token } = await userService.loginandredirect(email, password, remember);
+
+      // Redireciona o usuário para a página desejada após o login
+      res.json({ user, token, redirect: "/inicio" });
     } catch (e) {
       next(e);
     }
@@ -133,14 +135,16 @@ router.post(
       validateInput(req);
 
       const { token } = req.params;
-      const { password } = req.body;
+      const { senha } = req.body;
 
-      await userService.resetPassword(token, password);
+      await userService.resetPassword(token, senha);
+      res.json({ message: "Senha redefinida com sucesso" });
     } catch (e) {
       next(e);
     }
   }
 );
+
 
 router.post(
   "/resetpassword",
@@ -148,24 +152,35 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       validateInput(req);
-
       const { email } = req.body;
       await userService.resetPasswordRequest(email);
+      res.json({ message: "Solicitação de redefinição de senha enviada com sucesso"})
     } catch (e) {
       next(e);
     }
   }
 );
 
-router.get("/me", async (req: Request, res: Response, next: NextFunction) => {
+router.get("/me",  async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = checkAuthenticated(req);
+    const user = authMiddleware(req, res, next);
     const userSemSenha = { ...user, senha: undefined };
     res.json(userSemSenha);
   } catch (e) {
     next(e);
   }
 });
+
+router.delete("/delete/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    await userService.deleteUser(Number(id));
+    res.status(200).json({message: "Usuário deletado com sucesso"});
+  } catch (e) {
+    next(e);
+  }
+}
+);
 
 init();
 

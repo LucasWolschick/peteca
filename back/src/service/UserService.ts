@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import * as crypto from "crypto";
 import * as jwt from "jsonwebtoken";
 
-import { NotFoundError, UnauthorizedError } from "../errors";
+import { ConflictError, NotFoundError, UnauthorizedError } from "../errors";
 import { TokenRepository } from "../repository/TokenRepository";
 import { UserRepository } from "../repository/UserRepository";
 import RepositoryService from "./RepositoryService";
@@ -26,14 +26,17 @@ export class UserService {
   }
 
   async register(user: Omit<User, "id">): Promise<User> {
+    // Verificar se o e-mail, ra ou matricula ja existe
+    const existe = await this.userRepository.DataExists(user.email, user.ra, user.matricula);
+    if(existe){
+      throw new ConflictError("E-mail, RA ou Matricula já existem")
+    }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(user.senha, salt);
 
     user.senha = hashedPassword;
 
     const createdUser = await this.userRepository.create(user);
-    // TODO: handle already exists
-
     const token = jwt.sign(
       { email: createdUser.email, action: "confirm" },
       process.env.JWT_SECRET
@@ -84,7 +87,10 @@ export class UserService {
     }
 
     const salt = await bcrypt.genSalt(10);
+    console.log("Senha antes do hash: ", password)
+    console.log("SAlt: ", salt)
     const hashedPassword = await bcrypt.hash(password, salt);
+    console.log("Senha depois do hash, ", hashedPassword)
 
     await this.userRepository.update(user.id, { senha: hashedPassword });
     await this.tokenRepository.deleteAllUserTokens(user.id);
@@ -193,4 +199,27 @@ export class UserService {
 
     await this.userRepository.update(admin.id, { senha: hashedPassword });
   }
+
+  async loginandredirect(email: string, password: string, remember: boolean) {
+    const { user, token } =  await this.loginToken(email, password, remember);
+
+    if (user.verificado) {
+      return { user, token };
+    } else {
+      throw new UnauthorizedError("Usuário não verificado");
+    }
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    const user = await this.userRepository.findById(id);
+
+    if(!user) {
+      throw new NotFoundError("Usuário não encontrado");
+    }
+
+    await this.userRepository.DeleteUserPermissions(user.id);
+    await this.tokenRepository.deleteAllUserTokens(user.id);
+    await this.userRepository.DeleteUserById(user.id);
+  }
+
 }

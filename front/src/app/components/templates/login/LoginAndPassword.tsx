@@ -4,13 +4,20 @@ import LoginInput from "../../items/login/LoginInput";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import LoginButton from "../../items/login/LoginButton";
 import LoginTitle from "../../items/login/LoginTitle";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { use, useState } from "react";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
+import { useAuth } from "./AuthContext";
 
 // LogInAndPassword is the page to login and enter the Forgot Password and Reset Password pages
 export default function LoginAndPassword() {
-  const handleSubmit = (e: any) => {
+
+  const navigate = useNavigate();
+  const { setIsLogged } = useAuth();
+  const [showToast, setShowToast] = useState(false);
+
+  const handleSubmit = async (e: any) => {
+
     e.preventDefault();
 
     const form = e.target;
@@ -20,12 +27,23 @@ export default function LoginAndPassword() {
     const password = data.get('password') as string;
     const remember = data.get('remember') !== null;
 
+    try {
+      const result = await UsuarioAPI.login(email, password, remember);
+      console.log(result);
+      // Redireciona o usuário para a página desejada após o login
+      navigate("/inicio");
+      setIsLogged(true);
+    } catch (error) {
+      console.error(error);
+    }
+
     console.log({email, password, remember});
     const result = UsuarioAPI.login(email, password, remember);
     result.then((response) => {
       console.log(response);
     }).catch((error) => {
       console.error(error);
+      setShowToast(true);
     });
   }
 
@@ -61,6 +79,12 @@ export default function LoginAndPassword() {
               <Link to="/forgotpassword">
                 <LoginButton text="Esqueci minha senha" class="btn-warning" />
               </Link>
+            </div>
+            <div className={`toast ${showToast ? 'show' : ''} mt-3 bg-danger text-white`} role="alert" aria-live="assertive" aria-atomic="true">
+              <div className="toast-body d-flex justify-content-between align-items-center">
+                Login ou senha inválidos.
+                <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={() => setShowToast(false)}></button>
+              </div>
             </div>
           </div>
         </div>

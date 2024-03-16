@@ -41,4 +41,24 @@ export class UserRepository {
       },
     });
   }
+
+  async DataExists(email: string, ra?: string, matricula?:string): Promise<boolean> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          {email: email, ra: ra},
+          {email: email, matricula: matricula},
+        ],
+      },
+    })
+    return !!user;
+  }
+
+  async DeleteUserPermissions(id: number): Promise<void> {
+    await this.prisma.userPermissoes.deleteMany({where: {userId: id}});
+  }
+  async DeleteUserById(id: number): Promise<void> {
+    await this.prisma.user.delete({where: {id}});
+  }
+
 }

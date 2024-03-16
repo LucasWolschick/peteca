@@ -11,5 +11,25 @@ export const UsuarioAPI = {
                 remember
             }
         });
+    },
+
+    passwordRecovery: async function (email: string) {
+        return await api.request({
+            url: `/api/user/resetpassword`,
+            method: "POST",
+            data: {
+                email
+            }
+        });
+    },
+
+    resetPassword: async function (token: string, senha: string) {
+        return await api.request({
+            url: `/api/user/resetpassword/${token}`,
+            method: "POST",
+            data: {
+                password: senha
+            }
+        });
     }
 };
