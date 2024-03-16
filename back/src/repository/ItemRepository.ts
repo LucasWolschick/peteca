@@ -44,6 +44,29 @@ class ItemRepository {
         });
         return !!item;
     }
+
+    async getItemById(id: number) {
+        return this.prisma.item.findUnique({
+            where: { id },
+        });
+    }
+
+    async deleteItem(id: number) {
+        return this.prisma.item.delete({
+            where: { id },
+        });
+    }
+
+    async searchItems(searchParams: { nome?: string; quantidade?: number; unidadeMedida?: string; local?: string}) {
+        return this.prisma.item.findMany({
+            where: {
+                nome: searchParams.nome,
+                quantidade: searchParams.quantidade,
+                unidadeMedida: searchParams.unidadeMedida,
+                local: searchParams.local
+            }
+        });
+    }
 }
 
 export default ItemRepository;

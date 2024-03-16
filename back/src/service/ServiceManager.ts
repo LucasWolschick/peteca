@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { EmailService } from "./EmailService";
 import { PermissionsService } from "./PermissionsService";
 import { UserService } from "./UserService";
@@ -25,4 +26,5 @@ export class ServiceManager {
       this.permissionsService = new PermissionsService();
     return this.permissionsService;
   }
+
 }
