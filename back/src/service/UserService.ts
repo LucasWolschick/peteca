@@ -10,6 +10,7 @@ import RepositoryService from "./RepositoryService";
 import { ServiceManager } from "./ServiceManager";
 import { env } from "process";
 import { PermissionsRepository } from "../repository/PermissionsRepository";
+import logger from "../logger";
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const THIRTY_DAYS = 30 * ONE_DAY;
@@ -27,9 +28,13 @@ export class UserService {
 
   async register(user: Omit<User, "id">): Promise<User> {
     // Verificar se o e-mail, ra ou matricula ja existe
-    const existe = await this.userRepository.DataExists(user.email, user.ra, user.matricula);
-    if(existe){
-      throw new ConflictError("E-mail, RA ou Matricula já existem")
+    const existe = await this.userRepository.DataExists(
+      user.email,
+      user.ra,
+      user.matricula
+    );
+    if (existe) {
+      throw new ConflictError("E-mail, RA ou Matricula já existem");
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(user.senha, salt);
@@ -41,6 +46,7 @@ export class UserService {
       { email: createdUser.email, action: "confirm" },
       process.env.JWT_SECRET
     );
+    logger.info(`Usuário novo cadastrado: ${createdUser.email}`);
 
     await ServiceManager.getEmailService().sendMail(
       user.email,
@@ -58,15 +64,20 @@ export class UserService {
     };
 
     if (decoded.action !== "confirm") {
+      logger.warn(`Tentativa de ativar conta com token inválido: ${token}`);
       throw new NotFoundError("Token inválido");
     }
 
     const user = await this.userRepository.findByEmail(decoded.email);
 
     if (!user) {
+      logger.warn(
+        `Tentativa de ativar conta com email não encontrado: ${token}`
+      );
       throw new NotFoundError("Usuário não encontrado");
     }
 
+    logger.info(`Ativando conta de: ${user.email}`);
     await this.userRepository.update(user.id, { verificado: true });
   }
 
@@ -87,19 +98,20 @@ export class UserService {
     }
 
     const salt = await bcrypt.genSalt(10);
-    console.log("Senha antes do hash: ", password)
-    console.log("SAlt: ", salt)
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log("Senha depois do hash, ", hashedPassword)
 
     await this.userRepository.update(user.id, { senha: hashedPassword });
     await this.tokenRepository.deleteAllUserTokens(user.id);
+    logger.info(`Senha redefinida para: ${user.email}`);
   }
 
   async resetPasswordRequest(email: string): Promise<void> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
+      logger.warn(
+        `Tentativa de redefinir senha de usuário não existente: ${email}`
+      );
       throw new NotFoundError("Usuário não encontrado");
     }
 
@@ -109,6 +121,7 @@ export class UserService {
       { expiresIn: "1h" }
     );
 
+    logger.info(`Enviando email para redefinir senha de: ${user.email}`);
     await ServiceManager.getEmailService().sendMail(
       user.email,
       "Redefinição da sua senha no Peteca",
@@ -155,6 +168,7 @@ export class UserService {
     const user = await this.userRepository.findByToken(token);
 
     if (!user) {
+      logger.warn(`Usuário não autenticado com token: ${token}`);
       throw new UnauthorizedError("Usuário não autenticado");
     }
 
@@ -173,16 +187,16 @@ export class UserService {
         imagem: "",
         ingresso: new Date(),
         matricula: "admin",
-        admin: true,
         ra: null,
         nome: "admin",
         senha: "",
       };
-
+      logger.info(`Administrador não encontrado, criando um novo`);
       admin = await this.userRepository.create(user);
     }
 
-    if (!this.permissionsRepository.hasPermission(admin.id, "admin")) {
+    if (!(await this.permissionsRepository.hasPermission(admin.id, "admin"))) {
+      logger.info(`Administrador não tem permissão de admin, concedendo`);
       await this.permissionsRepository.grantPermission(admin.id, "admin");
     }
   }
@@ -201,11 +215,13 @@ export class UserService {
   }
 
   async loginandredirect(email: string, password: string, remember: boolean) {
-    const { user, token } =  await this.loginToken(email, password, remember);
+    const { user, token } = await this.loginToken(email, password, remember);
 
     if (user.verificado) {
+      logger.info(`Login de: ${user.email}`);
       return { user, token };
     } else {
+      logger.info(`Login de: ${user.email} falhou: não verificado`);
       throw new UnauthorizedError("Usuário não verificado");
     }
   }
@@ -213,13 +229,14 @@ export class UserService {
   async deleteUser(id: number): Promise<void> {
     const user = await this.userRepository.findById(id);
 
-    if(!user) {
+    if (!user) {
       throw new NotFoundError("Usuário não encontrado");
     }
+
+    logger.info(`Removendo usuário com id ${id}`);
 
     await this.userRepository.DeleteUserPermissions(user.id);
     await this.tokenRepository.deleteAllUserTokens(user.id);
     await this.userRepository.DeleteUserById(user.id);
   }
-
 }

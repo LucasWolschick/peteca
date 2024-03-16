@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import logger from "./logger";
 
 export class AppError extends Error {
   status: number;
@@ -69,9 +70,12 @@ export function errorHandler(
   next: NextFunction
 ) {
   if (err instanceof AppError) {
+    logger.warn(
+      `${err.status} - ${err} - ${req.method} ${req.originalUrl} - ${req.ip}`
+    );
     res.status(err.status).json(err.toJson());
   } else {
-    console.error("[ERROR]", err.stack);
+    logger.error(err.stack.toString());
     res.status(500).send(err.message);
   }
 }

@@ -1,4 +1,5 @@
 import { Transporter, createTransport } from "nodemailer";
+import logger from "../logger";
 
 export class EmailService {
   private transporter: Transporter;
@@ -26,6 +27,8 @@ export class EmailService {
   }
 
   async sendMail(to: string, subject: string, text: string): Promise<void> {
+    logger.info(`Enviando email para: ${to}; assunto: ${subject}`);
+
     const res = await this.transporter.sendMail({
       from: process.env.EMAIL_USER,
       to,
@@ -34,7 +37,7 @@ export class EmailService {
     });
 
     if (this.mock) {
-      console.log(res.message);
+      logger.debug(res.message);
     }
   }
 }
