@@ -195,7 +195,7 @@ export class UserService {
       admin = await this.userRepository.create(user);
     }
 
-    if (!this.permissionsRepository.hasPermission(admin.id, "admin")) {
+    if (!(await this.permissionsRepository.hasPermission(admin.id, "admin"))) {
       logger.info(`Administrador não tem permissão de admin, concedendo`);
       await this.permissionsRepository.grantPermission(admin.id, "admin");
     }
