@@ -1,6 +1,7 @@
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import SystemRoutes from "./SystemRoutes";
+import Index from "./estoque/Index";
 import Create from "./usuarios/Create";
 import Details from "./usuarios/Details";
 import List from "./usuarios/List";
@@ -20,8 +21,9 @@ export default function SystemTemplate() {
         <div className="col-md-9 col-12 min-vh-100 text-white p-5">
           {/* <SystemRoutes /> */}
           {/* <Create /> */}
-          <List />
+          {/* <List /> */}
           {/* <Details /> */}
+          <Index />
         </div>
       </div>
     </>
