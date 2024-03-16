@@ -10,14 +10,6 @@ const permissionsService = ServiceManager.getPermissionsService();
 
 const router = express.Router();
 
-export function validateInput(req: Request) {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    throw new ValidationError("Erro de validação", errors.array());
-  }
-}
-
 export function checkAuthenticated(req: any): User {
   if (!req.user) {
     throw new UnauthorizedError("Usuário não autenticado");

@@ -1,11 +1,12 @@
 import * as express from "express";
 import { UserService } from "../service/UserService";
-import { body, param, validationResult } from "express-validator";
+import { body, param } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
-import { UnauthorizedError, ValidationError } from "../errors";
+import { UnauthorizedError } from "../errors";
 import { ServiceManager } from "../service/ServiceManager";
 import { authMiddleware } from "../authMiddleware";
+import { validateInput } from "../validateInput";
 
 const userService = ServiceManager.getUserService();
 const permissionsService = ServiceManager.getPermissionsService();
@@ -19,14 +20,6 @@ const cadastroValidator = [
   body("email").isEmail(),
   body("senha").notEmpty(),
 ];
-
-export function validateInput(req: Request) {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    throw new ValidationError("Erro de validação", errors.array());
-  }
-}
 
 export function checkAuthenticated(req: any): User {
   if (!req.user) {

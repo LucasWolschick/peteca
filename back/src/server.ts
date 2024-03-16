@@ -4,10 +4,9 @@ import * as express from "express";
 
 import userController from "./controller/UserController";
 import permissionsController from "./controller/PermissionsController";
-import itemController from "./controller/ItemController"; // Importação do ItemController
+import itemController from "./controller/ItemController";
+import adminController from "./controller/AdminController";
 import { NotFoundError, errorHandler } from "./errors";
-import { PermissionsRepository } from "./repository/PermissionsRepository";
-import { PrismaClient } from "@prisma/client";
 import logger from "./logger";
 import { authMiddleware } from "./authMiddleware";
 
@@ -36,7 +35,8 @@ app.use(authMiddleware);
 // Routers
 app.use("/api/user", userController);
 app.use("/api/permissions", permissionsController);
-app.use("/api/items", itemController); // Rota para os itens
+app.use("/api/items", itemController);
+app.use("/api/admin", adminController);
 
 // 404 handler
 app.use(async (req, res, next) => {
