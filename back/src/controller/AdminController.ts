@@ -48,4 +48,50 @@ router.get(
   }
 );
 
+router.post(
+  "/do-backup", async (req: Request, res: Response) => {
+  try {
+      const user = checkAuthenticated(req);
+
+      if (!(await permissionsService.userHasPermission(user.id, "admin"))) {
+        throw new ForbiddenError(
+          "Você não tem permissão para acessar este recurso."
+        );
+      }
+
+      validateInput(req);
+
+      await adminService.performBackup();
+      res.status(200).json({ message: 'Backup realizado com sucesso!'});
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+router.post(
+  "/import-backup", async (req: Request, res: Response) => {
+     try {
+         const user = checkAuthenticated(req);
+ 
+         if (!(await permissionsService.userHasPermission(user.id, "admin"))) {
+          throw new ForbiddenError(
+            "Você não tem permissão para acessar este recurso."
+          );
+        }
+ 
+         validateInput(req);
+ 
+         const backupPath = req.body.backupPath;
+         if (!backupPath) {
+             res.status(400).json({ message: "O caminho do arquivo de backup é necessário." });
+             return;
+         }
+ 
+         await adminService.performImport(backupPath);
+         res.status(200).json({ message: 'Importação do backup realizada com sucesso!'});
+     } catch (error) {
+         res.status(500).json({ message: error.message });
+     }
+ });
+
 export default router;
