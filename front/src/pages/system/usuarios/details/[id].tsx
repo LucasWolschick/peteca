@@ -7,27 +7,42 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SystemTemplate from "../../_systemtemplate";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { User, UsuarioAPI } from "@/apis/usuarioAPI";
+import { SystemContext } from "@/SystemContext";
+import { Permission, PermissionsAPI } from "@/apis/permissionsAPI";
+
+function Permissao({ nome, possui }: { nome: Permission; possui: boolean }) {
+  return (
+    <tr>
+      <td>{nome}</td>
+      <td>
+        <FontAwesomeIcon icon={possui ? faCheck : faXmark} />
+      </td>
+    </tr>
+  );
+}
 
 // This page gets the informations about one user
 // It shows profile picture, name, e-mail, born date and all the permissions the user has
 export default function Details() {
   const router = useRouter();
   const { id } = router.query;
-
-  if (!id) {
-    return null;
-  }
-
   const [user, setUser] = useState(undefined as undefined | User);
+  const [userPermissions, setUserPermissions] = useState([] as Permission[]);
+  const allPermissions = useContext(SystemContext).permissions;
+
   useEffect(() => {
+    if (!id) return;
     const nId = Number(id);
     if (!isNaN(nId)) {
       UsuarioAPI.getUserById(nId)
         .then((response) => {
-          console.log(response.data);
           setUser(response.data);
+          return PermissionsAPI.getUserPermissions(nId);
+        })
+        .then((perms) => {
+          setUserPermissions(perms.data);
         })
         .catch((error) => {
           console.log(error);
@@ -36,7 +51,16 @@ export default function Details() {
   }, [id]);
 
   if (!user) {
-    return null;
+    return (
+      <SystemTemplate>
+        <div className="container-fluid">
+          <Title title="Usuário" />
+        </div>
+        <div>
+          <p>Carregando...</p>
+        </div>
+      </SystemTemplate>
+    );
   }
 
   return (
@@ -60,54 +84,15 @@ export default function Details() {
         <div className="mt-3">
           <table className="table table-responsive table-sm">
             <tbody>
-              <tr>
-                <td>Gerir documentos</td>
-                <td>
-                  <FontAwesomeIcon icon={faCheck} />
-                </td>
-              </tr>
-              <tr>
-                <td>Gerir cadastros</td>
-                <td>
-                  <FontAwesomeIcon icon={faXmark} />
-                </td>
-              </tr>
-              <tr>
-                <td>Gerir caixinha</td>
-                <td>
-                  <FontAwesomeIcon icon={faCheck} />
-                </td>
-              </tr>
-              <tr>
-                <td>Gerir estoque</td>
-                <td>
-                  <FontAwesomeIcon icon={faXmark} />
-                </td>
-              </tr>
-              <tr>
-                <td>Gerir calendário</td>
-                <td>
-                  <FontAwesomeIcon icon={faCheck} />
-                </td>
-              </tr>
-              <tr>
-                <td>Visualizar caixinha</td>
-                <td>
-                  <FontAwesomeIcon icon={faXmark} />
-                </td>
-              </tr>
-              <tr>
-                <td>Visualizar documentos</td>
-                <td>
-                  <FontAwesomeIcon icon={faCheck} />
-                </td>
-              </tr>
-              <tr>
-                <td>Visualizar registros</td>
-                <td>
-                  <FontAwesomeIcon icon={faXmark} />
-                </td>
-              </tr>
+              {allPermissions.map((perm) => {
+                return (
+                  <Permissao
+                    key={perm}
+                    nome={perm}
+                    possui={userPermissions.includes(perm)}
+                  />
+                );
+              })}
             </tbody>
           </table>
         </div>

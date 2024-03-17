@@ -4,6 +4,7 @@ import SystemTemplate from "../_systemtemplate";
 import { useEffect, useState } from "react";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface User {
   id: number;
@@ -64,22 +65,27 @@ export default function List() {
                         router.push("/system/usuarios/details/" + user.id);
                       }}
                       editUser={() => {
-                        router.push("/system/usuarios/create/" + user.id);
+                        router.push("/system/usuarios/edit/" + user.id);
                       }}
                     />
                   );
                 })
               ) : (
-                <div className="text-center">Carregando...</div>
+                // a single spinner
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
               )}
             </div>
           </div>
         </div>
         <div className="row justify-content-center mt-3">
           <div className="col-md-8 col-12">
-            <button className="btn btn-primary btn-sm rounded-5">
-              Cadastrar usuário
-            </button>
+            <Link href="/system/usuarios/edit/new">
+              <button className="btn btn-primary btn-sm rounded-5">
+                Cadastrar usuário
+              </button>
+            </Link>
           </div>
         </div>
       </div>
