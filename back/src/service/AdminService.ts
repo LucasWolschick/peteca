@@ -42,7 +42,6 @@ export class AdminService {
     for await (const line of rl) {
       const log = JSON.parse(line);
       const date = new Date(log.timestamp ?? 0);
-      console.log(log, date);
 
       if (from <= date && date <= to && levels[log.level] >= levels[level]) {
         logs.push(log);
