@@ -1,14 +1,13 @@
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import LoginInput from "../../items/login/LoginInput";
-import LoginTitle from "../../items/login/LoginTitle";
-import LoginButton from "../../items/login/LoginButton";
-import { Link, useNavigate } from "react-router-dom";
-import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { useState } from "react";
+import LoginTitle from "@/components/login/LoginTitle";
+import LoginInput from "@/components/login/LoginInput";
+import LoginButton from "@/components/login/LoginButton";
+import LoginTemplate from "./_logintemplate";
+import Link from "next/link";
 
 export default function PasswordRecovery() {
   return (
-    <>
+    <LoginTemplate>
       <LoginTitle title="ESQUECI MINHA SENHA" />
       <div>
         <h3 className="text-light text-center fw-bolder">
@@ -28,13 +27,13 @@ export default function PasswordRecovery() {
               <LoginButton text="Enviar" class="btn-primary"/>
             </div>
             <div className="col-md-8 col-12 mt-3">
-              <Link to="/">
+              <Link href="/">
                 <LoginButton text="Voltar" class="btn-danger" />
               </Link>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </LoginTemplate>
   );
 }

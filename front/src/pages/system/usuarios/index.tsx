@@ -1,13 +1,13 @@
-import CardUserList from "@/app/components/items/system/CardUserList";
-import Title from "@/app/components/items/system/Title";
-import { faPen, faUser, faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import CardUserList from "@/components/system/CardUserList";
+import Title from "@/components/system/Title";
+import SystemTemplate from "../_systemtemplate";
 
 // This page list the users of the system
 // In this page, you can be redirected to the Create page, creating or editing a user
 export default function List() {
     return (
-        <>
+        <SystemTemplate>
             <div className="container-fluid">
                 <Title title="Usuários" />
                 <div className="row mt-3 align-items-center justify-content-center overflow-auto ">
@@ -27,6 +27,6 @@ export default function List() {
                     </div>
                 </div>
             </div>
-        </>
+        </SystemTemplate>
     );
 }

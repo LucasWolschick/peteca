@@ -1,14 +1,9 @@
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import SystemRoutes from "./SystemRoutes";
-import Index from "./estoque/Index";
-import Create from "./usuarios/Create";
-import Details from "./usuarios/Details";
-import List from "./usuarios/List";
+import Sidebar from "@/components/system/Sidebar";
+import Header from "@/components/system/Header";
 
 // The SystemTemplate will be used mostly, since it will be in almost all the screens
 // It is the logged part of the system
-export default function SystemTemplate() {
+export default function SystemTemplate({ children }: React.PropsWithChildren<{}>) {
   return (
     <>
       <div className="row bg-purple g-0">
@@ -19,11 +14,7 @@ export default function SystemTemplate() {
           <Header />
         </div>
         <div className="col-md-9 col-12 min-vh-100 text-white p-5">
-          {/* <SystemRoutes /> */}
-          {/* <Create /> */}
-          {/* <List /> */}
-          {/* <Details /> */}
-          <Index />
+          {children}
         </div>
       </div>
     </>

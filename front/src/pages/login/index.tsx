@@ -1,18 +1,20 @@
 import { faLock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import LoginInput from "../../items/login/LoginInput";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
-import LoginButton from "../../items/login/LoginButton";
-import LoginTitle from "../../items/login/LoginTitle";
-import { Link, useNavigate } from "react-router-dom";
-import { use, useState } from "react";
+import { useState } from "react";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "@/AuthContext";
+import LoginTitle from "@/components/login/LoginTitle";
+import LoginInput from "@/components/login/LoginInput";
+import LoginButton from "@/components/login/LoginButton";
+import LoginTemplate from "./_logintemplate";
+import Link from "next/link";
+import { useRouter } from "next/router";
+
 
 // LogInAndPassword is the page to login and enter the Forgot Password and Reset Password pages
 export default function LoginAndPassword() {
 
-  const navigate = useNavigate();
+  const router = useRouter()
   const { setIsLogged } = useAuth();
   const [showToast, setShowToast] = useState(false);
 
@@ -31,7 +33,7 @@ export default function LoginAndPassword() {
       const result = await UsuarioAPI.login(email, password, remember);
       console.log(result);
       // Redireciona o usuário para a página desejada após o login
-      navigate("/inicio");
+      router.push("/system");
       setIsLogged(true);
     } catch (error) {
       console.error(error);
@@ -48,7 +50,7 @@ export default function LoginAndPassword() {
   }
 
   return (
-    <>
+    <LoginTemplate>
       <LoginTitle title="LOG IN" />
       <h3 className="text-light text-center fw-bolder">
         ENTRE EM SUA CONTA PARA GERIR SEU GRUPO PET
@@ -76,7 +78,7 @@ export default function LoginAndPassword() {
               <LoginButton text="Entrar" class="btn-primary"/>
             </div>
             <div className="col-md-8 col-12 mt-3">
-              <Link to="/forgotpassword">
+              <Link href="/login/recover_password">
                 <LoginButton text="Esqueci minha senha" class="btn-warning" />
               </Link>
             </div>
@@ -89,6 +91,6 @@ export default function LoginAndPassword() {
           </div>
         </div>
       </form>
-    </>
+    </LoginTemplate>
   );
 }
