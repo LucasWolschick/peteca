@@ -44,6 +44,10 @@ export class UserRepository {
     });
   }
 
+  async getAllUsers(): Promise<User[]> {
+    return this.prisma.user.findMany({ where: { ativo: true } });
+  }
+
   async DataExists(
     email: string,
     ra?: string,

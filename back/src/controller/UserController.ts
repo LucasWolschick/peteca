@@ -84,7 +84,7 @@ router.post(
     try {
       validateInput(req);
       const { email, password, remember } = req.body;
-      const { user, token } = await userService.loginandredirect(
+      const { user, token } = await userService.loginAndRedirect(
         email,
         password,
         remember
@@ -162,8 +162,10 @@ router.get("/me", async (req: Request, res: Response, next: NextFunction) => {
 
 router.delete(
   "/delete/:id",
+  [param("id").toInt()],
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      validateInput(req);
       const { id } = req.params;
       await userService.deleteUser(Number(id));
       res.status(200).json({ message: "Usuário deletado com sucesso" });
@@ -172,6 +174,46 @@ router.delete(
     }
   }
 );
+
+router.get("/:id", [param("id").toInt(10)], async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    validateInput(req);
+    const user = checkAuthenticated(req);
+    if (
+      (user.id !== (req.params.id as any)) && !(await permissionsService.userHasPermission(user.id, "Gerir Cadastros"))
+    ) {
+      throw new UnauthorizedError(
+        "Você não tem permissão para acessar este recurso."
+      );
+    }
+    const id = parseInt(req.params.id);
+    const usuario = await userService.getUserById(id);
+    delete usuario.senha;
+    res.status(200).json(usuario);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = checkAuthenticated(req);
+    if (
+      !(await permissionsService.userHasPermission(user.id, "Gerir Cadastros"))
+    ) {
+      throw new UnauthorizedError(
+        "Você não tem permissão para acessar este recurso."
+      );
+    }
+    const usuarios = (await userService.getAllUsers()).map((u) => {
+      delete u.senha;
+      return u;
+    });
+    res.status(200).json(usuarios);
+  } catch (e) {
+    next(e);
+  }
+});
 
 init();
 
