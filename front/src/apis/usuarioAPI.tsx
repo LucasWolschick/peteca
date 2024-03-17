@@ -54,7 +54,7 @@ export const UsuarioAPI = {
         });
     },
 
-    getLoggedUser: async function (token: string) {
+    getLoggedUser: async function () {
         return await api.request({
             url: `/api/user/me`,
             method: "GET",
