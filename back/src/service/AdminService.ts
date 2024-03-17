@@ -7,7 +7,7 @@ export class AdminService {
   private backupRepository: BackupRepository;
 
   constructor(prisma: PrismaClient) {
-    this.backupRepository = new BackupRepository(prisma);
+    this.backupRepository = new BackupRepository();
  }
 
 
@@ -73,4 +73,14 @@ export class AdminService {
       console.error('Falha ao realizar o backup:', error);
     }
  }
+
+  async performImport(backupFilePath: string) {
+    try {
+      await this.backupRepository.importBackup(backupFilePath);
+      console.log('Importação do backup realizada com sucesso.');
+    } catch (error) {
+      console.error('Falha na importação do backup:', error);
+    }
+}
+
 }
