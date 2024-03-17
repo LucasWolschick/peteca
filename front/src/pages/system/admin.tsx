@@ -1,8 +1,9 @@
-import Title from "@/app/components/items/system/Title";
+import Title from "@/components/system/Title";
+import SystemTemplate from "./_systemtemplate";
 
 export default function Index() {
     return (
-        <>
+        <SystemTemplate>
             <div className="container-fluid">
                 <Title title={"Administração"} />
                 <div className="row justify-content-between">
@@ -21,6 +22,6 @@ export default function Index() {
                     </div>
                 </div>
             </div>
-        </>
+        </SystemTemplate>
     );
 }

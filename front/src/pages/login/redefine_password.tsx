@@ -1,15 +1,14 @@
 import { faLock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useParams } from "react-router-dom";
-import LoginInput from "../../items/login/LoginInput";
-import LoginButton from "../../items/login/LoginButton";
-import LoginTitle from "../../items/login/LoginTitle";
-import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { useState } from "react";
+import LoginTitle from "@/components/login/LoginTitle";
+import LoginInput from "@/components/login/LoginInput";
+import LoginButton from "@/components/login/LoginButton";
+import LoginTemplate from "./_logintemplate";
+import Link from "next/link";
 
 export default function RedefinePassword() {
+
   return (
-    <>
+    <LoginTemplate>
       <div className="row justify-content-center align-self-center">
         <LoginTitle title="REDEFINIR SENHA" />
 
@@ -27,13 +26,13 @@ export default function RedefinePassword() {
               <LoginButton text="Redefinir senha" class="btn-primary"/>
             </div>
             <div className="col-md-8 col-12 mt-3">
-              <Link to="/">
+              <Link href="/">
                 <LoginButton text="Cancelar" class="btn-danger" />
               </Link>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </LoginTemplate>
   );
 }

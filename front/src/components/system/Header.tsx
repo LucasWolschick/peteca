@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Navigation from "./Navigation";
-import User from "../../items/system/User";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
+import User from "./User";
 
 export default function Header() {
   // The useState here is used to open/close the header below
