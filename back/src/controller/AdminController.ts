@@ -54,10 +54,9 @@ router.post(
       const user = checkAuthenticated(req);
 
       if (!(await permissionsService.userHasPermission(user.id, "admin"))) {
-          res.status(403).json({
-            message: "Você não tem permissão para acessar este recurso.",
-          });
-          return;
+        throw new ForbiddenError(
+          "Você não tem permissão para acessar este recurso."
+        );
       }
 
       validateInput(req);
@@ -75,11 +74,10 @@ router.post(
          const user = checkAuthenticated(req);
  
          if (!(await permissionsService.userHasPermission(user.id, "admin"))) {
-             res.status(403).json({
-               message: "Você não tem permissão para acessar este recurso.",
-             });
-             return;
-         }
+          throw new ForbiddenError(
+            "Você não tem permissão para acessar este recurso."
+          );
+        }
  
          validateInput(req);
  
