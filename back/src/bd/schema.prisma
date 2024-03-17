@@ -20,13 +20,14 @@ model User {
   imagem          String   @db.VarChar
   ativo           Boolean  @default(true)
 
-  permissoes UserPermissoes[]
-  tokens     Token[]
+  permissoes    UserPermissoes[]
+  tokens        Token[]
+  movimentacoes MovimentacaoItem[]
 }
 
 model Permissoes {
   id   Int    @id @default(autoincrement())
-  nome String @db.VarChar()
+  nome String @unique @db.VarChar()
 
   users UserPermissoes[]
 }
@@ -55,16 +56,40 @@ model Item {
   unidadeMedida String @db.VarChar()
   local         String @db.VarChar()
 
-  campos Campos[]
+  movimentacoes MovimentacaoItem[]
+
+  ativo Boolean @default(true)
 }
 
-model Campos {
-  id     Int       @id @default(autoincrement())
-  nome   String    @db.VarChar()
-  numero Float?    @db.Real
-  data   DateTime? @db.Date
-  texto  String?   @db.Text
+// CRIADO: antigaQuantidade = antigaUnidadeMedida=antigoLocal=null
+// ALTERADO: ao menos um campo antigo é diferente do novo
+// REMOVIDO: novoQuantidade = novoUnidadeMedida=novoLocal=null
 
-  item   Item @relation(fields: [itemId], references: [id])
+enum TipoMovimentacaoItem {
+  CRIADO
+  ALTERADO
+  REMOVIDO
+}
+
+model MovimentacaoItem {
+  id   Int      @id @default(autoincrement())
+  data DateTime @db.Date
+
+  antigoNome          String? @db.VarChar()
+  antigaQuantidade    Int?    @db.Integer
+  antigaUnidadeMedida String? @db.VarChar()
+  antigoLocal         String? @db.VarChar()
+
+  novaQuantidade    Int?    @db.Integer
+  novaUnidadeMedida String? @db.VarChar()
+  novoLocal         String? @db.VarChar()
+  novoNome          String? @db.VarChar()
+
+  tipo TipoMovimentacaoItem
+
   itemId Int
+  item   Item @relation(fields: [itemId], references: [id])
+
+  autorId Int
+  autor   User @relation(fields: [autorId], references: [id])
 }

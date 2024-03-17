@@ -3,12 +3,14 @@ import { EmailService } from "./EmailService";
 import { PermissionsService } from "./PermissionsService";
 import { UserService } from "./UserService";
 import { AdminService } from "./AdminService";
+import ItemService from "./ItemService";
 
 export class ServiceManager {
   private static userService: UserService | null = null;
   private static emailService: EmailService | null = null;
   private static permissionsService: PermissionsService | null = null;
   private static adminService: AdminService | null = null;
+  private static itemService: ItemService | null = null;
 
   static getUserService(): UserService {
     if (!this.userService) this.userService = new UserService();
@@ -27,6 +29,11 @@ export class ServiceManager {
     if (!this.permissionsService)
       this.permissionsService = new PermissionsService();
     return this.permissionsService;
+  }
+
+  static getItemService(): ItemService {
+    if (!this.itemService) this.itemService = new ItemService();
+    return this.itemService;
   }
 
   static getAdminService(): AdminService {

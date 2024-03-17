@@ -3,6 +3,7 @@ import { ServiceManager } from "../service/ServiceManager";
 import { query } from "express-validator";
 import { checkAuthenticated } from "./UserController";
 import { validateInput } from "../validateInput";
+import { ForbiddenError } from "../errors";
 
 const adminService = ServiceManager.getAdminService();
 const permissionsService = ServiceManager.getPermissionsService();
@@ -26,10 +27,9 @@ router.get(
       const user = checkAuthenticated(req);
 
       if (!(await permissionsService.userHasPermission(user.id, "admin"))) {
-        res.status(403).json({
-          message: "Você não tem permissão para acessar este recurso.",
-        });
-        return;
+        throw new ForbiddenError(
+          "Você não tem permissão para acessar este recurso."
+        );
       }
 
       validateInput(req);

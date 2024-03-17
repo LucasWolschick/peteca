@@ -1,4 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
+import { TipoMovimentacaoItem } from "@prisma/client";
+
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 (async () => {
@@ -620,14 +622,6 @@ const prisma = new PrismaClient();
       quantidade: 3,
       unidadeMedida: "UN",
       local: "Armário do Puff",
-      campos: {
-        create: [
-          {
-            nome: "Instruções de Uso",
-            texto: "Usar e guardar com cuidado",
-          },
-        ],
-      },
     },
   });
 
@@ -637,14 +631,6 @@ const prisma = new PrismaClient();
       quantidade: 1,
       unidadeMedida: "UN",
       local: "Armario de Livros",
-      campos: {
-        create: [
-          {
-            nome: "Data de recebimento",
-            data: new Date("1998-02-03"),
-          },
-        ],
-      },
     },
   });
 
@@ -654,17 +640,66 @@ const prisma = new PrismaClient();
       quantidade: 20,
       unidadeMedida: "UN",
       local: "Caixas organizadoras",
-      campos: {
-        create: [
-          {
-            nome: "Quantidade de usos restantes",
-            numero: 10,
-          },
-          {
-            nome: "Instruções de Uso",
-            texto: "Lavar após utilizar",
-          },
-        ],
+    },
+  });
+
+  await prisma.movimentacaoItem.create({
+    data: {
+      data: new Date("2023-09-15"),
+      tipo: TipoMovimentacaoItem.CRIADO,
+      novaQuantidade: 10,
+      novoNome: "wow",
+      novoLocal: "o que",
+      novaUnidadeMedida: "kg",
+      item: {
+        connect: {
+          id: 1,
+        },
+      },
+      autor: {
+        connect: {
+          id: 1,
+        },
+      },
+    },
+  });
+
+  await prisma.movimentacaoItem.create({
+    data: {
+      data: new Date("2023-09-15"),
+      tipo: TipoMovimentacaoItem.ALTERADO,
+      antigaQuantidade: 10,
+      novaQuantidade: 3,
+      item: {
+        connect: {
+          id: 2,
+        },
+      },
+      autor: {
+        connect: {
+          id: 1,
+        },
+      },
+    },
+  });
+
+  await prisma.movimentacaoItem.create({
+    data: {
+      data: new Date("2023-09-15"),
+      tipo: TipoMovimentacaoItem.REMOVIDO,
+      antigaQuantidade: 3,
+      antigoNome: "Apagador",
+      antigoLocal: "Quadro",
+      antigaUnidadeMedida: "UN",
+      item: {
+        connect: {
+          id: 3,
+        },
+      },
+      autor: {
+        connect: {
+          id: 1,
+        },
       },
     },
   });
