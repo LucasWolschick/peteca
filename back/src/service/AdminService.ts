@@ -1,7 +1,16 @@
 import * as fs from "fs";
 import * as readline from "readline";
+import BackupRepository from "../repository/BackupRespository";
+import { PrismaClient } from "@prisma/client";
 
 export class AdminService {
+  private backupRepository: BackupRepository;
+
+  constructor(prisma: PrismaClient) {
+    this.backupRepository = new BackupRepository(prisma);
+ }
+
+
   async getLogs(
     from: Date,
     to: Date,
@@ -42,6 +51,7 @@ export class AdminService {
     for await (const line of rl) {
       const log = JSON.parse(line);
       const date = new Date(log.timestamp ?? 0);
+      console.log(log, date);
 
       if (from <= date && date <= to && levels[log.level] >= levels[level]) {
         logs.push(log);
@@ -54,4 +64,13 @@ export class AdminService {
 
     return logs;
   }
+
+  async performBackup() {
+    try {
+      await this.backupRepository.backupDatabase();
+      console.log('Backup realizado com sucesso.');
+    } catch (error) {
+      console.error('Falha ao realizar o backup:', error);
+    }
+ }
 }
