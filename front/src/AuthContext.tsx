@@ -11,39 +11,60 @@ interface LoginData {
   };
 }
 
+// undefined if indeterminate, null if not logged, LoginData if logged
 interface AuthContextData {
-  loggedUser: LoginData | null;
-  setLoggedUser: React.Dispatch<React.SetStateAction<LoginData | null>>;
+  loggedUser: LoginData | null | undefined;
+  setLoggedUser: React.Dispatch<
+    React.SetStateAction<LoginData | null | undefined>
+  >;
 }
 
 export const AuthContext = createContext<AuthContextData>({
-  loggedUser: null,
+  loggedUser: undefined,
   setLoggedUser: () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [loggedUser, setLoggedUser] = useState(null as LoginData | null);
-  
+  const [loggedUser, setLoggedUser] = useState(
+    undefined as LoginData | null | undefined
+  );
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token && !loggedUser) {
-      let user = UsuarioAPI.getLoggedUser().then((response) => {
-        const user = {
-          id: response.data.id,
-          nome: response.data.nome,
-          email: response.data.email,
-        };
-        setLoggedUser({ token, user: user });
-        localStorage.setItem("token", token);
-      }).catch((error) => {
-        localStorage.removeItem("token");
-      });
-    } else if (!token && loggedUser) {
-      localStorage.setItem("token", loggedUser.token);
+
+    if (loggedUser === undefined) {
+      if (!token) {
+        // not logged in
+        setLoggedUser(null);
+      } else {
+        // attempt to log in
+        let user = UsuarioAPI.getLoggedUser()
+          .then((response) => {
+            const user = {
+              id: response.data.id,
+              nome: response.data.nome,
+              email: response.data.email,
+            };
+            localStorage.setItem("token", token);
+            setLoggedUser({ token, user: user });
+          })
+          .catch((error) => {
+            localStorage.removeItem("token");
+            setLoggedUser(null);
+          });
+      }
+    } else if (loggedUser === null) {
+      // not logged in, make sure we sync with localStorage
+      localStorage.removeItem("token");
+    } else {
+      if (!token) {
+        // logged in, but no token in localStorage
+        localStorage.setItem("token", loggedUser.token);
+      }
     }
-  });
+  }, [loggedUser]);
 
   return (
     <AuthContext.Provider value={{ loggedUser, setLoggedUser }}>

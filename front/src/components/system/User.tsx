@@ -23,7 +23,6 @@ export default function User() {
       <div className="d-flex flex-column">
         <b>{loggedUser.user.nome}</b>
         <Link href={"/login"} onClick={() => {
-          localStorage.removeItem("token");
           setLoggedUser(null);
         }}>SAIR</Link>
       </div>
