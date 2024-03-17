@@ -1,12 +1,13 @@
-import Title from "@/app/components/items/system/Title";
+import Title from "@/components/system/Title";
 import { faCheck, faUserCircle, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SystemTemplate from "../_systemtemplate";
 
 // This page gets the informations about one user
 // It shows profile picture, name, e-mail, born date and all the permissions the user has
 export default function Details() {
     return (
-        <>
+        <SystemTemplate>
             <div className="container-fluid">
                 <Title title="Usuário" />
             </div>
@@ -63,6 +64,6 @@ export default function Details() {
                     </table>
                 </div>
             </div>
-        </>
+        </SystemTemplate>
     );
 }

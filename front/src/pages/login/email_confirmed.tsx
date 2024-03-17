@@ -1,6 +1,8 @@
+import LoginTemplate from "./_logintemplate";
+
 export default function RedefinitionConfirmation() {
   return (
-    <>
+    <LoginTemplate>
       <h4 className="text-light text-center">
         O seu endereço de e-mail foi confirmado com sucesso!
       </h4>
@@ -9,6 +11,6 @@ export default function RedefinitionConfirmation() {
           Voltar para login
         </button>
       </div>
-    </>
+    </LoginTemplate>
   );
 }

@@ -1,6 +1,7 @@
 // The component User shows a photo of the current logged user in the system, with a <a> tag
 
-import { Link } from "react-router-dom";
+import Link from "next/link";
+
 
 // The <a> tag goes to logout
 export default function User() {
@@ -16,7 +17,7 @@ export default function User() {
 
       <div className="d-flex flex-column">
         <b>Wolschick</b>
-        <Link to={"/login"}>SAIR</Link>
+        <Link href={"/login"}>SAIR</Link>
       </div>
     </div>
   );
