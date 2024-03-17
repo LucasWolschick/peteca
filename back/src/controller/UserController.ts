@@ -117,7 +117,7 @@ router.post(
 
 router.post(
   "/resetpassword/:token",
-  param("token").notEmpty(),
+  [param("token").notEmpty(), body("senha").notEmpty()],
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       validateInput(req);

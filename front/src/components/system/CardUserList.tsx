@@ -13,12 +13,12 @@ export default function CardUserList(props: CardUserListProps) {
                 </div>
                 <div className="d-flex col-12 col-lg-6 align-items-center justify-content-md-end justify-content-center mt-2 mt-md-0">
                     <label className="me-3">{props.email}</label>
-                    <a href="#" className="text-dark">
+                    <button className="text-dark" onClick={() => props.editUser()}>
                         <FontAwesomeIcon icon={faPen} size="1x" />
-                    </a>
-                    <a href="#" className="text-dark ms-3">
+                    </button>
+                    <button className="text-dark ms-3" onClick={() => props.viewUser()}>
                         <FontAwesomeIcon icon={faEye} size="1x" />
-                    </a>
+                    </button>
                 </div>
             </div>
         </>
@@ -27,5 +27,7 @@ export default function CardUserList(props: CardUserListProps) {
 
 export interface CardUserListProps {
     name: string,
-    email: string
+    email: string,
+    editUser: () => void,
+    viewUser: () => void,
 }
