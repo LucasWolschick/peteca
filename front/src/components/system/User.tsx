@@ -1,10 +1,15 @@
 // The component User shows a photo of the current logged user in the system, with a <a> tag
 
+import { AuthContext } from "@/AuthContext";
 import Link from "next/link";
+import { useContext } from "react";
 
 
 // The <a> tag goes to logout
 export default function User() {
+  const {loggedUser, setLoggedUser} = useContext(AuthContext);
+  if (!loggedUser) return null;
+
   return (
     <div className="d-flex flex-row justify-content-between align-items-center text-purple text-decoration-none p-3">
       <img
@@ -16,8 +21,11 @@ export default function User() {
       />
 
       <div className="d-flex flex-column">
-        <b>Wolschick</b>
-        <Link href={"/login"}>SAIR</Link>
+        <b>{loggedUser.user.nome}</b>
+        <Link href={"/login"} onClick={() => {
+          localStorage.removeItem("token");
+          setLoggedUser(null);
+        }}>SAIR</Link>
       </div>
     </div>
   );

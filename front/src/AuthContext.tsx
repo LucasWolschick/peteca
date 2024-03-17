@@ -1,24 +1,53 @@
 // AuthContext.tsx
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { UsuarioAPI } from "./apis/usuarioAPI";
 
-interface AuthContextData {
- isLogged: boolean;
- setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+interface LoginData {
+  token: string;
+  user: {
+    id: number;
+    nome: string;
+    email: string;
+  };
 }
 
-const AuthContext = createContext<AuthContextData>({
- isLogged: false,
- setIsLogged: () => {},
+interface AuthContextData {
+  loggedUser: LoginData | null;
+  setLoggedUser: React.Dispatch<React.SetStateAction<LoginData | null>>;
+}
+
+export const AuthContext = createContext<AuthContextData>({
+  loggedUser: null,
+  setLoggedUser: () => {},
 });
 
-export const useAuth = () => useContext(AuthContext);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [loggedUser, setLoggedUser] = useState(null as LoginData | null);
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token && !loggedUser) {
+      let user = UsuarioAPI.getLoggedUser().then((response) => {
+        const user = {
+          id: response.data.id,
+          nome: response.data.nome,
+          email: response.data.email,
+        };
+        setLoggedUser({ token, user: user });
+        localStorage.setItem("token", token);
+      }).catch((error) => {
+        localStorage.removeItem("token");
+      });
+    } else if (!token && loggedUser) {
+      localStorage.setItem("token", loggedUser.token);
+    }
+  });
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
- const [isLogged, setIsLogged] = useState(false);
-
- return (
-        <AuthContext.Provider value={{ isLogged, setIsLogged }}>
-            {children}
-        </AuthContext.Provider>
- );
+  return (
+    <AuthContext.Provider value={{ loggedUser, setLoggedUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

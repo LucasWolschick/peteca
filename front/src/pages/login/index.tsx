@@ -1,8 +1,8 @@
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { useAuth } from "@/AuthContext";
+import { AuthContext } from "@/AuthContext";
 import LoginTitle from "@/components/login/LoginTitle";
 import LoginInput from "@/components/login/LoginInput";
 import LoginButton from "@/components/login/LoginButton";
@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 export default function LoginAndPassword() {
 
   const router = useRouter()
-  const { setIsLogged } = useAuth();
+  const { setLoggedUser } = useContext(AuthContext);
   const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (e: any) => {
@@ -31,22 +31,18 @@ export default function LoginAndPassword() {
 
     try {
       const result = await UsuarioAPI.login(email, password, remember);
-      console.log(result);
-      // Redireciona o usuário para a página desejada após o login
+      setLoggedUser({
+        token: result.data.token.token,
+        user: {
+          id: result.data.user.id,
+          nome: result.data.user.nome,
+          email: result.data.user.email,
+        },
+      });
       router.push("/system");
-      setIsLogged(true);
     } catch (error) {
       console.error(error);
     }
-
-    console.log({email, password, remember});
-    const result = UsuarioAPI.login(email, password, remember);
-    result.then((response) => {
-      console.log(response);
-    }).catch((error) => {
-      console.error(error);
-      setShowToast(true);
-    });
   }
 
   return (

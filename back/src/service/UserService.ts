@@ -214,7 +214,7 @@ export class UserService {
     await this.userRepository.update(admin.id, { senha: hashedPassword });
   }
 
-  async loginandredirect(email: string, password: string, remember: boolean) {
+  async loginAndRedirect(email: string, password: string, remember: boolean) {
     const { user, token } = await this.loginToken(email, password, remember);
 
     if (user.verificado) {
@@ -238,5 +238,19 @@ export class UserService {
     await this.userRepository.DeleteUserPermissions(user.id);
     await this.tokenRepository.deleteAllUserTokens(user.id);
     await this.userRepository.DeleteUserById(user.id);
+  }
+
+  async getUserById(id: number): Promise<User> {
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundError("Usuário não encontrado");
+    }
+
+    return user;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return this.userRepository.getAllUsers();
   }
 }

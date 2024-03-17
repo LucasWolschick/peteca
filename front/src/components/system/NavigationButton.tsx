@@ -10,7 +10,7 @@ export default function NavigationButton({ icon, text, route }: NavigationButton
     <>
       <li>
         <Link
-          href={"/" + route}
+          href={route}
           className="nav-link text-purple gap-3 d-flex align-items-center"
         >
           <FontAwesomeIcon icon={icon} size="1x" />
