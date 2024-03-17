@@ -77,7 +77,7 @@ export const UsuarioAPI = {
 
     getAllUsers: async function () {
         return await api.request({
-            url: `/api/user`,
+            url: `/api/user/`,
             method: "GET",
         });
     },
