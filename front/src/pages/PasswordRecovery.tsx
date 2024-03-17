@@ -1,10 +1,8 @@
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import LoginInput from "../../items/login/LoginInput";
-import LoginTitle from "../../items/login/LoginTitle";
-import LoginButton from "../../items/login/LoginButton";
+import LoginInput from "@/components/login/LoginInput";
+import LoginTitle from "@/components/login/LoginTitle";
+import LoginButton from "@/components/login/LoginButton";
 import { Link, useNavigate } from "react-router-dom";
-import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { useState } from "react";
 
 export default function PasswordRecovery() {
   return (

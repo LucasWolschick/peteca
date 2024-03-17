@@ -1,4 +1,4 @@
-import Title from "@/app/components/items/system/Title";
+import Title from "@/components/system/Title"
 import { faCheck, faUserCircle, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

@@ -1,5 +1,5 @@
-import CardUserList from "@/app/components/items/system/CardUserList";
-import Title from "@/app/components/items/system/Title";
+import CardUserList from "@/components/system/CardUserList";
+import Title from "@/components/system/Title";
 import { faPen, faUser, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

@@ -17,3 +17,10 @@ const errorHandler = (error: any) => {
 api.interceptors.response.use(undefined, (error) => {
     return errorHandler(error);
 })
+
+api.interceptors.request.use((config) => {
+    if (localStorage.getItem('token')) {
+        config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+    }
+    return config;
+});

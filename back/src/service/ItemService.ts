@@ -2,17 +2,14 @@ import logger from "../logger";
 import RepositoryService from "../service/RepositoryService";
 
 export default class ItemService {
-  static getItems() {
-    throw new Error("Method not implemented.");
-  }
   private itemRepository;
-
-  constructor() {
-    this.itemRepository = RepositoryService.getItemRepository();
-  }
 
   async getItems() {
     return this.itemRepository.getItems();
+  }
+
+  constructor() {
+    this.itemRepository = RepositoryService.getItemRepository();
   }
 
   async updateItems(

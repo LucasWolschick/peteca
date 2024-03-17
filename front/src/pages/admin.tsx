@@ -1,4 +1,4 @@
-import Title from "@/app/components/items/system/Title";
+import Title from "@/components/system/Title";
 
 export default function Index() {
     return (

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import Dialog from "@/app/components/items/system/Dialog";
-import Title from "@/app/components/items/system/Title";
+import Dialog from "@/pages/components/items/system/Dialog";
+import Title from "@/pages/components/items/system/Title";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMask } from "@react-input/mask";

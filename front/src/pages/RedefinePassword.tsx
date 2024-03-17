@@ -1,11 +1,8 @@
 import { faLock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useParams } from "react-router-dom";
-import LoginInput from "../../items/login/LoginInput";
-import LoginButton from "../../items/login/LoginButton";
-import LoginTitle from "../../items/login/LoginTitle";
-import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { useState } from "react";
+import LoginInput from "@/components/login/LoginInput";
+import LoginTitle from "@/components/login/LoginTitle";
+import LoginButton from "@/components/login/LoginButton";
 
 export default function RedefinePassword() {
   return (

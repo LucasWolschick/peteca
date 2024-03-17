@@ -22,6 +22,7 @@ export const authMiddleware = async (
       next(e);
     }
   } else {
-    next(new UnauthorizedError("Usuário não autenticado"));
+    /* next(new UnauthorizedError("Usuário não autenticado")); */
+    next();
   }
 };

@@ -1,10 +1,11 @@
-import DialogCreateItem from "@/app/components/items/system/DialogCreateItem";
-import DialogEditItem from "@/app/components/items/system/DialogEditItem";
-import Item from "@/app/components/items/system/Item";
-import Title from "@/app/components/items/system/Title";
+import DialogCreateItem from "@/components/system/DialogCreateItem";
+import DialogEditItem from "@/components/system/DialogEditItem";
+import Item from "@/components/system/Item";
+import Title from "@/components/system/Title";
 import { useState } from "react";
+import { ItemAPI } from "@/apis/itemsAPI";
 
-export default function Index() {
+export default function Estoque() {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filterOption, setFilterOption] = useState('');  
@@ -44,21 +45,6 @@ export default function Index() {
                             </tr>
                         </thead>
                         <tbody>
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
-                            <Item name="Sudoku" amount={100} storage="Armário do PET" />
                         </tbody>
                     </table>
                 </div>

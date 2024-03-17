@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Navigation from "./Navigation";
-import User from "../../items/system/User";
+import User from "./User";
 
 // The sidebar appears when it is a bigger device, if it is mobile shows the header
 export default function Sidebar() {

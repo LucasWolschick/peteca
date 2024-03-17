@@ -1,5 +1,4 @@
 import Image from "next/image";
-import LoginRoutes from "./LoginRoutes";
 import LoginAndPassword from "./LoginAndPassword";
 import PasswordRecovery from "./PasswordRecovery";
 import RedefinePassword from "./RedefinePassword";
@@ -15,7 +14,7 @@ export default function LoginTemplate() {
           <Image src={"/logo.svg"} alt="Peteca" width={362} height={120} />
         </div>
         <div>
-          <LoginRoutes />
+          <LoginAndPassword />
         </div>
       </div>
     </>

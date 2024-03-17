@@ -1,19 +1,17 @@
+import LoginInput from "@/components/login/LoginInput";
+import LoginTitle from "@/components/login/LoginTitle";
+import LoginButton from "@/components/login/LoginButton";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import LoginInput from "../../items/login/LoginInput";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
-import LoginButton from "../../items/login/LoginButton";
-import LoginTitle from "../../items/login/LoginTitle";
 import { Link, useNavigate } from "react-router-dom";
 import { use, useState } from "react";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../AuthContext";
 
 // LogInAndPassword is the page to login and enter the Forgot Password and Reset Password pages
 export default function LoginAndPassword() {
 
-  const navigate = useNavigate();
-  const { setIsLogged } = useAuth();
+  const { setIsLogged, setUser, setToken } = useAuth();
   const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (e: any) => {
@@ -30,8 +28,11 @@ export default function LoginAndPassword() {
     try {
       const result = await UsuarioAPI.login(email, password, remember);
       console.log(result);
-      // Redireciona o usuário para a página desejada após o login
-      navigate("/inicio");
+
+      setUser(result.data.user);
+      setToken(result.data.token.token);
+
+      // Redireciona o usuário para a página desejada após o login 
       setIsLogged(true);
     } catch (error) {
       console.error(error);
