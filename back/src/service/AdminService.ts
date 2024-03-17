@@ -1,12 +1,11 @@
 import * as fs from "fs";
 import * as readline from "readline";
 import BackupRepository from "../repository/BackupRespository";
-import { PrismaClient } from "@prisma/client";
 
 export class AdminService {
   private backupRepository: BackupRepository;
 
-  constructor(prisma: PrismaClient) {
+  constructor() {
     this.backupRepository = new BackupRepository();
  }
 

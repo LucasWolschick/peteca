@@ -1,17 +1,19 @@
+import { PrismaClient } from "@prisma/client";
+import { env } from "process";
+
 const { exec } = require('child_process');
 require('dotenv').config({ path: '../.env' });
 
 class BackupRepository {
+    private prisma: PrismaClient;
+
     async backupDatabase() {
-        const dbName = process.env.DBNAME;
-        const user = process.env.USER;
-        const password = process.env.PASSWORD;
-        const host = process.env.HOST;
-        const port = process.env.PORT || '5432';
+        const connectionDetails = process.env.DATABASE_URL.match(/postgresql:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
+        const [user, password, host, port, dbName] = connectionDetails.slice(1);
 
         process.env.PGPASSWORD = password;
 
-        const backupCommand = `pg_dump -U ${user} -h ${host} -p ${port} -d ${dbName} -f backup.sql`;
+        const backupCommand = `"${env.PG_PATH}pg_dump" -U ${user} -h ${host} -p ${port} -d ${dbName} -F c -f backup.sql`;
 
         return new Promise<void>((resolve, reject) => {
             exec(backupCommand, (error, stdout, stderr) => {
@@ -34,15 +36,12 @@ class BackupRepository {
     }
 
     async importBackup(backupFilePath: string) {
-        const dbName = process.env.DBNAME;
-        const user = process.env.USER;
-        const password = process.env.PASSWORD;
-        const host = process.env.HOST;
-        const port = process.env.PORT || '5432';
+        const connectionDetails = process.env.DATABASE_URL.match(/postgresql:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
+        const [user, password, host, port, dbName] = connectionDetails.slice(1);
 
         process.env.PGPASSWORD = password;
 
-        const importCommand = `psql -U ${user} -h ${host} -p ${port} -d ${dbName} -f ${backupFilePath}`;
+        const importCommand = `"${env.PG_PATH}pg_restore" -U ${user} -h ${host} -p ${port} -d ${dbName} -c -1 ${backupFilePath}`;
 
         return new Promise<void>((resolve, reject) => {
             exec(importCommand, (error, stdout, stderr) => {
