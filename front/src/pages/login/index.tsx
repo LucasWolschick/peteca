@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 export default function LoginAndPassword() {
 
   const router = useRouter()
-  const { setIsLogged } = useAuth();
+  const { setIsLogged, showToast2, setShowToast2 } = useAuth();
   const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (e: any) => {
@@ -86,6 +86,12 @@ export default function LoginAndPassword() {
               <div className="toast-body d-flex justify-content-between align-items-center">
                 Login ou senha inválidos.
                 <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={() => setShowToast(false)}></button>
+              </div>
+            </div>
+            <div className={`toast ${showToast2 ? 'show' : ''} mt-3 bg-success text-white`} role="alert" aria-live="assertive" aria-atomic="true">
+              <div className="toast-body d-flex justify-content-between align-items-center">
+                E-mail enviado com sucesso!
+                <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={() => setShowToast2(false)}></button>
               </div>
             </div>
           </div>

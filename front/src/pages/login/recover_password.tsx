@@ -4,8 +4,20 @@ import LoginInput from "@/components/login/LoginInput";
 import LoginButton from "@/components/login/LoginButton";
 import LoginTemplate from "./_logintemplate";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useAuth } from "@/AuthContext";
 
 export default function PasswordRecovery() {
+
+  const router = useRouter();
+  const { setShowToast2 } = useAuth();
+
+  const hanleClick = () => {
+    setShowToast2(true);
+    router.push("/");
+  }
+
+
   return (
     <LoginTemplate>
       <LoginTitle title="ESQUECI MINHA SENHA" />
@@ -24,7 +36,7 @@ export default function PasswordRecovery() {
           </div>
           <div className="row justify-content-center align-self-center m-3">
             <div className="col-md-8 col-12">
-              <LoginButton text="Enviar" class="btn-primary"/>
+              <LoginButton text="Enviar" class="btn-primary" onClick={hanleClick}/>
             </div>
             <div className="col-md-8 col-12 mt-3">
               <Link href="/">
