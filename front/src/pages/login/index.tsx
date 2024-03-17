@@ -1,8 +1,8 @@
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { useAuth } from "@/AuthContext";
+import { AuthContext } from "@/AuthContext";
 import LoginTitle from "@/components/login/LoginTitle";
 import LoginInput from "@/components/login/LoginInput";
 import LoginButton from "@/components/login/LoginButton";
@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 export default function LoginAndPassword() {
 
   const router = useRouter()
-  const { setLoggedUser } = useAuth();
+  const { setLoggedUser } = useContext(AuthContext);
   const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (e: any) => {

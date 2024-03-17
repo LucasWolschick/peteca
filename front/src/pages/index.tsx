@@ -1,7 +1,18 @@
+import { useRouter } from "next/router";
 import LoginAndPassword from "./login";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "@/AuthContext";
 
 export default function Index() {
-  return (
-    <LoginAndPassword />
-  );
+  const router = useRouter();
+  const isLogged = useContext(AuthContext).loggedUser;
+
+  useEffect(() => {
+    if (isLogged) {
+      router.push("/login");
+    } else {
+      router.push("/system");
+    }
+  });
+  return null;
 }

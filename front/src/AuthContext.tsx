@@ -16,12 +16,10 @@ interface AuthContextData {
   setLoggedUser: React.Dispatch<React.SetStateAction<LoginData | null>>;
 }
 
-const AuthContext = createContext<AuthContextData>({
+export const AuthContext = createContext<AuthContextData>({
   loggedUser: null,
   setLoggedUser: () => {},
 });
-
-export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -33,12 +31,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (token && !loggedUser) {
       let user = UsuarioAPI.getLoggedUser().then((response) => {
         const user = {
-          id: response.data.user.id,
-          nome: response.data.user.nome,
-          email: response.data.user.email,
+          id: response.data.id,
+          nome: response.data.nome,
+          email: response.data.email,
         };
-        setLoggedUser({ token: response.data.token.token, user: user });
-        localStorage.setItem("token", response.data.token.token);
+        setLoggedUser({ token, user: user });
+        localStorage.setItem("token", token);
       }).catch((error) => {
         localStorage.removeItem("token");
       });
