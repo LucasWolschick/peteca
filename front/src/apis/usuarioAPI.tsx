@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api } from "./configs/axiosConfigs";
+import { Permissions } from "./permissionsAPI";
 
 export interface User {
   id: number;
@@ -72,7 +73,9 @@ export const UsuarioAPI = {
     email: string,
     senha: string,
     remember: boolean
-  ): Promise<AxiosResponse<{ token: Token; user: User }>> {
+  ): Promise<
+    AxiosResponse<{ token: Token; user: User; permissions: Permissions }>
+  > {
     const res = await api.request({
       url: `/api/user/login`,
       method: "POST",
