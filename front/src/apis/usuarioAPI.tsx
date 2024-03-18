@@ -117,7 +117,7 @@ export const UsuarioAPI = {
       url: `/api/user/resetpassword/${token}`,
       method: "POST",
       data: {
-        password: senha,
+        senha,
       },
     });
   },
