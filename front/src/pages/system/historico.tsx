@@ -46,14 +46,12 @@ export default function Historico() {
         <Title title="Histórico de Transações" />
         <HistoryTable />
         <div className="mt-3 d-flex justify-content-center">
-          <button className="btn btn-info btn-sm rounded-5 col-lg-4 col-md-5 col-10 mt-2 mt-md-0 ">
-            <Link
-              href="/system/estoque"
-              className="text-decoration-none text-black"
-            >
-              Voltar
-            </Link>
-          </button>
+          <Link
+            href="/system/estoque"
+            className="text-decoration-none text-black btn btn-info btn-sm rounded-5 col-lg-4 col-md-5 col-10 mt-2 mt-md-0 "
+          >
+            Voltar
+          </Link>
         </div>
       </div>
     </SystemTemplate>
