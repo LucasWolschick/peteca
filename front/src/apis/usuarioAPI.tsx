@@ -46,7 +46,6 @@ export const UsuarioAPI = {
   register: async function (
     nome: string,
     email: string,
-    senha: string,
     ra?: string,
     matricula?: string,
     aniversario?: Date
@@ -57,7 +56,6 @@ export const UsuarioAPI = {
       data: {
         nome,
         email,
-        senha,
         ra,
         matricula,
         aniversario: aniversario?.toISOString(),

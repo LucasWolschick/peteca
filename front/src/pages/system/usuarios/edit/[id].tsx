@@ -83,7 +83,7 @@ export default function Create() {
     const birthdate = new Date((e.currentTarget as any).birthdate.value);
 
     if (criando) {
-      UsuarioAPI.register(name, email, email, ra, matricula, birthdate)
+      UsuarioAPI.register(name, email, ra, matricula, birthdate)
         .then((res) => {
           const id = res.data.id;
           PermissionsAPI.setUserPermissions(id, userPerms).then((res) => {

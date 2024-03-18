@@ -13,14 +13,15 @@ const permissionsService = ServiceManager.getPermissionsService();
 
 const router = express.Router();
 
-const cadastroValidator = [
+const atualizaValidator = [
   body("nome").notEmpty(),
   body("ra").optional().notEmpty(),
   body("matricula").optional({ checkFalsy: true }),
   body("email").isEmail(),
-  body("senha").notEmpty(),
   body("aniversario").optional().isISO8601(),
 ];
+
+const cadastroValidator = [...atualizaValidator];
 
 export function checkAuthenticated(req: any): User {
   if (!req.user) {
@@ -55,7 +56,7 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
       ra: req.body.ra,
       matricula: req.body.matricula,
       email: req.body.email,
-      senha: req.body.senha,
+      senha: "",
       data_nascimento: new Date(req.body.aniversario || "2000-01-01"),
 
       ingresso: new Date(),
@@ -218,7 +219,7 @@ router.get(
 
 router.put(
   "/:id",
-  [param("id").toInt(10), ...cadastroValidator],
+  [param("id").toInt(10), ...atualizaValidator],
   async (req, res, next) => {
     try {
       validateInput(req);
@@ -239,7 +240,6 @@ router.put(
         ra: req.body.ra,
         matricula: req.body.matricula,
         email: req.body.email,
-        senha: req.body.senha,
         data_nascimento: req.body.aniversario,
       };
       await userService.updateUser(req.params.id, updatedUser);
