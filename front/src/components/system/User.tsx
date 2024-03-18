@@ -1,6 +1,7 @@
 // The component User shows a photo of the current logged user in the system, with a <a> tag
 
 import { AuthContext } from "@/AuthContext";
+import { UsuarioAPI } from "@/apis/usuarioAPI";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -27,6 +28,7 @@ export default function User() {
         <Link
           href={"/login"}
           onClick={() => {
+            UsuarioAPI.logout().catch(() => {});
             setLoggedUser(null);
           }}
         >

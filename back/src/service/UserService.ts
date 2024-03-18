@@ -266,4 +266,8 @@ export class UserService {
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.getAllUsers();
   }
+
+  async logout(user: User): Promise<void> {
+    await this.tokenRepository.deleteAllUserTokens(user.id);
+  }
 }

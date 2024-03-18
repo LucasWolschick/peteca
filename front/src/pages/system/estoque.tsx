@@ -17,6 +17,13 @@ export default function Index() {
     item.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const [refresh, setRefresh] = useState(0);
+
+  const handleRefresh = () => {
+    setSelectItems(new Set<Item>());
+    setRefresh((s) => s + 1);
+  };
+
   useEffect(() => {
     const fetchItems = async () => {
       const response = await itemsAPI.getitems();
@@ -24,7 +31,7 @@ export default function Index() {
     };
 
     fetchItems();
-  }, []);
+  }, [refresh]);
 
   const sortItems = (option: string, items: Item[]) => {
     let sortedItems = [...items];
@@ -87,7 +94,7 @@ export default function Index() {
             <tbody>
               {filteredItems.map((item: Item) => (
                 <ItemEntry
-                  key={item.id}
+                  key={refresh + "" + item.id}
                   name={item.nome}
                   amount={item.quantidade}
                   storage={item.local}
@@ -114,19 +121,23 @@ export default function Index() {
             buttonText={"Adicionar item"}
             text={"a"}
             onCreate={(item) =>
-              itemsAPI.criar(
-                item.nome,
-                item.quantidade,
-                item.unidadeMedida,
-                item.local
-              )
+              itemsAPI
+                .criar(
+                  item.nome,
+                  item.quantidade,
+                  item.unidadeMedida,
+                  item.local
+                )
+                .then((_) => handleRefresh())
             }
+            refresh={handleRefresh}
           />
           <DialogEditItem
             title={"Editar item"}
             buttonType={"btn-warning"}
             buttonText={"Editar item"}
             itens={selectedItems}
+            refresh={handleRefresh}
           />
         </div>
       </div>

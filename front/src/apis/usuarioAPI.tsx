@@ -92,6 +92,15 @@ export const UsuarioAPI = {
     return res;
   },
 
+  logout: async function (): Promise<AxiosResponse<{}>> {
+    const res = await api.request({
+      url: `/api/user/logout`,
+      method: "POST",
+    });
+
+    return res;
+  },
+
   confirmEmail: async function (token: string): Promise<AxiosResponse<{}>> {
     return await api.request({
       url: `/api/user/confirm/${token}`,
