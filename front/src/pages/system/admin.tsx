@@ -76,7 +76,7 @@ export default function Index() {
               </button>
             </div>
           </div>
-          <div className="col-lg-7">
+          <div className="col-lg-7 mt-3 mt-lg-0">
             <div className="table-responsive bg-white">
               <table className="table table-sm table-striped">
                 <thead className="sticky-top">
