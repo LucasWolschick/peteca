@@ -40,7 +40,7 @@ export default function LoginAndPassword() {
         userPermissions: result.data.permissions,
       });
 
-      router.push("/system");
+      router.push("/system/inicio");
     } catch (error: any) {
       setShowToast(
         "Falha ao realizar login: " + error.request

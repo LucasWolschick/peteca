@@ -12,7 +12,7 @@ export default function Title(props: TitleProps) {
     <>
       <Link
         className="text-warning text-decoration-none d-flex align-items-center"
-        href="./.."
+        href="/system/inicio"
       >
         <FontAwesomeIcon icon={faChevronLeft} size="2x" /> Voltar
       </Link>
