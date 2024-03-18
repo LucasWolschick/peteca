@@ -7,12 +7,14 @@ export default function CardUserList(props: CardUserListProps) {
   return (
     <>
       <div className="bg-light-gray border-0 rounded-0 row align-items-center justify-content-between m-3 text-dark">
-        <div className="d-flex col-12 col-lg-6 align-items-center justify-content-start ">
+        <div className="d-flex col-12 col-lg-5 col-sm-6 align-items-center justify-content-sm-start justify-content-center">
           <FontAwesomeIcon icon={faUserCircle} size="3x" />
           <label className="ms-3">{props.name}</label>
         </div>
-        <div className="d-flex col-12 col-lg-6 align-items-center justify-content-md-end justify-content-center mt-2 mt-md-0">
-          <label className="me-3">{props.email}</label>
+        <div className="d-flex col-12 col-lg-5 col-sm-8 align-items-center justify-content-lg-start  justify-content-sm-start justify-content-center my-2 my-md-0">
+          <label>{props.email}</label>
+        </div>
+        <div className="d-flex col-12 col-lg-2 col-sm-4 align-items-center justify-content-sm-end justify-content-center">
           {props.editUser !== undefined && (
             <button
               className="text-dark"

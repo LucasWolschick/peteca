@@ -32,13 +32,13 @@ export default function List() {
         setUsers(
           response.data.map(
             (user) =>
-              ({
-                id: user.id,
-                nome: user.nome,
-                email: user.email,
-                data_nascimento: user.data_nascimento,
-                imagem: user.imagem,
-              } as User)
+            ({
+              id: user.id,
+              nome: user.nome,
+              email: user.email,
+              data_nascimento: user.data_nascimento,
+              imagem: user.imagem,
+            } as User)
           )
         );
       })
@@ -53,7 +53,7 @@ export default function List() {
       <div className="container-fluid">
         <Title title="Usuários" />
         <div className="row mt-3 align-items-center justify-content-center overflow-auto ">
-          <div className="col-md-8 col-12 overflow-auto">
+          <div className="col-12 overflow-auto">
             <div
               data-bs-spy="scroll"
               data-bs-target="#list-example"
@@ -73,8 +73,8 @@ export default function List() {
                       editUser={
                         canEdit
                           ? () => {
-                              router.push("/system/usuarios/edit/" + user.id);
-                            }
+                            router.push("/system/usuarios/edit/" + user.id);
+                          }
                           : undefined
                       }
                     />
@@ -91,7 +91,7 @@ export default function List() {
         </div>
         {canEdit && (
           <div className="row justify-content-center mt-3">
-            <div className="col-md-8 col-12">
+            <div className="col-12">
               <Link href="/system/usuarios/edit/new">
                 <button className="btn btn-primary btn-sm rounded-5">
                   Cadastrar usuário
