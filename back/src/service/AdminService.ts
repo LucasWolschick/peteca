@@ -75,8 +75,16 @@ export class AdminService {
     try {
       await this.backupRepository.importBackup(backupFilePath);
       console.log("Importação do backup realizada com sucesso.");
+      
+      fs.unlink(backupFilePath, (err) => {
+        if (err) {
+          console.error(`Erro ao remover o arquivo de backup: ${err}`);
+        } else {
+          console.log('Arquivo de backup removido com sucesso.');
+        }
+      });
     } catch (error) {
       console.error("Falha na importação do backup:", error);
     }
-  }
+ }
 }

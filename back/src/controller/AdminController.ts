@@ -4,11 +4,21 @@ import { query } from "express-validator";
 import { checkAuthenticated } from "./UserController";
 import { validateInput } from "../validateInput";
 import { ForbiddenError } from "../errors";
+const multer = require('multer');
 
 const adminService = ServiceManager.getAdminService();
 const permissionsService = ServiceManager.getPermissionsService();
+const upload = multer({ dest: 'uploads/' });
 
 const router = Router();
+
+declare module 'express-serve-static-core' {
+  interface Request {
+     file: {
+       path: string;
+     };
+  }
+ }
 
 const logsValidator = [
   query("from").optional().isISO8601().toDate(),
@@ -69,29 +79,27 @@ router.post(
 });
 
 router.post(
-  "/import-backup", async (req: Request, res: Response) => {
-     try {
-         const user = checkAuthenticated(req);
- 
-         if (!(await permissionsService.userHasPermission(user.id, "admin"))) {
-          throw new ForbiddenError(
-            "Você não tem permissão para acessar este recurso."
-          );
-        }
- 
-         validateInput(req);
- 
-         const backupPath = req.body.backupPath;
-         if (!backupPath) {
-             res.status(400).json({ message: "O caminho do arquivo de backup é necessário." });
-             return;
-         }
- 
-         await adminService.performImport(backupPath);
-         res.status(200).json({ message: 'Importação do backup realizada com sucesso!'});
-     } catch (error) {
-         res.status(500).json({ message: error.message });
-     }
- });
+ "/import-backup",
+ upload.single('backupFile'),
+ async (req: Request, res: Response) => {
+    try {
+      const user = checkAuthenticated(req);
+
+      if (!(await permissionsService.userHasPermission(user.id, "admin"))) {
+        throw new ForbiddenError(
+          "Você não tem permissão para acessar este recurso."
+        );
+      }
+
+      validateInput(req);
+
+      const backupPath = req.file.path;
+      await adminService.performImport(backupPath);
+      res.status(200).json({ message: 'Importação do backup realizada com sucesso!'});
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+});
+
 
 export default router;
