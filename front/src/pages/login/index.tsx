@@ -10,12 +10,13 @@ import LoginTemplate from "./_logintemplate";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { PermissionsAPI } from "@/apis/permissionsAPI";
+import { AxiosError } from "axios";
 
 // LogInAndPassword is the page to login and enter the Forgot Password and Reset Password pages
 export default function LoginAndPassword() {
   const router = useRouter();
   const { setLoggedUser } = useContext(AuthContext);
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState("");
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -40,8 +41,12 @@ export default function LoginAndPassword() {
       });
 
       router.push("/system");
-    } catch (error) {
-      setShowToast(true);
+    } catch (error: any) {
+      setShowToast(
+        "Falha ao realizar login: " + error.request
+          ? JSON.parse(error.request.response).message
+          : error
+      );
     }
   };
 
@@ -109,13 +114,13 @@ export default function LoginAndPassword() {
               aria-atomic="true"
             >
               <div className="toast-body d-flex justify-content-between align-items-center">
-                Login ou senha inválidos.
+                {showToast}
                 <button
                   type="button"
                   className="btn-close"
                   data-bs-dismiss="toast"
                   aria-label="Close"
-                  onClick={() => setShowToast(false)}
+                  onClick={() => setShowToast("")}
                 ></button>
               </div>
             </div>

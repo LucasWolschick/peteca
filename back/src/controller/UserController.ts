@@ -62,6 +62,7 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
       verificado: false,
       ativo: true,
       imagem: "",
+      senha_removida: true,
     };
 
     const createdUser = await userService.register(user);
@@ -74,7 +75,7 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
 
 const loginValidator = [
   body("email").trim().isEmail(),
-  body("password").notEmpty(),
+  body("password").exists(),
   body("remember").isBoolean(),
 ];
 
@@ -85,14 +86,22 @@ router.post(
     try {
       validateInput(req);
       const { email, password, remember } = req.body;
+
+      console.log("WHAT!!");
+      if (!(await userService.hasPassword(email))) {
+        console.log("E DENTRO!!");
+        throw new UnauthorizedError(
+          "Conta sem senha; verifique seu email para definir sua senha."
+        );
+      }
+
       const { user, token } = await userService.loginAndRedirect(
         email,
         password,
         remember
       );
-      const permissions = await permissionsService.getUserPermissions(user.id);
 
-      // Redireciona o usuário para a página desejada após o login
+      const permissions = await permissionsService.getUserPermissions(user.id);
       res.json({ user, token, permissions });
     } catch (e) {
       next(e);

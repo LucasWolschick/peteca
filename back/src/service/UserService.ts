@@ -142,6 +142,16 @@ export class UserService {
     );
   }
 
+  async hasPassword(email: string): Promise<boolean> {
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundError("Usuário não encontrado");
+    }
+
+    return !user.senha_removida;
+  }
+
   async loginToken(
     email: string,
     password: string,
@@ -203,6 +213,7 @@ export class UserService {
         ra: null,
         nome: "admin",
         senha: "",
+        senha_removida: false,
       };
       logger.info(`Administrador não encontrado, criando um novo`);
       admin = await this.userRepository.create(user);

@@ -16,6 +16,7 @@ model User {
   email           String   @unique @db.VarChar()
   verificado      Boolean
   senha           String   @db.VarChar()
+  senha_removida  Boolean  @default(true)
   data_nascimento DateTime @db.Date
   imagem          String   @db.VarChar
   ativo           Boolean  @default(true)
