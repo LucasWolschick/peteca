@@ -2,7 +2,7 @@
 
 import { AuthContext } from "@/AuthContext";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faRightFromBracket, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useContext } from "react";
@@ -13,7 +13,7 @@ export default function User() {
   if (!loggedUser) return null;
 
   return (
-    <div className="d-flex flex-row justify-content-between align-items-center text-purple text-decoration-none p-md-3 mt-3 mt-md-0">
+    <div className="d-flex flex-row justify-content-between align-items-center text-purple text-decoration-none p-md-3 mt-3 mt-md-0 mb-3 mb-md-0s">
       {/* <img
         src="https://github.com/mdo.png"
         alt=""
@@ -23,16 +23,18 @@ export default function User() {
       /> */}
       <FontAwesomeIcon icon={faUserCircle} size="3x" />
 
-      <div className="d-flex flex-column">
+      <div className="d-flex flex-column ms-2">
         <b>{loggedUser.user.nome}</b>
         <Link
           href={"/login"}
           onClick={() => {
-            UsuarioAPI.logout().catch(() => {});
+            UsuarioAPI.logout().catch(() => { });
             setLoggedUser(null);
           }}
+          className="text-decoration-none text-purple"
         >
-          SAIR
+          Logout
+          <FontAwesomeIcon icon={faRightFromBracket} className="ms-2"/>
         </Link>
       </div>
     </div>
