@@ -78,7 +78,7 @@ export default function Index() {
               placeholder="Pesquisar..."
             />
           </div>
-          <div className="col-lg-3">
+          <div className="col-lg-3 mt-3 mt-lg-0">
             <select value={filterOption} onChange={handleFilterChange} className="form-select">
               <option value="">Filtrar por...</option>
               <option value="Quantidade">Quantidade</option>
