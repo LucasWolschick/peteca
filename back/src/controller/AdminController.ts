@@ -4,6 +4,8 @@ import { query } from "express-validator";
 import { checkAuthenticated } from "./UserController";
 import { validateInput } from "../validateInput";
 import { ForbiddenError } from "../errors";
+import * as path from 'path';
+import * as fs from 'fs';
 const multer = require('multer');
 
 const adminService = ServiceManager.getAdminService();
@@ -77,6 +79,18 @@ router.post(
       res.status(500).json({ message: error.message });
   }
 });
+
+router.get('/download-backup', (req: Request, res: Response) => {
+  const backupPath = path.join(__dirname, '..', 'backups', 'backup.sql');
+  const backupFile = fs.createReadStream(backupPath);
+ 
+  // Definindo o nome do arquivo para o download
+  res.setHeader('Content-Disposition', 'attachment; filename=backup.sql');
+  res.setHeader('Content-Type', 'application/octet-stream');
+ 
+  // Enviando o arquivo de backup como resposta
+  backupFile.pipe(res);
+ });
 
 router.post(
  "/import-backup",

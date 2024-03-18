@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { env } from "process";
 import logger from "../logger";
+import * as path from 'path';
 
 const { exec } = require("child_process");
 require("dotenv").config({ path: "../.env" });
@@ -16,7 +17,7 @@ class BackupRepository {
 
     process.env.PGPASSWORD = password;
 
-    const backupCommand = `"${env.PG_PATH}pg_dump" -U ${user} -h ${host} -p ${port} -d ${dbName} -F c -f backup.sql`;
+    const backupCommand = `"${env.PG_PATH}pg_dump" -U ${user} -h ${host} -p ${port} -d ${dbName} -F c -f ${path.join(__dirname, '..', 'backups', 'backup.sql')}`;
 
     return new Promise<void>((resolve, reject) => {
       exec(backupCommand, (error, stdout, stderr) => {
