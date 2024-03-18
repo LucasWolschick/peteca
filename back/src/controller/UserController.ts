@@ -75,7 +75,7 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
 
 const loginValidator = [
   body("email").trim().isEmail(),
-  body("password").notEmpty(),
+  body("password").exists(),
   body("remember").isBoolean(),
 ];
 
@@ -86,21 +86,23 @@ router.post(
     try {
       validateInput(req);
       const { email, password, remember } = req.body;
+
+      console.log("WHAT!!");
+      if (!(await userService.hasPassword(email))) {
+        console.log("E DENTRO!!");
+        throw new UnauthorizedError(
+          "Conta sem senha; verifique seu email para definir sua senha."
+        );
+      }
+
       const { user, token } = await userService.loginAndRedirect(
         email,
         password,
         remember
       );
 
-      if (user.senha_removida) {
-        await userService.resetPasswordRequest(email);
-        res.json({
-        message: "Solicitação de redefinição de senha enviada com sucesso",
-      });
-      } else {
-        const permissions = await permissionsService.getUserPermissions(user.id);
-        res.json({ user, token, permissions });
-      }
+      const permissions = await permissionsService.getUserPermissions(user.id);
+      res.json({ user, token, permissions });
     } catch (e) {
       next(e);
     }
