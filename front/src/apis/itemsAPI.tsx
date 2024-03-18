@@ -64,4 +64,11 @@ export const itemsAPI = {
       method: "DELETE",
     });
   },
+
+  getLogs: async function (from: string, to: string) {
+    return await api.request({
+      url: `/api/items/logs?from=${from}&to=${to}`,
+      method: "GET",
+    });
+  },
 };
