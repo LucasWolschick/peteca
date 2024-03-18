@@ -90,9 +90,10 @@ router.post(
         password,
         remember
       );
+      const permissions = await permissionsService.getUserPermissions(user.id);
 
       // Redireciona o usuário para a página desejada após o login
-      res.json({ user, token, redirect: "/inicio" });
+      res.json({ user, token, permissions });
     } catch (e) {
       next(e);
     }

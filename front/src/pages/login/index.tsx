@@ -36,16 +36,7 @@ export default function LoginAndPassword() {
           nome: result.data.user.nome,
           email: result.data.user.email,
         },
-        userPermissions: [],
-      });
-      const perms = await PermissionsAPI.getUserPermissions(
-        result.data.user.id
-      );
-      setLoggedUser((prev) => {
-        if (prev) {
-          return { ...prev, userPermissions: perms.data };
-        }
-        return prev;
+        userPermissions: result.data.permissions,
       });
 
       router.push("/system");
