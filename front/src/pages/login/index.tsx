@@ -41,7 +41,7 @@ export default function LoginAndPassword() {
 
       router.push("/system");
     } catch (error) {
-      console.error(error);
+      setShowToast(true);
     }
   };
 

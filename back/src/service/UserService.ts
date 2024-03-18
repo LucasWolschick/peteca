@@ -138,7 +138,7 @@ export class UserService {
     await ServiceManager.getEmailService().sendMail(
       user.email,
       "Redefinição da sua senha no Peteca",
-      `Seu token para redefinir a senha é: ${token}`
+      `Seu link para redefinir a senha é: ${env.BASE_URL}/login/redefine_password/${token}`
     );
   }
 
