@@ -60,7 +60,7 @@ router.get(
   }
 );
 
-router.post(
+router.get(
   "/do-backup",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -79,7 +79,7 @@ router.post(
         throw new InternalServerError("Erro ao realizar o backup.");
       }
 
-      res.setHeader("Content-Type", "application/octet-stream");
+      res.setHeader("Content-Type", "application/octet-streamitem");
       res.setHeader("Content-Disposition", "attachment; filename=backup.sql");
 
       readStream.pipe(res);
