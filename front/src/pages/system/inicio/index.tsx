@@ -95,7 +95,7 @@ export default function Index() {
                                         return (
                                             <dl className="row">
                                                 <dt className="col-md-3">
-                                                    {moment(user.data_nascimento).format("DD/MM")}
+                                                {moment(new Date(user.data_nascimento.getTime() + user.data_nascimento.getTimezoneOffset() * 60000)).format("DD/MM")}
                                                 </dt>
                                                 <dd className="col-md-9">
                                                     {user.nome}
