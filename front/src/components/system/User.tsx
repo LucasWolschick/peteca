@@ -13,7 +13,7 @@ export default function User() {
   if (!loggedUser) return null;
 
   return (
-    <div className="d-flex flex-row justify-content-between align-items-center text-purple text-decoration-none p-3">
+    <div className="d-flex flex-row justify-content-between align-items-center text-purple text-decoration-none p-md-3 mt-3 mt-md-0">
       {/* <img
         src="https://github.com/mdo.png"
         alt=""
