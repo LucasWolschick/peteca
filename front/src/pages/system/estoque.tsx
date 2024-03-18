@@ -149,14 +149,12 @@ export default function Index() {
           />
 
           {/* <Link href="/system/historico"> */}
-          <button className="btn btn-info btn-sm rounded-5 col-lg-3 col-10 mt-2 mt-lg-0">
-            <Link
-              href="/system/historico"
-              className="text-decoration-none text-black"
-            >
-              Ver Histórico
-            </Link>
-          </button>
+          <Link
+            className="text-decoration-none text-black btn btn-info btn-sm rounded-5 col-lg-3 col-10 mt-2 mt-lg-0"
+            href="/system/historico"
+          >
+            Ver Histórico
+          </Link>
           {/* </Link> */}
         </div>
       </div>
