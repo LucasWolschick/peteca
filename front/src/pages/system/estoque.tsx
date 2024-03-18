@@ -149,7 +149,7 @@ export default function Index() {
           />
 
           {/* <Link href="/system/historico"> */}
-          <button className="btn btn-info btn-sm rounded-5 col-lg-4 col-md-5 col-10 mt-2 mt-md-0">
+          <button className="btn btn-info btn-sm rounded-5 col-lg-3 col-10 mt-2 mt-lg-0">
             <Link
               href="/system/historico"
               className="text-decoration-none text-black"

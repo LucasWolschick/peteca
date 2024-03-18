@@ -19,7 +19,7 @@ export default function DialogCreateItem(props: DialogCreateItemProps) {
   return (
     <>
       <button
-        className={`btn ${props.buttonType} btn-sm rounded-5 col-lg-4 col-md-5 col-10 mt-2 mt-md-0`}
+        className={`btn ${props.buttonType} btn-sm rounded-5 col-lg-3 col-10 mt-2 mt-md-0`}
         onClick={handleShow}
       >
         {props.buttonText}
