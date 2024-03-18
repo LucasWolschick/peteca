@@ -70,9 +70,9 @@ export default function Index() {
                         </h1>
                         <div className="d-flex justify-content-between align-items-top  ">
                             <p className="text-warning">{loggedUser?.user.email}</p>
-                            <Link href={`/system/usuarios/edit/${loggedUser?.user.id}`} className="text-warning">
+                            {/* <Link href={`/system/usuarios/edit/${loggedUser?.user.id}`} className="text-warning">
                                 <FontAwesomeIcon icon={faPen} className="me-4" />
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
 
