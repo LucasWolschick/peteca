@@ -5,6 +5,7 @@ import { itemsAPI } from "@/apis/itemsAPI";
 import SystemTemplate from "./_systemtemplate";
 import Title from "@/components/system/Title";
 import ItemEntry from "@/components/system/ItemEntry";
+import moment from "moment";
 
 export type Log = {
   id: number;
@@ -56,7 +57,7 @@ export default function Historico() {
               {logs.map((log) => (
                 <tr key={log.data + log.item.nome}>
                   <td>{log.item.nome}</td>
-                  <td>{log.data}</td>
+                  <td>{moment(log.data).format('DD/MM/YYYY hh:mm:ss')}</td>
                   <td>{log.tipo}</td>
                   <td>{log.autor.nome}</td>
                 </tr>
