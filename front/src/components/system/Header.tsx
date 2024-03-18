@@ -21,7 +21,7 @@ export default function Header() {
     <>
       <header>
         <nav className="d-flex flex-column navbar justify-content-center bg-light-gray">
-          <div className="container-fluid align-items-center justify-content-between ms-2 ">
+          <div className="container-fluid align-items-center justify-content-between">
             <Image src={"/logo.svg"} alt="Peteca" width={145} height={48} />
             <User />
           </div>

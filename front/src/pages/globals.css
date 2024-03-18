@@ -88,3 +88,9 @@ main {
 .table-responsive {
   height:60vh !important;
 }
+
+.react-calendar{
+  font-size: 10px;
+  height: 260px !important;
+  width: 260px !important;
+}

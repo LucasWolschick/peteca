@@ -21,7 +21,7 @@ export default function Navigation() {
 
   return (
     <>
-      <NavigationButton icon={faHouse} text="Início" route="/system" />
+      <NavigationButton icon={faHouse} text="Início" route="/system/inicio" />
       <NavigationButton icon={faBox} text="Estoque" route="/system/estoque" />
       <NavigationButton
         icon={faCircleUser}

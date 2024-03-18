@@ -5,6 +5,8 @@ import { itemsAPI } from "@/apis/itemsAPI";
 import SystemTemplate from "./_systemtemplate";
 import Title from "@/components/system/Title";
 import ItemEntry from "@/components/system/ItemEntry";
+import moment from "moment";
+import HistoryTable from "@/components/system/HistoryTable";
 
 export type Log = {
   id: number;
@@ -42,38 +44,14 @@ export default function Historico() {
     <SystemTemplate>
       <div className="container-fluid">
         <Title title="Histórico de Transações" />
-        <div className="table-responsive bg-white">
-          <table className="table table-sm table-striped">
-            <thead className="sticky-top">
-              <tr>
-                <th>Nome</th>
-                <th>Data</th>
-                <th>Tipo de Movimentação</th>
-                <th>Autor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map((log) => (
-                <tr key={log.data + log.item.nome}>
-                  <td>{log.item.nome}</td>
-                  <td>{log.data}</td>
-                  <td>{log.tipo}</td>
-                  <td>{log.autor.nome}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {/* </Link> */}
-        </div>
+        <HistoryTable />
         <div className="mt-3 d-flex justify-content-center">
-          <button className="btn btn-info btn-sm rounded-5 col-lg-4 col-md-5 col-10 mt-2 mt-md-0 ">
-            <Link
-              href="/system/estoque"
-              className="text-decoration-none text-black"
-            >
-              Voltar
-            </Link>
-          </button>
+          <Link
+            href="/system/estoque"
+            className="text-decoration-none text-black btn btn-info btn-sm rounded-5 col-lg-4 col-md-5 col-10 mt-2 mt-md-0 "
+          >
+            Voltar
+          </Link>
         </div>
       </div>
     </SystemTemplate>
