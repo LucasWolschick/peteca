@@ -22,9 +22,9 @@ export default function Index() {
 
     console.log(actualMonth);
 
-    let todayTwoMonthsAhead = new Date(actualYear, actualMonth + 2, today.getDay());
+    let todayTwoMonthsAhead = new Date(actualYear, actualMonth + 2, today.getDate());
     if (actualMonth >= 10) {
-        todayTwoMonthsAhead = new Date(actualYear + 1, actualMonth + 2, today.getDay());
+        todayTwoMonthsAhead = new Date(actualYear + 1, actualMonth + 2, today.getDate());
     }
 
 
@@ -101,9 +101,10 @@ export default function Index() {
                         <Calendar calendarType={'gregory'} formatMonth={locale} locale="pt-BR" navigationAriaLive={"polite"} />
 
                         <h3 className="mt-3">Próximos aniversariantes</h3>
+                        <label>{moment(today).format("DD/MM/YYYY")} - {moment(todayTwoMonthsAhead).format("DD/MM/YYYY")}</label>
                         <div>
-                            {users?.filter(query => new Date(today.getFullYear(), query.data_nascimento.getMonth(), query.data_nascimento.getDay()) >= today
-                                && new Date(today.getFullYear(), query.data_nascimento.getMonth(), query.data_nascimento.getDay()) <= todayTwoMonthsAhead)
+                            {users?.filter(query => new Date(today.getFullYear(), query.data_nascimento.getMonth(), query.data_nascimento.getDate()) >= today
+                                && new Date(today.getFullYear(), query.data_nascimento.getMonth(), query.data_nascimento.getDate()) <= todayTwoMonthsAhead)
                                 .map((user) => {
                                     return (
                                         <dl className="row">
