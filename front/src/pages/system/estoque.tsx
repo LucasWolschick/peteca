@@ -65,24 +65,28 @@ export default function Index() {
     <SystemTemplate>
       <div className="container-fluid">
         <Title title="Estoque" />
-        <div className="mb-3">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setSelectItems(new Set<Item>());
-            }}
-            placeholder="Pesquisar..."
-          />
-
-          <select value={filterOption} onChange={handleFilterChange}>
-            <option value="">Filtrar por...</option>
-            <option value="Quantidade">Quantidade</option>
-            <option value="Local">Local</option>
-            <option value="Nome">Nome</option>
-            {/* Add more options as needed */}
-          </select>
+        <div className="mb-3 row">
+          <div className="col-lg-6">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setSelectItems(new Set<Item>());
+              }}
+              className="form-control"
+              placeholder="Pesquisar..."
+            />
+          </div>
+          <div className="col-lg-3">
+            <select value={filterOption} onChange={handleFilterChange} className="form-select">
+              <option value="">Filtrar por...</option>
+              <option value="Quantidade">Quantidade</option>
+              <option value="Local">Local</option>
+              <option value="Nome">Nome</option>
+              {/* Add more options as needed */}
+            </select>
+          </div>
         </div>
         <div className="table-responsive bg-white">
           <table className="table table-striped">
