@@ -8,6 +8,7 @@ import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { format } from "path";
 import { User, UsuarioAPI } from "@/apis/usuarioAPI";
+import HistoryTable from "@/components/system/HistoryTable";
 
 type ValuePiece = Date | null;
 
@@ -34,12 +35,6 @@ export default function Index() {
 
     // Get the lastest added items in the database to show at a table
     useEffect(() => {
-        const fetchLogs = async () => {
-            const response = await itemsAPI.getLogs("2023-09-15", moment(today).format("YYYY-MM-DD"));
-            console.log(response.data);
-            setLogs(response.data);
-        };
-
         UsuarioAPI.getAllUsers()
             .then((response) => {
                 setUsers(
@@ -60,7 +55,6 @@ export default function Index() {
                 setUsers([] as User[]);
             });
 
-        fetchLogs();
     }, []);
 
     return (
@@ -72,29 +66,7 @@ export default function Index() {
                     </h1>
                     <div className="col-lg-8 col-12 mt-3">
                         <h3>Movimentações do estoque</h3>
-                        <div className="table-responsive bg-white">
-                            <table className="table table-sm table-striped">
-                                <thead className="sticky-top">
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Data</th>
-                                        <th>Tipo de Movimentação</th>
-                                        <th>Autor</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {logs.map((log) => (
-                                        <tr key={log.data + log.item.nome}>
-                                            <td>{log.item.nome}</td>
-                                            <td>{moment(log.data).format('DD/MM/YYYY hh:mm:ss')}</td>
-                                            <td>{log.tipo}</td>
-                                            <td>{log.autor.nome}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-
-                        </div>
+                        <HistoryTable />
                     </div>
                     <div className="col-lg-4 mt-3">
                         <h3>Calendário</h3>
