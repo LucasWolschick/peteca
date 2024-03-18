@@ -46,6 +46,13 @@ export class ConflictError extends AppError {
   }
 }
 
+export class InternalServerError extends AppError {
+  constructor(message: string | undefined) {
+    super(message ?? "Internal server error", 500);
+    Object.setPrototypeOf(this, InternalServerError.prototype);
+  }
+}
+
 export class ValidationError extends AppError {
   private errors: any[];
 
