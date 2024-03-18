@@ -85,7 +85,7 @@ export default function Index() {
           </select>
         </div>
         <div className="table-responsive bg-white">
-          <table className="table table-sm table-striped">
+          <table className="table table-striped">
             <thead className="sticky-top">
               <tr>
                 <th>Item</th>

@@ -44,7 +44,7 @@ export default function Historico() {
       <div className="container-fluid">
         <Title title="Histórico de Transações" />
         <div className="table-responsive bg-white">
-          <table className="table table-sm table-striped">
+          <table className="table table-striped">
             <thead className="sticky-top">
               <tr>
                 <th>Nome</th>
