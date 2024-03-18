@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Modal } from "react-bootstrap";
 
-export default function DialogDeleteItemConfirmation() {
+export default function DialogDeleteItemConfirmation(props: DialogDeleteItemConfirmationProps) {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const handleDelete = () => {
+        props.onDelete();
+        handleClose();
+    }
 
     return (
         <>
@@ -26,7 +31,7 @@ export default function DialogDeleteItemConfirmation() {
                         </button>
                     </div>
                     <div className='col-lg-5 col-12'>
-                        <button className="btn btn-primary btn-md rounded-5 col-12" onClick={handleClose}>
+                        <button className="btn btn-primary btn-md rounded-5 col-12" onClick={handleDelete}>
                             Remover
                         </button>
                     </div>
@@ -34,4 +39,8 @@ export default function DialogDeleteItemConfirmation() {
             </Modal>
         </>
     );
+}
+
+export interface DialogDeleteItemConfirmationProps {
+    onDelete: () => void;
 }
