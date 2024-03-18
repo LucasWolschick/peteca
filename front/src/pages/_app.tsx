@@ -17,6 +17,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Peteca</title>
         <meta name="description" content="SGI para grupos PET" />
+        <link rel="icon" href="/images/favicon.ico" sizes="any" />
       </Head>
       <SystemProvider>
         <AuthProvider>
