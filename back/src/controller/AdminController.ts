@@ -1,26 +1,26 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { ServiceManager } from "../service/ServiceManager";
 import { query } from "express-validator";
 import { checkAuthenticated } from "./UserController";
 import { validateInput } from "../validateInput";
-import { ForbiddenError } from "../errors";
-import * as path from 'path';
-import * as fs from 'fs';
-const multer = require('multer');
+import { ForbiddenError, InternalServerError } from "../errors";
+import * as path from "path";
+import * as fs from "fs";
+import * as multer from "multer";
 
 const adminService = ServiceManager.getAdminService();
 const permissionsService = ServiceManager.getPermissionsService();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
 const router = Router();
 
-declare module 'express-serve-static-core' {
+declare module "express-serve-static-core" {
   interface Request {
-     file: {
-       path: string;
-     };
+    file: {
+      path: string;
+    };
   }
- }
+}
 
 const logsValidator = [
   query("from").optional().isISO8601().toDate(),
@@ -61,8 +61,9 @@ router.get(
 );
 
 router.post(
-  "/do-backup", async (req: Request, res: Response) => {
-  try {
+  "/do-backup",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
       const user = checkAuthenticated(req);
 
       if (!(await permissionsService.userHasPermission(user.id, "admin"))) {
@@ -73,29 +74,25 @@ router.post(
 
       validateInput(req);
 
-      await adminService.performBackup();
-      res.status(200).json({ message: 'Backup realizado com sucesso!'});
-  } catch (error) {
-      res.status(500).json({ message: error.message });
-  }
-});
+      const readStream = await adminService.performBackup();
+      if (!readStream) {
+        throw new InternalServerError("Erro ao realizar o backup.");
+      }
 
-router.get('/download-backup', (req: Request, res: Response) => {
-  const backupPath = path.join(__dirname, '..', 'backups', 'backup.sql');
-  const backupFile = fs.createReadStream(backupPath);
- 
-  // Definindo o nome do arquivo para o download
-  res.setHeader('Content-Disposition', 'attachment; filename=backup.sql');
-  res.setHeader('Content-Type', 'application/octet-stream');
- 
-  // Enviando o arquivo de backup como resposta
-  backupFile.pipe(res);
- });
+      res.setHeader("Content-Type", "application/octet-stream");
+      res.setHeader("Content-Disposition", "attachment; filename=backup.sql");
+
+      readStream.pipe(res);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.post(
- "/import-backup",
- upload.single('backupFile'),
- async (req: Request, res: Response) => {
+  "/import-backup",
+  upload.single("backupFile"),
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = checkAuthenticated(req);
 
@@ -109,11 +106,14 @@ router.post(
 
       const backupPath = req.file.path;
       await adminService.performImport(backupPath);
-      res.status(200).json({ message: 'Importação do backup realizada com sucesso!'});
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-});
 
+      res
+        .status(200)
+        .json({ message: "Importação do backup realizada com sucesso!" });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default router;

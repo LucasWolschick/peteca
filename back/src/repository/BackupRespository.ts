@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { env } from "process";
 import logger from "../logger";
-import * as path from 'path';
+import * as path from "path";
+import * as fs from "fs";
+import { exec } from "child_process";
 
-const { exec } = require("child_process");
 require("dotenv").config({ path: "../.env" });
 
 class BackupRepository {
@@ -17,9 +18,18 @@ class BackupRepository {
 
     process.env.PGPASSWORD = password;
 
-    const backupCommand = `"${env.PG_PATH}pg_dump" -U ${user} -h ${host} -p ${port} -d ${dbName} -F c -f ${path.join(__dirname, '..', 'backups', 'backup.sql')}`;
+    fs.mkdirSync(path.join(__dirname, "..", "backups"), { recursive: true });
 
-    return new Promise<void>((resolve, reject) => {
+    const backupCommand = `"${
+      env.PG_PATH
+    }pg_dump" -U ${user} -h ${host} -p ${port} -d ${dbName} -F c -f ${path.join(
+      __dirname,
+      "..",
+      "backups",
+      "backup.sql"
+    )}`;
+
+    return new Promise<fs.ReadStream>((resolve, reject) => {
       exec(backupCommand, (error, stdout, stderr) => {
         if (error) {
           logger.error(`Erro ao fazer backup: ${error.message}`);
@@ -32,7 +42,11 @@ class BackupRepository {
           return;
         }
         logger.warn("Backup concluído com sucesso.");
-        resolve();
+        resolve(
+          fs.createReadStream(
+            path.join(__dirname, "..", "backups", "backup.sql")
+          )
+        );
       });
     }).finally(() => {
       process.env.PGPASSWORD = "";
