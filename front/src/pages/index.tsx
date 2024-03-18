@@ -8,11 +8,13 @@ export default function Index() {
   const isLogged = useContext(AuthContext).loggedUser;
 
   useEffect(() => {
+    if (isLogged === undefined) return;
+    
     if (isLogged) {
       router.push("/login");
     } else {
       router.push("/system");
     }
-  });
+  }, [isLogged]);
   return null;
 }

@@ -1,84 +1,186 @@
+import { AxiosResponse } from "axios";
 import { api } from "./configs/axiosConfigs";
 
+export interface User {
+  id: number;
+  ingresso: Date;
+  nome: string;
+  ra?: string;
+  matricula?: string;
+  email: string;
+  verificado: boolean;
+  data_nascimento: Date;
+  imagem: string;
+  ativo: boolean;
+}
+
+export interface Token {
+  id: number;
+  token: string;
+  userId: number;
+  data_expiracao: Date;
+}
+
+function parseUserResponse(user: any): User {
+  const copy = { ...user };
+
+  copy.id = Number(user.id);
+  copy.ingresso = new Date(user.ingresso);
+  copy.data_nascimento = new Date(user.data_nascimento);
+
+  return copy;
+}
+
+function parseTokenResponse(token: any): Token {
+  const copy = { ...token };
+
+  copy.id = Number(token.id);
+  copy.userId = Number(token.userId);
+  copy.data_expiracao = new Date(token.data_expiracao);
+
+  return copy;
+}
+
 export const UsuarioAPI = {
-    register: async function (nome: string, email: string, senha: string, ra?: string, matricula?: string) {
-        return await api.request({
-            url: `/api/user/register`,
-            method: "POST",
-            data: {
-                nome,
-                email,
-                senha,
-                ra,
-                matricula
-            }
-        });
-    },
+  register: async function (
+    nome: string,
+    email: string,
+    senha: string,
+    ra?: string,
+    matricula?: string,
+    aniversario?: Date
+  ): Promise<AxiosResponse<{ id: number }>> {
+    const res = await api.request({
+      url: `/api/user/register`,
+      method: "POST",
+      data: {
+        nome,
+        email,
+        senha,
+        ra,
+        matricula,
+        aniversario: aniversario?.toISOString(),
+      },
+    });
 
-    login: async function (email: string, senha: string, remember: boolean) {
-        return await api.request({
-            url: `/api/user/login`,
-            method: "POST",
-            data: {
-                email,
-                password: senha,
-                remember
-            }
-        });
-    },
+    res.data.id = Number(res.data.id);
 
-    confirmEmail: async function (token: string) {
-        return await api.request({
-            url: `/api/user/confirm/${token}`,
-            method: "POST",
-        });
-    },
+    return res;
+  },
 
-    passwordRecovery: async function (email: string) {
-        return await api.request({
-            url: `/api/user/resetpassword`,
-            method: "POST",
-            data: {
-                email
-            }
-        });
-    },
+  login: async function (
+    email: string,
+    senha: string,
+    remember: boolean
+  ): Promise<AxiosResponse<{ token: Token; user: User }>> {
+    const res = await api.request({
+      url: `/api/user/login`,
+      method: "POST",
+      data: {
+        email,
+        password: senha,
+        remember,
+      },
+    });
 
-    resetPassword: async function (token: string, senha: string) {
-        return await api.request({
-            url: `/api/user/resetpassword/${token}`,
-            method: "POST",
-            data: {
-                password: senha
-            }
-        });
-    },
+    res.data.token = parseTokenResponse(res.data.token);
+    res.data.user = parseUserResponse(res.data.user);
 
-    getLoggedUser: async function () {
-        return await api.request({
-            url: `/api/user/me`,
-            method: "GET",
-        });
-    },
+    return res;
+  },
 
-    deleteUser: async function (id: number) {
-        return await api.request({
-            url: `/api/user/${id}`,
-            method: "DELETE",
-        });
-    },
+  confirmEmail: async function (token: string): Promise<AxiosResponse<{}>> {
+    return await api.request({
+      url: `/api/user/confirm/${token}`,
+      method: "POST",
+    });
+  },
 
-    getUserById: async function (id: number) {
-        return await api.request({
-            url: `/api/user/${id}`,
-            method: "GET",
-        });
-    },
+  passwordRecovery: async function (email: string): Promise<AxiosResponse<{}>> {
+    return await api.request({
+      url: `/api/user/resetpassword`,
+      method: "POST",
+      data: {
+        email,
+      },
+    });
+  },
 
-    getAllUsers: async function () {
-        return await api.request({
-            url: `/api/user`,
-            method: "GET",
-        });
-    },
+  resetPassword: async function (
+    token: string,
+    senha: string
+  ): Promise<AxiosResponse<{}>> {
+    return await api.request({
+      url: `/api/user/resetpassword/${token}`,
+      method: "POST",
+      data: {
+        password: senha,
+      },
+    });
+  },
+
+  getLoggedUser: async function (): Promise<AxiosResponse<User>> {
+    const res = await api.request({
+      url: `/api/user/me`,
+      method: "GET",
+    });
+
+    res.data = parseUserResponse(res.data);
+
+    return res;
+  },
+
+  deleteUser: async function (id: number): Promise<AxiosResponse<{}>> {
+    return await api.request({
+      url: `/api/user/${id}`,
+      method: "DELETE",
+    });
+  },
+
+  getUserById: async function (id: number): Promise<AxiosResponse<User>> {
+    const res = await api.request({
+      url: `/api/user/${id}`,
+      method: "GET",
+    });
+
+    res.data = parseUserResponse(res.data);
+
+    return res;
+  },
+
+  getAllUsers: async function (): Promise<AxiosResponse<User[]>> {
+    const res = await api.request({
+      url: `/api/user/`,
+      method: "GET",
+    });
+
+    res.data = res.data.map((user: any) => parseUserResponse(user));
+
+    return res;
+  },
+
+  updateUser: async function (
+    id: number,
+    nome: string,
+    email: string,
+    ra?: string,
+    matricula?: string,
+    aniversario?: Date
+  ): Promise<AxiosResponse<{}>> {
+    const res = await api.request({
+      url: `/api/user/${id}`,
+      method: "PUT",
+      data: {
+        nome,
+        email,
+        ra,
+        matricula,
+        aniversario: aniversario?.toISOString(),
+      },
+    });
+
+    res.data = parseUserResponse(res.data);
+
+    return res;
+  },
 };

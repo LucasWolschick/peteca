@@ -6,6 +6,7 @@ import userController from "./controller/UserController";
 import permissionsController from "./controller/PermissionsController";
 import itemController from "./controller/ItemController";
 import adminController from "./controller/AdminController";
+import systemController from "./controller/SystemController";
 import { NotFoundError, errorHandler } from "./errors";
 import logger from "./logger";
 import { authMiddleware } from "./authMiddleware";
@@ -37,6 +38,7 @@ app.use("/api/user", userController);
 app.use("/api/permissions", permissionsController);
 app.use("/api/items", itemController);
 app.use("/api/admin", adminController);
+app.use("/api/config", systemController);
 
 // 404 handler
 app.use(async (req, res, next) => {

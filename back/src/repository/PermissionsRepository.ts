@@ -61,4 +61,21 @@ export class PermissionsRepository {
       },
     });
   }
+
+  async setPermissions(userId: number, permissions: string[]): Promise<void> {
+    // get current permissions
+    const current = await this.getPermissions(userId);
+
+    // remove old permissions
+    await this.prisma.userPermissoes.deleteMany({
+      where: {
+        userId: userId,
+      },
+    });
+
+    // add new permissions
+    for (const perm of permissions) {
+      await this.grantPermission(userId, perm);
+    }
+  }
 }
