@@ -62,6 +62,7 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
       verificado: false,
       ativo: true,
       imagem: "",
+      senha_removida: true,
     };
 
     const createdUser = await userService.register(user);
@@ -90,10 +91,16 @@ router.post(
         password,
         remember
       );
-      const permissions = await permissionsService.getUserPermissions(user.id);
 
-      // Redireciona o usuário para a página desejada após o login
-      res.json({ user, token, permissions });
+      if (user.senha_removida) {
+        await userService.resetPasswordRequest(email);
+        res.json({
+        message: "Solicitação de redefinição de senha enviada com sucesso",
+      });
+      } else {
+        const permissions = await permissionsService.getUserPermissions(user.id);
+        res.json({ user, token, permissions });
+      }
     } catch (e) {
       next(e);
     }

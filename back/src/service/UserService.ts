@@ -203,6 +203,7 @@ export class UserService {
         ra: null,
         nome: "admin",
         senha: "",
+        senha_removida: false,
       };
       logger.info(`Administrador não encontrado, criando um novo`);
       admin = await this.userRepository.create(user);

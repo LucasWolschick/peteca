@@ -60,6 +60,7 @@ const prisma = new PrismaClient();
       email: "joao.silva@example.com",
       verificado: true,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: false,
       data_nascimento: new Date("2000-05-20"),
       imagem: "url_da_imagem",
       permissoes: {
@@ -112,6 +113,7 @@ const prisma = new PrismaClient();
       email: "maria.oliveira@example.com",
       verificado: true,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: false,
       data_nascimento: new Date("1998-10-10"),
       imagem: "url_da_imagem",
       permissoes: {
@@ -178,6 +180,7 @@ const prisma = new PrismaClient();
       email: "carlos.santos@example.com",
       verificado: true,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: false,
       data_nascimento: new Date("2001-03-15"),
       imagem: "url_da_imagem",
       ativo: false,
@@ -224,6 +227,7 @@ const prisma = new PrismaClient();
       email: "ana.lima@example.com",
       verificado: true,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: false,
       data_nascimento: new Date("1999-07-25"),
       imagem: "url_da_imagem",
       permissoes: {
@@ -283,6 +287,7 @@ const prisma = new PrismaClient();
       email: "pedro.costa@example.com",
       verificado: false,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: false,
       data_nascimento: new Date("2002-01-30"),
       imagem: "url_da_imagem",
       permissoes: {
@@ -328,6 +333,7 @@ const prisma = new PrismaClient();
       email: "juliana.pereira@example.com",
       verificado: true,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: false,
       data_nascimento: new Date("2003-09-05"),
       imagem: "url_da_imagem",
       permissoes: {
@@ -387,6 +393,7 @@ const prisma = new PrismaClient();
       email: "fernando.souza@example.com",
       verificado: false,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: false,
       data_nascimento: new Date("2000-12-12"),
       imagem: "url_da_imagem",
       permissoes: {
@@ -432,6 +439,7 @@ const prisma = new PrismaClient();
       email: "camila.rodrigues@example.com",
       verificado: true,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: false,
       data_nascimento: new Date("2001-08-20"),
       imagem: "url_da_imagem",
       ativo: false,
@@ -492,6 +500,7 @@ const prisma = new PrismaClient();
       email: "rafaela.nunes@example.com",
       verificado: true,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: true,
       data_nascimento: new Date("1998-04-02"),
       imagem: "url_da_imagem",
       permissoes: {
@@ -551,6 +560,7 @@ const prisma = new PrismaClient();
       email: "gabriel.oliveira@example.com",
       verificado: true,
       senha: "$2b$10$4g4PDQtahvBjsxw7QpCWD.y2ZWJVTWdWxaXnyYRMO59MUbBhEVXsS",
+      senha_removida: true,
       data_nascimento: new Date("2002-11-18"),
       imagem: "url_da_imagem",
       ativo: false,
