@@ -101,6 +101,19 @@ router.post(
 );
 
 router.post(
+  "/logout",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = checkAuthenticated(req);
+      await userService.logout(user);
+      res.json({ message: "Usuário deslogado com sucesso" });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.post(
   "/confirm/:token",
   param("token").notEmpty(),
   async (req: Request, res: Response, next: NextFunction) => {
