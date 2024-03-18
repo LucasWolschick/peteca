@@ -9,10 +9,10 @@ export type Log = {
 
 export const AdminAPI = {
   getLogs: async function (
-    from: Date,
-    to: Date,
-    limit: number,
-    level: string
+    from?: Date,
+    to?: Date,
+    limit?: number,
+    level?: string
   ): Promise<AxiosResponse<Log[]>> {
     const logs = await api.request({
       url: `/api/admin/logs`,

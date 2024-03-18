@@ -1,6 +1,7 @@
 import Title from "@/components/system/Title";
 import SystemTemplate from "./_systemtemplate";
-import { AdminAPI } from "@/apis/adminAPI";
+import { AdminAPI, Log } from "@/apis/adminAPI";
+import { useEffect, useState } from "react";
 
 export default function Index() {
   const fazerBackup = () => {
@@ -42,6 +43,18 @@ export default function Index() {
     input.click();
   };
 
+  const [logs, setLogs] = useState<Log[]>([]);
+
+  useEffect(() => {
+    AdminAPI.getLogs()
+      .then(({ data }) => {
+        setLogs(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <SystemTemplate>
       <div className="container-fluid">
@@ -63,13 +76,26 @@ export default function Index() {
               </button>
             </div>
           </div>
-          <div className="col-lg-7 bg-light-violet-blue mt-3 mt-lg-0">
-            <div className="row p-2">
-              <div className="bg-light-gray text-dark">
-                <h5 className="fw-bolder text-center mt-2">
-                  27-02-2003 - 07-03-2003
-                </h5>
-              </div>
+          <div className="col-lg-7">
+            <div className="table-responsive bg-white">
+              <table className="table table-sm table-striped">
+                <thead className="sticky-top">
+                  <tr>
+                    <th>Data</th>
+                    <th>Nível</th>
+                    <th>Mensagem</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.map((log) => (
+                    <tr key={log.timestamp + log.message}>
+                      <td>{log.timestamp.toLocaleString()}</td>
+                      <td>{log.level}</td>
+                      <td>{log.message}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
