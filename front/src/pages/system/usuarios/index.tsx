@@ -22,7 +22,6 @@ export default function List() {
   const [users, setUsers] = useState(undefined as undefined | User[]);
   const router = useRouter();
   const loggedUser = useContext(AuthContext).loggedUser;
-  console.log(loggedUser);
   const canEdit =
     loggedUser?.userPermissions.includes("admin") ||
     loggedUser?.userPermissions.includes("Gerir Cadastros");

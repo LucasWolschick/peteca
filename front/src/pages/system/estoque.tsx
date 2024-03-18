@@ -5,6 +5,8 @@ import Title from "@/components/system/Title";
 import { useEffect, useState } from "react";
 import SystemTemplate from "./_systemtemplate";
 import { Item, itemsAPI } from "@/apis/itemsAPI";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Index() {
   const [selectedItems, setSelectItems] = useState(new Set<Item>());
@@ -13,9 +15,17 @@ export default function Index() {
   const [filterOption, setFilterOption] = useState("");
 
   const [listaitems, setListaItems] = useState<Item[]>([]);
+
   const filteredItems = listaitems.filter((item) =>
     item.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const [refresh, setRefresh] = useState(0);
+
+  const handleRefresh = () => {
+    setSelectItems(new Set<Item>());
+    setRefresh((s) => s + 1);
+  };
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -24,7 +34,7 @@ export default function Index() {
     };
 
     fetchItems();
-  }, []);
+  }, [refresh]);
 
   const sortItems = (option: string, items: Item[]) => {
     let sortedItems = [...items];
@@ -87,7 +97,7 @@ export default function Index() {
             <tbody>
               {filteredItems.map((item: Item) => (
                 <ItemEntry
-                  key={item.id}
+                  key={refresh + "" + item.id}
                   name={item.nome}
                   amount={item.quantidade}
                   storage={item.local}
@@ -114,20 +124,36 @@ export default function Index() {
             buttonText={"Adicionar item"}
             text={"a"}
             onCreate={(item) =>
-              itemsAPI.criar(
-                item.nome,
-                item.quantidade,
-                item.unidadeMedida,
-                item.local
-              )
+              itemsAPI
+                .criar(
+                  item.nome,
+                  item.quantidade,
+                  item.unidadeMedida,
+                  item.local
+                )
+                .then((_) => handleRefresh())
             }
+            refresh={handleRefresh}
           />
+
           <DialogEditItem
             title={"Editar item"}
             buttonType={"btn-warning"}
             buttonText={"Editar item"}
             itens={selectedItems}
+            refresh={handleRefresh}
           />
+
+          {/* <Link href="/system/historico"> */}
+          <button className="btn btn-info btn-sm rounded-5 col-lg-4 col-md-5 col-10 mt-2 mt-md-0">
+            <Link
+              href="/system/historico"
+              className="text-decoration-none text-black"
+            >
+              Ver Histórico
+            </Link>
+          </button>
+          {/* </Link> */}
         </div>
       </div>
     </SystemTemplate>

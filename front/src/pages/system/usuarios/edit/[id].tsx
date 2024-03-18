@@ -19,10 +19,10 @@ import { User, UsuarioAPI } from "@/apis/usuarioAPI";
 import { AuthContext } from "@/AuthContext";
 
 function formatDateToYYYYMMDD(date: Date): string {
-  const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  // format to "YYYY-MM-DD" using GMT timezone
+  const offset = date.getTimezoneOffset();
+  date = new Date(date.getTime() + offset * 60 * 1000);
+  return date.toISOString().split("T")[0];
 }
 
 export default function Create() {
@@ -30,7 +30,7 @@ export default function Create() {
   const { id } = router.query;
 
   const [name, setName] = useState("");
-  const [birthdate, setBirthdate] = useState(new Date(2002, 0, 1));
+  const datePickerRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
   const [ra, setRa] = useState("");
   const [matricula, setMatricula] = useState("");
@@ -58,7 +58,8 @@ export default function Create() {
           setEmail(user.email);
           setRa(user.ra ?? "");
           setMatricula(user.matricula ?? "");
-          setBirthdate(user.data_nascimento);
+          (datePickerRef.current as HTMLInputElement).value =
+            formatDateToYYYYMMDD(user.data_nascimento);
           return PermissionsAPI.getUserPermissions(nId);
         })
         .then((perms) => {
@@ -79,6 +80,7 @@ export default function Create() {
     }
 
     const userPerms = Array.from(userPermissions);
+    const birthdate = new Date((e.currentTarget as any).birthdate.value);
 
     if (criando) {
       UsuarioAPI.register(name, email, email, ra, matricula, birthdate)
@@ -176,8 +178,8 @@ export default function Create() {
                 id="birthdate"
                 type="date"
                 className="form-control-sm form-control"
-                value={formatDateToYYYYMMDD(birthdate)}
-                onChange={(e) => setBirthdate(new Date(e.target.value))}
+                ref={datePickerRef}
+                // onChange={(e) => setBirthdate(new Date(e.target.value))}
               />
             </div>
             <div>

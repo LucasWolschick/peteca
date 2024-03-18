@@ -38,7 +38,7 @@ export default function DialogEditItem(props: DialogEditItemProps) {
   };
 
   const handleEdit = () => {
-    itensArray.forEach((item) => {
+    const promises = itensArray.map((item) => {
       itemsAPI.update(
         item.id,
         nome ?? item.nome,
@@ -47,6 +47,7 @@ export default function DialogEditItem(props: DialogEditItemProps) {
         local ?? item.local
       );
     });
+    Promise.all(promises).then((_) => props.refresh());
     handleClose();
   };
 
@@ -129,7 +130,7 @@ export default function DialogEditItem(props: DialogEditItemProps) {
             <DialogDeleteItemConfirmation
               onDelete={() => {
                 itensArray.forEach((item) => {
-                  itemsAPI.delete(item.id);
+                  itemsAPI.delete(item.id).then((_) => props.refresh());
                 });
                 handleClose();
               }}
@@ -146,4 +147,5 @@ export interface DialogEditItemProps {
   buttonText: string;
   title: string;
   itens: Set<Item>;
+  refresh: () => void;
 }
