@@ -5,6 +5,8 @@ import Title from "@/components/system/Title";
 import { useEffect, useState } from "react";
 import SystemTemplate from "./_systemtemplate";
 import { Item, itemsAPI } from "@/apis/itemsAPI";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Index() {
   const [selectedItems, setSelectItems] = useState(new Set<Item>());
@@ -13,6 +15,7 @@ export default function Index() {
   const [filterOption, setFilterOption] = useState("");
 
   const [listaitems, setListaItems] = useState<Item[]>([]);
+
   const filteredItems = listaitems.filter((item) =>
     item.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -132,6 +135,7 @@ export default function Index() {
             }
             refresh={handleRefresh}
           />
+
           <DialogEditItem
             title={"Editar item"}
             buttonType={"btn-warning"}
@@ -139,6 +143,17 @@ export default function Index() {
             itens={selectedItems}
             refresh={handleRefresh}
           />
+
+          {/* <Link href="/system/historico"> */}
+          <button className="btn btn-info btn-sm rounded-5 col-lg-4 col-md-5 col-10 mt-2 mt-md-0">
+            <Link
+              href="/system/historico"
+              className="text-decoration-none text-black"
+            >
+              Ver Histórico
+            </Link>
+          </button>
+          {/* </Link> */}
         </div>
       </div>
     </SystemTemplate>
