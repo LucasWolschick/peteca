@@ -51,7 +51,7 @@ export class UserService {
     await ServiceManager.getEmailService().sendMail(
       user.email,
       "Link de confirmação da sua conta no Peteca",
-      `Seu token para confirmar a sua conta é: ${token}`
+      `Acesse o link para ativar sua conta no Peteca: ${env.BASE_URL}/login/email_confirmed/${token}`
     );
 
     return createdUser;

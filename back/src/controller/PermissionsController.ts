@@ -54,8 +54,6 @@ router.post(
     try {
       validateInput(req);
 
-      console.log(1);
-
       // assert that req.body.permissions is a list, and it is a list of strings
       if (
         !Array.isArray(req.body.permissions) ||
@@ -65,8 +63,6 @@ router.post(
           "permissions",
         ]);
       }
-
-      console.log(2);
 
       const id: number = req.params.id;
 
@@ -84,8 +80,6 @@ router.post(
           "Você não tem permissão para atualizar as permissões deste usuário"
         );
       }
-
-      console.log(3);
 
       const otherUserPerms = await permissionsService.getUserPermissions(id);
 
