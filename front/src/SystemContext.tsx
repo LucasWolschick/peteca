@@ -25,7 +25,7 @@ export const SystemProvider: React.FC<{ children: React.ReactNode }> = ({
         setColor(response.data.cor);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }, []);
 

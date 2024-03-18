@@ -57,6 +57,19 @@ export class UserService {
     return createdUser;
   }
 
+  async updateUser(id: number, user: Partial<User>): Promise<User> {
+    const existe = await this.userRepository.DataExists(
+      user.email,
+      user.ra,
+      user.matricula
+    );
+    if (!existe) {
+      throw new NotFoundError("Usuário não encontrado");
+    }
+    delete user.id;
+    return await this.userRepository.update(id, user);
+  }
+
   async activateAccount(token: string): Promise<void> {
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
       email: string;

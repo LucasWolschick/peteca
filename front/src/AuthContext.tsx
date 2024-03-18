@@ -1,6 +1,7 @@
 // AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { UsuarioAPI } from "./apis/usuarioAPI";
+import { Permission, PermissionsAPI } from "./apis/permissionsAPI";
 
 interface LoginData {
   token: string;
@@ -9,6 +10,7 @@ interface LoginData {
     nome: string;
     email: string;
   };
+  userPermissions: Permission[];
 }
 
 // undefined if indeterminate, null if not logged, LoginData if logged
@@ -48,7 +50,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
               email: response.data.email,
             };
             localStorage.setItem("token", token);
-            setLoggedUser({ token, user: user });
+            setLoggedUser({ token, user: user, userPermissions: [] });
+            return PermissionsAPI.getUserPermissions(user.id);
+          })
+          .then((permissions) => {
+            setLoggedUser((prev) => {
+              if (prev) {
+                return { ...prev, userPermissions: permissions.data };
+              }
+              return prev;
+            });
           })
           .catch((error) => {
             localStorage.removeItem("token");

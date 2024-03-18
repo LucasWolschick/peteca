@@ -19,6 +19,7 @@ const cadastroValidator = [
   body("matricula").optional({ checkFalsy: true }),
   body("email").isEmail(),
   body("senha").notEmpty(),
+  body("aniversario").optional().isISO8601(),
 ];
 
 export function checkAuthenticated(req: any): User {
@@ -55,11 +56,11 @@ router.post("/register", cadastroValidator, async (req, res, next) => {
       matricula: req.body.matricula,
       email: req.body.email,
       senha: req.body.senha,
+      data_nascimento: new Date(req.body.aniversario || "2000-01-01"),
 
       ingresso: new Date(),
       verificado: false,
       ativo: true,
-      data_nascimento: new Date(2001, 0, 1),
       imagem: "",
     };
 
@@ -161,7 +162,7 @@ router.get("/me", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.delete(
-  "/delete/:id",
+  "/:id",
   [param("id").toInt()],
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -175,36 +176,61 @@ router.delete(
   }
 );
 
-router.get("/:id", [param("id").toInt(10)], async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    validateInput(req);
-    const user = checkAuthenticated(req);
-    if (
-      (user.id !== (req.params.id as any)) && !(await permissionsService.userHasPermission(user.id, "Gerir Cadastros"))
-    ) {
-      throw new UnauthorizedError(
-        "Você não tem permissão para acessar este recurso."
-      );
+router.get(
+  "/:id",
+  [param("id").toInt(10)],
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      validateInput(req);
+      const user = checkAuthenticated(req);
+      const id = parseInt(req.params.id);
+      const usuario = await userService.getUserById(id);
+      delete usuario.senha;
+      res.status(200).json(usuario);
+    } catch (e) {
+      next(e);
     }
-    const id = parseInt(req.params.id);
-    const usuario = await userService.getUserById(id);
-    delete usuario.senha;
-    res.status(200).json(usuario);
-  } catch (e) {
-    next(e);
   }
-});
+);
+
+router.put(
+  "/:id",
+  [param("id").toInt(10), ...cadastroValidator],
+  async (req, res, next) => {
+    try {
+      validateInput(req);
+      const user = checkAuthenticated(req);
+      if (
+        user.id !== (req.params.id as any) &&
+        !(await permissionsService.userHasPermission(
+          user.id,
+          "Gerir Cadastros"
+        ))
+      ) {
+        throw new UnauthorizedError(
+          "Você não tem permissão para acessar este recurso."
+        );
+      }
+      const updatedUser: Partial<User> = {
+        nome: req.body.nome,
+        ra: req.body.ra,
+        matricula: req.body.matricula,
+        email: req.body.email,
+        senha: req.body.senha,
+        data_nascimento: req.body.aniversario,
+      };
+      await userService.updateUser(req.params.id, updatedUser);
+      res.status(200).json({ message: "Usuário atualizado com sucesso" });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = checkAuthenticated(req);
-    if (
-      !(await permissionsService.userHasPermission(user.id, "Gerir Cadastros"))
-    ) {
-      throw new UnauthorizedError(
-        "Você não tem permissão para acessar este recurso."
-      );
-    }
+
     const usuarios = (await userService.getAllUsers()).map((u) => {
       delete u.senha;
       return u;

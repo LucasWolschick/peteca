@@ -1,10 +1,12 @@
 import CardUserList from "@/components/system/CardUserList";
 import Title from "@/components/system/Title";
 import SystemTemplate from "../_systemtemplate";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { SystemContext } from "@/SystemContext";
+import { AuthContext } from "@/AuthContext";
 
 interface User {
   id: number;
@@ -19,6 +21,11 @@ interface User {
 export default function List() {
   const [users, setUsers] = useState(undefined as undefined | User[]);
   const router = useRouter();
+  const loggedUser = useContext(AuthContext).loggedUser;
+  console.log(loggedUser);
+  const canEdit =
+    loggedUser?.userPermissions.includes("admin") ||
+    loggedUser?.userPermissions.includes("Gerir Cadastros");
 
   useEffect(() => {
     UsuarioAPI.getAllUsers()
@@ -37,7 +44,7 @@ export default function List() {
         );
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         setUsers([] as User[]);
       });
   }, []);
@@ -64,30 +71,36 @@ export default function List() {
                       viewUser={() => {
                         router.push("/system/usuarios/details/" + user.id);
                       }}
-                      editUser={() => {
-                        router.push("/system/usuarios/edit/" + user.id);
-                      }}
+                      editUser={
+                        canEdit
+                          ? () => {
+                              router.push("/system/usuarios/edit/" + user.id);
+                            }
+                          : undefined
+                      }
                     />
                   );
                 })
               ) : (
-                // a single spinner
-                <div className="spinner-border text-primary" role="status">
+                // spiiners
+                <div className="spinner-border" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
               )}
             </div>
           </div>
         </div>
-        <div className="row justify-content-center mt-3">
-          <div className="col-md-8 col-12">
-            <Link href="/system/usuarios/edit/new">
-              <button className="btn btn-primary btn-sm rounded-5">
-                Cadastrar usuário
-              </button>
-            </Link>
+        {canEdit && (
+          <div className="row justify-content-center mt-3">
+            <div className="col-md-8 col-12">
+              <Link href="/system/usuarios/edit/new">
+                <button className="btn btn-primary btn-sm rounded-5">
+                  Cadastrar usuário
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </SystemTemplate>
   );

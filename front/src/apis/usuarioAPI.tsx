@@ -47,7 +47,8 @@ export const UsuarioAPI = {
     email: string,
     senha: string,
     ra?: string,
-    matricula?: string
+    matricula?: string,
+    aniversario?: Date
   ): Promise<AxiosResponse<{ id: number }>> {
     const res = await api.request({
       url: `/api/user/register`,
@@ -58,6 +59,7 @@ export const UsuarioAPI = {
         senha,
         ra,
         matricula,
+        aniversario: aniversario?.toISOString(),
       },
     });
 
@@ -153,6 +155,31 @@ export const UsuarioAPI = {
     });
 
     res.data = res.data.map((user: any) => parseUserResponse(user));
+
+    return res;
+  },
+
+  updateUser: async function (
+    id: number,
+    nome: string,
+    email: string,
+    ra?: string,
+    matricula?: string,
+    aniversario?: Date
+  ): Promise<AxiosResponse<{}>> {
+    const res = await api.request({
+      url: `/api/user/${id}`,
+      method: "PUT",
+      data: {
+        nome,
+        email,
+        ra,
+        matricula,
+        aniversario: aniversario?.toISOString(),
+      },
+    });
+
+    res.data = parseUserResponse(res.data);
 
     return res;
   },

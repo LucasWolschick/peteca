@@ -20,4 +20,8 @@ export class PermissionsService {
     const permissions = await this.permissionsRepository.getPermissions(id);
     return permissions.includes(permission) || permissions.includes("admin");
   }
+
+  async setUserPermissions(id: number, validPerms: string[]) {
+    await this.permissionsRepository.setPermissions(id, validPerms);
+  }
 }

@@ -45,7 +45,7 @@ export default function Details() {
           setUserPermissions(perms.data);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     }
   }, [id]);
@@ -78,7 +78,11 @@ export default function Details() {
         <div className="col-md-9 mt-3 mt-md-0">
           <h1 className="fw-bolder">{user.nome}</h1>
           <p>{user.email}</p>
-          <p>{user.data_nascimento.toLocaleDateString()}</p>
+          <p>
+            {user.data_nascimento.toLocaleDateString(undefined, {
+              timeZone: "UTC",
+            })}
+          </p>
         </div>
 
         <div className="mt-3">

@@ -30,4 +30,17 @@ export const PermissionsAPI = {
       method: "GET",
     });
   },
+
+  setUserPermissions: async function (
+    id: number,
+    permissions: Permissions
+  ): Promise<AxiosResponse<{}>> {
+    return await api.request({
+      url: `/api/permissions/user/${id}`,
+      method: "POST",
+      data: {
+        permissions,
+      },
+    });
+  },
 };
