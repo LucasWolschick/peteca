@@ -113,7 +113,10 @@ export class UserService {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    await this.userRepository.update(user.id, { senha: hashedPassword });
+    await this.userRepository.update(user.id, {
+      senha: hashedPassword,
+      senha_removida: false,
+    });
     await this.tokenRepository.deleteAllUserTokens(user.id);
     logger.info(`Senha redefinida para: ${user.email}`);
   }
