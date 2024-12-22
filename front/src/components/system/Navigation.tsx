@@ -35,6 +35,11 @@ export default function Navigation() {
           route="/system/admin"
         />
       )}
+      <NavigationButton
+        icon={faCalendar}
+        text="Caixinha"
+        route="/system/caixinha"
+      />
     </>
   );
 }
