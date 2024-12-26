@@ -22,7 +22,7 @@ function requireCaixinhaPermission() {
       ))
     ) {
       throw new UnauthorizedError(
-        "Você não tem permissão para criar contas na caixinha"
+        "Você não tem permissão para alterar contas da caixinha"
       );
     }
   };

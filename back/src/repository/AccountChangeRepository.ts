@@ -7,8 +7,8 @@ class AccountChangeRepository {
     this.prisma = prisma;
   }
 
-  createAccount(acc: Conta, criador: User) {
-    this.prisma.alteracaoConta.create({
+  async createAccount(acc: Conta, criador: User) {
+    return this.prisma.alteracaoConta.create({
       data: {
         tipo: TipoAlteracaoConta.CRIADA,
         data: new Date(),
@@ -26,8 +26,8 @@ class AccountChangeRepository {
     });
   }
 
-  deleteAccount(acc: Conta, deletor: User) {
-    this.prisma.alteracaoConta.create({
+  async deleteAccount(acc: Conta, deletor: User) {
+    return this.prisma.alteracaoConta.create({
       data: {
         tipo: TipoAlteracaoConta.REMOVIDA,
         data: new Date(),
@@ -45,8 +45,8 @@ class AccountChangeRepository {
     });
   }
 
-  updateAccount(autor: User, oldAcc: Conta, newAcc: Conta) {
-    this.prisma.alteracaoConta.create({
+  async updateAccount(autor: User, oldAcc: Conta, newAcc: Conta) {
+    return this.prisma.alteracaoConta.create({
       data: {
         tipo: TipoAlteracaoConta.EDITADA,
         data: new Date(),

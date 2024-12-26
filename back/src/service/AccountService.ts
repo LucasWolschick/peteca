@@ -1,4 +1,4 @@
-import { Conta, User } from "@prisma/client";
+import { Conta, TipoTransacao, Transacao, User } from "@prisma/client";
 import AccountChangeRepository from "../repository/AccountChangeRepository";
 import AccountRepository from "../repository/AccountRepository";
 import RepositoryService from "./RepositoryService";
@@ -73,5 +73,83 @@ export class AccountService {
     if (autor) {
       await this.accountChangeRepository.updateAccount(autor, acc, newAcc);
     }
+  }
+
+  async updateAddingTransaction(transaction: Transacao) {
+    const acc = await this.getAccountById(transaction.contaId);
+    if (!acc) {
+      throw new NotFoundError(
+        `Conta com id ${transaction.contaId} não encontrada`
+      );
+    }
+
+    logger.info(`Atualizando saldo da conta ${acc.nome}`);
+
+    if (transaction.tipo === TipoTransacao.PENDENCIA) {
+      return;
+    }
+
+    let newSaldo;
+    if (transaction.tipo === TipoTransacao.RECEITA) {
+      newSaldo = acc.saldo.add(transaction.valor);
+    } else if (transaction.tipo === TipoTransacao.DESPESA) {
+      newSaldo = acc.saldo.sub(transaction.valor);
+    }
+
+    await this.accountRepository.updateSaldo(acc.id, newSaldo);
+  }
+
+  async updateChangingTransaction(
+    oldTransaction: Transacao,
+    newTransaction: Transacao
+  ) {
+    const acc = await this.getAccountById(oldTransaction.contaId);
+    if (!acc) {
+      throw new NotFoundError(
+        `Conta com id ${oldTransaction.contaId} não encontrada`
+      );
+    }
+
+    logger.info(`Atualizando saldo da conta ${acc.nome}`);
+
+    let saldo = acc.saldo;
+
+    if (oldTransaction.tipo === TipoTransacao.RECEITA) {
+      saldo = saldo.sub(oldTransaction.valor);
+    } else if (oldTransaction.tipo === TipoTransacao.DESPESA) {
+      saldo = saldo.add(oldTransaction.valor);
+    }
+
+    if (newTransaction.tipo === TipoTransacao.RECEITA) {
+      saldo = saldo.add(newTransaction.valor);
+    } else if (newTransaction.tipo === TipoTransacao.DESPESA) {
+      saldo = saldo.sub(newTransaction.valor);
+    }
+
+    await this.accountRepository.updateSaldo(acc.id, saldo);
+  }
+
+  async updateDeletingTransaction(transaction: Transacao) {
+    const acc = await this.getAccountById(transaction.contaId);
+    if (!acc) {
+      throw new NotFoundError(
+        `Conta com id ${transaction.contaId} não encontrada`
+      );
+    }
+
+    logger.info(`Atualizando saldo da conta ${acc.nome}`);
+
+    if (transaction.tipo === TipoTransacao.PENDENCIA) {
+      return;
+    }
+
+    let newSaldo;
+    if (transaction.tipo === TipoTransacao.RECEITA) {
+      newSaldo = acc.saldo.sub(transaction.valor);
+    } else if (transaction.tipo === TipoTransacao.DESPESA) {
+      newSaldo = acc.saldo.add(transaction.valor);
+    }
+
+    await this.accountRepository.updateSaldo(acc.id, newSaldo);
   }
 }

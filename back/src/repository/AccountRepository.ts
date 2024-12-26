@@ -1,4 +1,5 @@
 import { Conta, PrismaClient } from "@prisma/client";
+import Decimal from "decimal.js";
 
 class AccountRepository {
   private prisma: PrismaClient;
@@ -18,7 +19,7 @@ class AccountRepository {
       data: {
         nome,
         descricao,
-        saldo: 0,
+        saldo: new Decimal("0"),
       },
     });
     return acc;
@@ -49,6 +50,18 @@ class AccountRepository {
       data: {
         nome,
         descricao,
+      },
+    });
+  }
+
+  async updateSaldo(id: number, saldo: Decimal): Promise<Conta> {
+    return this.prisma.conta.update({
+      where: {
+        id,
+        ativo: true,
+      },
+      data: {
+        saldo,
       },
     });
   }
