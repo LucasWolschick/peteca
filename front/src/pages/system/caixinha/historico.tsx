@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { itemsAPI } from "@/apis/itemsAPI";
-import SystemTemplate from "./_systemtemplate";
+import SystemTemplate from "../_systemtemplate";
 import Title from "@/components/system/Title";
 import ItemEntry from "@/components/system/ItemEntry";
 import moment from "moment";
