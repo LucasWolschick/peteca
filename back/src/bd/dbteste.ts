@@ -3,7 +3,7 @@ import { TipoMovimentacaoItem } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-(async () => {
+const generate = async () => {
   await prisma.permissoes.create({
     data: {
       nome: "Gerir Cadastros",
@@ -713,6 +713,10 @@ const prisma = new PrismaClient();
       },
     },
   });
-})();
+};
 
-console.log("Terminou!");
+generate().then(async () => {
+  console.log("Terminou!");
+  await prisma.$disconnect();
+  process.exit();
+});

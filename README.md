@@ -4,7 +4,7 @@
 
 ## Descrição
 
-Este repositório contém o Peteca, um sistema de gestão integrada voltado aos discentes e docentes participantes do [Programa de Educação Tutorial (PET)]([https://](http://portal.mec.gov.br/pet)) que queiram gerir os seus grupos PET digitalmente. O sistema proporciona facilidade no controle e disponibilização de acesso de informações por meio de um robusto sistema de autenticação, gerenciamento granular de permissões e acesso por qualquer navegador Web.
+Este repositório contém o Peteca, um sistema de gestão integrada voltado aos discentes e docentes participantes do [Programa de Educação Tutorial (PET)](<[https://](http://portal.mec.gov.br/pet)>) que queiram gerir os seus grupos PET digitalmente. O sistema proporciona facilidade no controle e disponibilização de acesso de informações por meio de um robusto sistema de autenticação, gerenciamento granular de permissões e acesso por qualquer navegador Web.
 
 O sistema é modular e pode ser facilmente incrementado com novos recursos. Os módulos originalmente planejados incluíam: gerenciamento de inventário do grupo, gerenciamento das finanças do grupo, organização e exibição de documentos importantes e exibição do calendário de atividades do grupo. Este repositório contém apenas o módulo de gerenciamento de inventário atualmente implementado.
 
@@ -43,14 +43,13 @@ O projeto está dividido em dois componentes: o módulo da interface, o _front-e
    ```bash
    $ cd Peteca/front
    $ npm run build
-   $ npm run start
+   $ npm run dev
    ```
 7. Abra outro terminal e inicie o _back-end_:
    ```bash
    $ cd Peteca/back
    $ npm run generatePrisma
-   $ npm run dbstart
-   (Após finalizado este comando, dê Ctrl-C)
-   $ npm run start
+   $ npm run populateDb
+   $ npm run dev
    ```
 8. Abra o endereço [http://localhost:3000/](http://localhost:3000/) em seu navegador, e se autentique com as credenciais de administrador.
