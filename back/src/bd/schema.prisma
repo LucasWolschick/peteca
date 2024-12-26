@@ -26,6 +26,7 @@ model User {
   movimentacoes         MovimentacaoItem[]
   movimentacoesCaixinha MovimentacaoTransacao[]
   relatoriosCaixinha    RelatorioCaixinha[]
+  MovimentacaoConta     AlteracaoConta[]
 }
 
 model Permissoes {
@@ -98,11 +99,15 @@ model MovimentacaoItem {
 }
 
 model Conta {
-  id    Int     @id @default(autoincrement())
-  banco String  @db.VarChar()
-  saldo Decimal @db.Money
+  id        Int     @id @default(autoincrement())
+  nome      String  @db.VarChar()
+  descricao String  @db.VarChar()
+  saldo     Decimal @db.Money
 
-  movimentacoes MovimentacaoTransacao[]
+  movimentacoes  MovimentacaoTransacao[]
+  alteracaoConta AlteracaoConta[]
+
+  ativo Boolean @default(true)
 }
 
 enum TipoMovimentacaoTransacao {
@@ -123,6 +128,31 @@ model MovimentacaoTransacao {
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
+}
+
+enum TipoAlteracaoConta {
+  CRIADA
+  REMOVIDA
+  EDITADA
+}
+
+model AlteracaoConta {
+  id   Int      @id @default(autoincrement())
+  data DateTime @db.Date
+
+  antigoNome      String? @db.VarChar()
+  antigaDescricao String? @db.VarChar()
+
+  novoNome      String? @db.VarChar()
+  novaDescricao String? @db.VarChar()
+
+  tipo TipoAlteracaoConta
+
+  contaId Int
+  conta   Conta @relation(fields: [contaId], references: [id])
+
+  autorId Int
+  autor   User @relation(fields: [autorId], references: [id])
 }
 
 model RelatorioCaixinha {

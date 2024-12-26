@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-import ItemService from "../service/ItemService";
+import { ItemService } from "../service/ItemService";
 import { ServiceManager } from "../service/ServiceManager";
 import { checkAuthenticated } from "./UserController";
 import { validateInput } from "../validateInput";
