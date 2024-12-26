@@ -21,12 +21,12 @@ model User {
   imagem          String   @db.VarChar
   ativo           Boolean  @default(true)
 
-  permissoes            UserPermissoes[]
-  tokens                Token[]
-  movimentacoes         MovimentacaoItem[]
-  movimentacoesCaixinha MovimentacaoTransacao[]
-  relatoriosCaixinha    RelatorioCaixinha[]
-  MovimentacaoConta     AlteracaoConta[]
+  permissoes         UserPermissoes[]
+  tokens             Token[]
+  movimentacoes      MovimentacaoItem[]
+  relatoriosCaixinha RelatorioCaixinha[]
+  movimentacoesConta AlteracaoConta[]
+  alteracoesConta    AlteracaoTransacao[]
 }
 
 model Permissoes {
@@ -104,30 +104,13 @@ model Conta {
   descricao String  @db.VarChar()
   saldo     Decimal @db.Money
 
-  movimentacoes  MovimentacaoTransacao[]
+  transacoes     Transacao[]
   alteracaoConta AlteracaoConta[]
 
   ativo Boolean @default(true)
-}
 
-enum TipoMovimentacaoTransacao {
-  Receita
-  Despesa
-  Pendencia
-}
-
-model MovimentacaoTransacao {
-  id    Int      @id @default(autoincrement())
-  valor Decimal  @db.Money
-  data  DateTime @db.Date
-
-  tipo TipoMovimentacaoTransacao
-
-  contaId Int
-  conta   Conta @relation(fields: [contaId], references: [id])
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  alteracoesTransacaoAntigas AlteracaoTransacao[] @relation("contasAntigas")
+  alteracoesTransacaoNovas   AlteracaoTransacao[] @relation("contasNovas")
 }
 
 enum TipoAlteracaoConta {
@@ -155,11 +138,68 @@ model AlteracaoConta {
   autor   User @relation(fields: [autorId], references: [id])
 }
 
+enum TipoTransacao {
+  RECEITA
+  DESPESA
+  PENDENCIA
+}
+
+model Transacao {
+  id Int @id @default(autoincrement())
+
+  valor      Decimal       @db.Money
+  data       DateTime      @db.Date
+  referencia String        @db.VarChar()
+  tipo       TipoTransacao
+
+  contaId Int
+  conta   Conta @relation(fields: [contaId], references: [id])
+
+  alteracaoTransacao AlteracaoTransacao[]
+
+  ativo Boolean @default(true)
+}
+
+enum TipoAlteracaoTransacao {
+  CRIADA
+  REMOVIDA
+  EDITADA
+}
+
+model AlteracaoTransacao {
+  id   Int      @id @default(autoincrement())
+  data DateTime @db.Date
+
+  tipo TipoAlteracaoTransacao
+
+  antigoValor      Decimal?       @db.Money
+  antigaData       DateTime?      @db.Date
+  antigaReferencia String?        @db.VarChar()
+  antigoTipo       TipoTransacao?
+
+  antigaContaId Int?
+  antigaConta   Conta? @relation("contasAntigas", fields: [antigaContaId], references: [id])
+
+  novoValor      Decimal?       @db.Money
+  novaData       DateTime?      @db.Date
+  novaReferencia String?        @db.VarChar()
+  novoTipo       TipoTransacao?
+
+  novaContaId Int?
+  novaConta   Conta? @relation("contasNovas", fields: [novaContaId], references: [id])
+
+  transacaoId Int
+  transacao   Transacao @relation(fields: [transacaoId], references: [id])
+
+  autorId Int
+  autor   User @relation(fields: [autorId], references: [id])
+}
+
 model RelatorioCaixinha {
   id            Int      @id @default(autoincrement())
   data          DateTime @db.Date
   pathRelatorio String   @db.VarChar()
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  autorId Int
+  autor   User @relation(fields: [autorId], references: [id])
 }
