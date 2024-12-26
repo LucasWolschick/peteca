@@ -21,9 +21,11 @@ model User {
   imagem          String   @db.VarChar
   ativo           Boolean  @default(true)
 
-  permissoes    UserPermissoes[]
-  tokens        Token[]
-  movimentacoes MovimentacaoItem[]
+  permissoes            UserPermissoes[]
+  tokens                Token[]
+  movimentacoes         MovimentacaoItem[]
+  movimentacoesCaixinha MovimentacaoTransacao[]
+  relatoriosCaixinha    RelatorioCaixinha[]
 }
 
 model Permissoes {
@@ -93,4 +95,41 @@ model MovimentacaoItem {
 
   autorId Int
   autor   User @relation(fields: [autorId], references: [id])
+}
+
+model Conta {
+  id    Int     @id @default(autoincrement())
+  banco String  @db.VarChar()
+  saldo Decimal @db.Money
+
+  movimentacoes MovimentacaoTransacao[]
+}
+
+enum TipoMovimentacaoTransacao {
+  Receita
+  Despesa
+  Pendencia
+}
+
+model MovimentacaoTransacao {
+  id    Int      @id @default(autoincrement())
+  valor Decimal  @db.Money
+  data  DateTime @db.Date
+
+  tipo TipoMovimentacaoTransacao
+
+  contaId Int
+  conta   Conta @relation(fields: [contaId], references: [id])
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model RelatorioCaixinha {
+  id            Int      @id @default(autoincrement())
+  data          DateTime @db.Date
+  pathRelatorio String   @db.VarChar()
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
