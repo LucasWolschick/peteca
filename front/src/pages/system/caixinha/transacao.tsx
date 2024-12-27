@@ -1,5 +1,5 @@
 import React from "react";
-import SystemTemplate from "./_systemtemplate";
+import SystemTemplate from "../_systemtemplate";
 import Title from "@/components/system/Title";
 import styles from "./transacao.module.css";
 

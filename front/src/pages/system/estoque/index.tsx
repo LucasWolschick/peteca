@@ -3,7 +3,7 @@ import DialogEditItem from "@/components/system/DialogEditItem";
 import ItemEntry from "@/components/system/ItemEntry";
 import Title from "@/components/system/Title";
 import { useEffect, useState } from "react";
-import SystemTemplate from "./_systemtemplate";
+import SystemTemplate from "../_systemtemplate";
 import { Item, itemsAPI } from "@/apis/itemsAPI";
 import { useRouter } from "next/router";
 import Link from "next/link";

@@ -1,5 +1,5 @@
 import Title from "@/components/system/Title";
-import SystemTemplate from "./_systemtemplate";
+import SystemTemplate from "../_systemtemplate";
 import { AdminAPI, Log } from "@/apis/adminAPI";
 import { useEffect, useState } from "react";
 

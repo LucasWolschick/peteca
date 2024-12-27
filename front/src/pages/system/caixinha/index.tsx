@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import dynamic from "next/dynamic";
-import SystemTemplate from "./_systemtemplate";
+import SystemTemplate from "../_systemtemplate";
 import Title from "@/components/system/Title";
 import Link from "next/link";
 
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+const Chart = dynamic(() => import("react-apexcharts"), {ssr: false});
 
 const Caixinha = () => {
   const [isClient, setIsClient] = useState(false);
@@ -27,15 +27,15 @@ const Caixinha = () => {
           show: false, // Oculta a barra de ferramentas
         },
         style: {
-            fontFamily: "inherit",
-            color: "#fff",
+          fontFamily: "inherit",
+          color: "#fff",
         }
       },
       xaxis: {
         categories: ["Jan", "Feb", "Mar", "Apr", "May"], // Categorias do eixo x
         style: {
-            fontSize: "14px",
-            color: "#fff",
+          fontSize: "14px",
+          color: "#fff",
         }
       },
       title: {
@@ -56,18 +56,18 @@ const Caixinha = () => {
 
   return (
     <SystemTemplate>
-      <Title title="Caixinha" />
+      <Title title="Caixinha"/>
       <div className="d-flex flex-column flex-md-row justify-content-between gap-4">
         {/* Coluna 1 */}
         <div className="col-md-4 mb-4">
           <div className="mb-4">
-            <span className="text-uppercase fw-bold" style={{ color: "#E0972F" }}>
+            <span className="text-uppercase fw-bold" style={{color: "#E0972F"}}>
               Saldo
             </span>
             <h1 className="display-5">R$ 4321,90</h1>
           </div>
           <div className="mb-4">
-            <span style={{ color: "#E0972F" }} className="text-uppercase fw-bold">
+            <span style={{color: "#E0972F"}} className="text-uppercase fw-bold">
               Contas
             </span>
             <div className="d-flex justify-content-between items-center">
@@ -84,7 +84,7 @@ const Caixinha = () => {
             </div>
           </div>
           <div className="mb-4">
-            <span style={{ color: "#E0972F" }} className="text-uppercase fw-bold">
+            <span style={{color: "#E0972F"}} className="text-uppercase fw-bold">
               Pendências
             </span>
             <div className="d-flex justify-content-between items-center">
@@ -98,7 +98,7 @@ const Caixinha = () => {
           </div>
 
           <div className="mb-4 d-flex justify-content-between items-center">
-            <span style={{ color: "#E0972F" }} className="text-uppercase fw-bold">
+            <span style={{color: "#E0972F"}} className="text-uppercase fw-bold">
               Subtotal
             </span>
             <div>
@@ -107,7 +107,7 @@ const Caixinha = () => {
           </div>
 
           {isClient && (
-            <Chart options={chartData.options} series={chartData.series} type="line" height={350} />
+            <Chart options={chartData.options} series={chartData.series} type="line" height={350}/>
           )}
           <div className="d-grid gap-2">
             <Link href="/system/transacao" className="btn btn-primary">
@@ -127,49 +127,49 @@ const Caixinha = () => {
               <label htmlFor="startDate" className="me-2">
                 De:
               </label>
-              <input type="date" id="startDate" className="form-control me-2" style={{ width: "auto" }} />
+              <input type="date" id="startDate" className="form-control me-2" style={{width: "auto"}}/>
               <label htmlFor="endDate" className="me-2">
                 a
               </label>
-              <input type="date" id="endDate" className="form-control me-2" style={{ width: "auto" }} />
+              <input type="date" id="endDate" className="form-control me-2" style={{width: "auto"}}/>
               <button className="btn btn-primary">Emitir Extrato</button>
             </div>
-            <input type="text" placeholder="Buscar..." className="form-control" />
+            <input type="text" placeholder="Buscar..." className="form-control"/>
           </div>
 
           <div className="table-responsive bg-white mb-4">
             <table className="table table-striped">
               <thead className="table-dark">
-                <tr>
-                  <th>Autor</th>
-                  <th>Data</th>
-                  <th>Valor</th>
-                  <th>Referência</th>
-                  <th>Tipo</th>
-                  <th>Ações</th>
-                </tr>
+              <tr>
+                <th>Autor</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Referência</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+              </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Lucas</td>
-                  <td>01/01/2022</td>
-                  <td>+R$ 1000,00</td>
-                  <td>Custeio</td>
-                  <td>Entrada</td>
-                  <td>
-                    <button className="btn btn-warning btn-sm">Editar</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Eduarda</td>
-                  <td>02/01/2022</td>
-                  <td>-R$ 500,00</td>
-                  <td>Confraternização</td>
-                  <td>Saída</td>
-                  <td>
-                    <button className="btn btn-warning btn-sm">Editar</button>
-                  </td>
-                </tr>
+              <tr>
+                <td>Lucas</td>
+                <td>01/01/2022</td>
+                <td>+R$ 1000,00</td>
+                <td>Custeio</td>
+                <td>Entrada</td>
+                <td>
+                  <button className="btn btn-warning btn-sm">Editar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Eduarda</td>
+                <td>02/01/2022</td>
+                <td>-R$ 500,00</td>
+                <td>Confraternização</td>
+                <td>Saída</td>
+                <td>
+                  <button className="btn btn-warning btn-sm">Editar</button>
+                </td>
+              </tr>
               </tbody>
             </table>
           </div>
