@@ -92,7 +92,10 @@ export class AccountService {
     let newSaldo;
     if (transaction.tipo === TipoTransacao.RECEITA) {
       newSaldo = acc.saldo.add(transaction.valor);
-    } else if (transaction.tipo === TipoTransacao.DESPESA) {
+    } else if (
+      transaction.tipo === TipoTransacao.DESPESA ||
+      transaction.tipo == TipoTransacao.PENDENCIA
+    ) {
       newSaldo = acc.saldo.sub(transaction.valor);
     }
 
@@ -113,14 +116,20 @@ export class AccountService {
     let balance = oldAcc.saldo;
     if (oldTransaction.tipo === TipoTransacao.RECEITA) {
       balance = balance.sub(oldTransaction.valor);
-    } else if (oldTransaction.tipo === TipoTransacao.DESPESA) {
+    } else if (
+      oldTransaction.tipo === TipoTransacao.DESPESA ||
+      oldTransaction.tipo == TipoTransacao.PENDENCIA
+    ) {
       balance = balance.add(oldTransaction.valor);
     }
 
     if (oldTransaction.contaId === newTransaction.contaId) {
       if (newTransaction.tipo === TipoTransacao.RECEITA) {
         balance = balance.add(newTransaction.valor);
-      } else if (newTransaction.tipo === TipoTransacao.DESPESA) {
+      } else if (
+        newTransaction.tipo === TipoTransacao.DESPESA ||
+        oldTransaction.tipo == TipoTransacao.PENDENCIA
+      ) {
         balance = balance.sub(newTransaction.valor);
       }
       await this.accountRepository.updateSaldo(oldAcc.id, balance);
@@ -138,7 +147,10 @@ export class AccountService {
       let newBalance = newAcc.saldo;
       if (newTransaction.tipo === TipoTransacao.RECEITA) {
         newBalance = newBalance.add(newTransaction.valor);
-      } else if (newTransaction.tipo === TipoTransacao.DESPESA) {
+      } else if (
+        newTransaction.tipo === TipoTransacao.DESPESA ||
+        oldTransaction.tipo == TipoTransacao.PENDENCIA
+      ) {
         newBalance = newBalance.sub(newTransaction.valor);
       }
       await this.accountRepository.updateSaldo(newAcc.id, newBalance);
@@ -162,7 +174,10 @@ export class AccountService {
     let newSaldo;
     if (transaction.tipo === TipoTransacao.RECEITA) {
       newSaldo = acc.saldo.sub(transaction.valor);
-    } else if (transaction.tipo === TipoTransacao.DESPESA) {
+    } else if (
+      transaction.tipo === TipoTransacao.DESPESA ||
+      transaction.tipo == TipoTransacao.PENDENCIA
+    ) {
       newSaldo = acc.saldo.add(transaction.valor);
     }
 
