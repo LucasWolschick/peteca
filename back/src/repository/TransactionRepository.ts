@@ -64,9 +64,61 @@ export class TransactionRepository {
     });
   }
 
+  async getTransactionsByQuery(query: string): Promise<Transacao[]> {
+    return this.prisma.transacao.findMany({
+      where: {
+        OR: [
+          {
+            referencia: {
+              contains: query,
+              mode: "insensitive",
+            },
+            conta: {
+              nome: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+        ativo: true,
+      },
+    });
+  }
+
+  async getTransactionsByQueryAndDates(
+    query: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<Transacao[]> {
+    return this.prisma.transacao.findMany({
+      where: {
+        data: {
+          gte: startDate,
+          lte: endDate,
+        },
+        OR: [
+          {
+            referencia: {
+              contains: query,
+              mode: "insensitive",
+            },
+            conta: {
+              nome: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+        ativo: true,
+      },
+    });
+  }
+
   async updateTransaction(
     id: number,
-    { valor, data, referencia, tipo, contaId }
+    { valor, data, referencia, tipo, contaId }: Omit<Transacao, "id" | "ativo">
   ): Promise<Transacao> {
     return this.prisma.transacao.update({
       where: {

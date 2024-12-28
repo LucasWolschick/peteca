@@ -103,30 +103,46 @@ export class AccountService {
     oldTransaction: Transacao,
     newTransaction: Transacao
   ) {
-    const acc = await this.getAccountById(oldTransaction.contaId);
-    if (!acc) {
+    const oldAcc = await this.getAccountById(oldTransaction.contaId);
+    if (!oldAcc) {
       throw new NotFoundError(
         `Conta com id ${oldTransaction.contaId} não encontrada`
       );
     }
 
-    logger.info(`Atualizando saldo da conta ${acc.nome}`);
-
-    let saldo = acc.saldo;
-
+    let balance = oldAcc.saldo;
     if (oldTransaction.tipo === TipoTransacao.RECEITA) {
-      saldo = saldo.sub(oldTransaction.valor);
+      balance = balance.sub(oldTransaction.valor);
     } else if (oldTransaction.tipo === TipoTransacao.DESPESA) {
-      saldo = saldo.add(oldTransaction.valor);
+      balance = balance.add(oldTransaction.valor);
     }
 
-    if (newTransaction.tipo === TipoTransacao.RECEITA) {
-      saldo = saldo.add(newTransaction.valor);
-    } else if (newTransaction.tipo === TipoTransacao.DESPESA) {
-      saldo = saldo.sub(newTransaction.valor);
-    }
+    if (oldTransaction.contaId === newTransaction.contaId) {
+      if (newTransaction.tipo === TipoTransacao.RECEITA) {
+        balance = balance.add(newTransaction.valor);
+      } else if (newTransaction.tipo === TipoTransacao.DESPESA) {
+        balance = balance.sub(newTransaction.valor);
+      }
+      await this.accountRepository.updateSaldo(oldAcc.id, balance);
+    } else {
+      // Save the old account balance
+      await this.accountRepository.updateSaldo(oldAcc.id, balance);
 
-    await this.accountRepository.updateSaldo(acc.id, saldo);
+      const newAcc = await this.getAccountById(newTransaction.contaId);
+      if (!newAcc) {
+        throw new NotFoundError(
+          `Conta com id ${newTransaction.contaId} não encontrada`
+        );
+      }
+
+      let newBalance = newAcc.saldo;
+      if (newTransaction.tipo === TipoTransacao.RECEITA) {
+        newBalance = newBalance.add(newTransaction.valor);
+      } else if (newTransaction.tipo === TipoTransacao.DESPESA) {
+        newBalance = newBalance.sub(newTransaction.valor);
+      }
+      await this.accountRepository.updateSaldo(newAcc.id, newBalance);
+    }
   }
 
   async updateDeletingTransaction(transaction: Transacao) {

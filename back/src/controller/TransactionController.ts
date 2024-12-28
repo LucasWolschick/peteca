@@ -3,7 +3,7 @@ import { ServiceManager } from "../service/ServiceManager";
 import { validateInput } from "../validateInput";
 import { checkAuthenticated } from "./UserController";
 import { UnauthorizedError } from "../errors";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import { TipoTransacao } from "@prisma/client";
 import Decimal from "decimal.js";
 
@@ -23,7 +23,14 @@ const createTransactionValidator = [
 
 const updateTransactionValidator = [
   body("id").isInt(),
-  ...createTransactionValidator,
+  body("valor")
+    .optional()
+    .isDecimal()
+    .customSanitizer((value) => new Decimal(value)),
+  body("data").optional().toDate(),
+  body("referencia").optional(),
+  body("tipo").optional().isIn(["receita", "despesa", "pendencia"]),
+  body("conta").optional().isInt(),
 ];
 
 function requireCaixinhaPermission() {
@@ -49,6 +56,29 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const transactions = await transactionService.getTransactions();
+      res.status(200).json(transactions);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/filter",
+  [
+    query("from").optional().toDate(),
+    query("to").optional().toDate(),
+    query("q").optional(),
+  ],
+  requireCaixinhaPermission(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { q, from, to } = req.query;
+      const transactions = await transactionService.searchTransactions(
+        q as string,
+        from as any as Date,
+        to as any as Date
+      );
       res.status(200).json(transactions);
     } catch (error) {
       next(error);
@@ -110,11 +140,14 @@ router.put(
       const id = parseInt(req.params.id);
       const updatedTransaction = await transactionService.updateTransaction(
         id,
-        new Decimal(valor),
-        data,
-        referencia || "",
-        tipo,
-        await accountService.getAccountById(conta)
+        checkAuthenticated(req),
+        {
+          valor,
+          data,
+          referencia,
+          tipo,
+          conta: conta && (await accountService.getAccountById(conta)),
+        }
       );
       res.status(200).json(updatedTransaction);
     } catch (error) {

@@ -77,12 +77,20 @@ export class TransactionService {
 
   async updateTransaction(
     id: number,
-    valor: Decimal,
-    data: Date,
-    referencia: string,
-    tipo: TipoTransacao,
-    conta: Conta,
-    autor?: User
+    autor: User,
+    {
+      valor,
+      data,
+      referencia,
+      tipo,
+      conta,
+    }: {
+      valor?: Decimal;
+      data?: Date;
+      referencia?: string;
+      tipo?: TipoTransacao;
+      conta?: Conta;
+    }
   ) {
     const transaction = await this.transactionRepository.findById(id);
     if (!transaction) {
@@ -90,14 +98,26 @@ export class TransactionService {
     }
 
     logger.info(`Atualizando transação com id ${id}`);
+
+    const updatedFields = { ...transaction };
+    if (valor !== undefined) {
+      updatedFields.valor = valor;
+    }
+    if (data !== undefined) {
+      updatedFields.data = data;
+    }
+    if (referencia !== undefined) {
+      updatedFields.referencia = referencia;
+    }
+    if (tipo !== undefined) {
+      updatedFields.tipo = tipo;
+    }
+    if (conta !== undefined) {
+      updatedFields.contaId = conta.id;
+    }
+
     const updatedTransaction =
-      await this.transactionRepository.updateTransaction(id, {
-        valor,
-        data,
-        referencia,
-        tipo,
-        contaId: conta.id,
-      });
+      await this.transactionRepository.updateTransaction(id, updatedFields);
 
     if (autor) {
       await this.transactionChangeRepository.updateTransaction(
@@ -113,5 +133,36 @@ export class TransactionService {
     );
 
     return updatedTransaction;
+  }
+
+  async searchTransactions(
+    query?: string,
+    from?: Date,
+    to?: Date
+  ): Promise<Transacao[]> {
+    if (!query && !from && !to) {
+      return await this.transactionRepository.getTransactions();
+    }
+
+    if (!from && !to) {
+      // query only
+      return await this.transactionRepository.getTransactionsByQuery(query);
+    }
+
+    from = from || new Date(0);
+    to = to || new Date();
+
+    if (!query) {
+      return await this.transactionRepository.getTransactionsBetweenDates(
+        from,
+        to
+      );
+    } else {
+      return await this.transactionRepository.getTransactionsByQueryAndDates(
+        query,
+        from,
+        to
+      );
+    }
   }
 }
