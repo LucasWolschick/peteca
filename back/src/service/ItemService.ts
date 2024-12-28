@@ -4,7 +4,7 @@ import ItemRepository from "../repository/ItemRepository";
 import RepositoryService from "../service/RepositoryService";
 import MovimentacaoItemRepository from "../repository/MovimentacaoItemRepository";
 
-export default class ItemService {
+export class ItemService {
   private itemRepository: ItemRepository;
   private movimentacaoItemRepository: MovimentacaoItemRepository;
 

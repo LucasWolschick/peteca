@@ -1,7 +1,11 @@
+import AccountChangeRepository from "../repository/AccountChangeRepository";
+import AccountRepository from "../repository/AccountRepository";
 import ItemRepository from "../repository/ItemRepository";
 import MovimentacaoItemRepository from "../repository/MovimentacaoItemRepository";
 import { PermissionsRepository } from "../repository/PermissionsRepository";
 import { TokenRepository } from "../repository/TokenRepository";
+import { TransactionChangeRepository } from "../repository/TransactionChangeRepository";
+import { TransactionRepository } from "../repository/TransactionRepository";
 import { UserRepository } from "../repository/UserRepository";
 import { PrismaClient } from "@prisma/client";
 
@@ -12,6 +16,11 @@ class RepositoryService {
   private prisma: PrismaClient;
   private itemRepository: ItemRepository | null = null;
   private movimentacaoItemRepository: MovimentacaoItemRepository | null = null;
+  private accountRepository: AccountRepository | null = null;
+  private accountChangeRepository: AccountChangeRepository | null = null;
+  private transactionRepository: TransactionRepository | null = null;
+  private transactionChangeRepository: TransactionChangeRepository | null =
+    null;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
@@ -47,6 +56,32 @@ class RepositoryService {
         this.prisma
       );
     return this.movimentacaoItemRepository;
+  }
+
+  getAccountRepository(): AccountRepository {
+    if (!this.accountRepository)
+      this.accountRepository = new AccountRepository(this.prisma);
+    return this.accountRepository;
+  }
+
+  getAccountChangeRepository(): AccountChangeRepository {
+    if (!this.accountChangeRepository)
+      this.accountChangeRepository = new AccountChangeRepository(this.prisma);
+    return this.accountChangeRepository;
+  }
+
+  getTransactionRepository(): TransactionRepository {
+    if (!this.transactionRepository)
+      this.transactionRepository = new TransactionRepository(this.prisma);
+    return this.transactionRepository;
+  }
+
+  getTransactionChangeRepository(): TransactionChangeRepository {
+    if (!this.transactionChangeRepository)
+      this.transactionChangeRepository = new TransactionChangeRepository(
+        this.prisma
+      );
+    return this.transactionChangeRepository;
   }
 }
 
