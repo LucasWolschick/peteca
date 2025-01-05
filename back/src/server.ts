@@ -7,6 +7,8 @@ import permissionsController from "./controller/PermissionsController";
 import itemController from "./controller/ItemController";
 import adminController from "./controller/AdminController";
 import systemController from "./controller/SystemController";
+import accountController from "./controller/AccountController";
+import transactionController from "./controller/TransactionController";
 import { NotFoundError, errorHandler } from "./errors";
 import logger from "./logger";
 import { authMiddleware } from "./authMiddleware";
@@ -39,6 +41,8 @@ app.use("/api/permissions", permissionsController);
 app.use("/api/items", itemController);
 app.use("/api/admin", adminController);
 app.use("/api/config", systemController);
+app.use("/api/accounts", accountController);
+app.use("/api/transactions", transactionController);
 
 // 404 handler
 app.use(async (req, res, next) => {
