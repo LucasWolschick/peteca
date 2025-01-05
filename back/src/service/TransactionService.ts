@@ -1,20 +1,19 @@
 import Decimal from "decimal.js";
-import { TransactionChangeRepository } from "../repository/TransactionChangeRepository";
-import { TransactionRepository } from "../repository/TransactionRepository";
+import {
+  TransacaoAutor,
+  TransactionRepository,
+} from "../repository/TransactionRepository";
 import RepositoryService from "./RepositoryService";
-import { Conta, TipoTransacao, Transacao, User } from "@prisma/client";
+import { AlteracaoTransacao, Conta, TipoTransacao, User } from "@prisma/client";
 import logger from "../logger";
 import { NotFoundError } from "../errors";
 import { ServiceManager } from "./ServiceManager";
 
 export class TransactionService {
   private transactionRepository: TransactionRepository;
-  private transactionChangeRepository: TransactionChangeRepository;
 
   constructor() {
     this.transactionRepository = RepositoryService.getTransactionRepository();
-    this.transactionChangeRepository =
-      RepositoryService.getTransactionChangeRepository();
   }
 
   async createTransaction(
@@ -24,7 +23,7 @@ export class TransactionService {
     tipo: TipoTransacao,
     conta: Conta,
     autor?: User
-  ): Promise<Transacao> {
+  ): Promise<TransacaoAutor> {
     logger.info(
       `Criando transação ${referencia} (valor=${valor}) para conta ${conta.nome}, tipo ${tipo}, data ${data}`
     );
@@ -38,25 +37,22 @@ export class TransactionService {
     );
 
     if (autor) {
-      await this.transactionChangeRepository.createTransaction(
-        transaction,
-        autor
-      );
+      await this.transactionRepository.logCreateTransaction(transaction, autor);
     }
 
     await ServiceManager.getAccountService().updateAddingTransaction(
       transaction
     );
 
-    return transaction;
+    return { autor, ...transaction };
   }
 
-  async getTransactionById(id: number): Promise<Transacao | null> {
-    return await this.transactionRepository.findById(id);
+  async getTransactionById(id: number): Promise<TransacaoAutor | null> {
+    return await this.transactionRepository.findByIdWithAuthor(id);
   }
 
-  async getTransactions(): Promise<Transacao[]> {
-    return await this.transactionRepository.getTransactions();
+  async getTransactions(): Promise<TransacaoAutor[]> {
+    return await this.transactionRepository.getTransactionsWithAuthor();
   }
 
   async deleteTransaction(id: number, autor?: User) {
@@ -69,7 +65,7 @@ export class TransactionService {
     const trans = await this.transactionRepository.deleteTransaction(id);
 
     if (autor) {
-      await this.transactionChangeRepository.deleteTransaction(exists, autor);
+      await this.transactionRepository.logDeleteTransaction(exists, autor);
     }
 
     await ServiceManager.getAccountService().updateDeletingTransaction(trans);
@@ -91,15 +87,15 @@ export class TransactionService {
       tipo?: TipoTransacao;
       conta?: Conta;
     }
-  ) {
-    const transaction = await this.transactionRepository.findById(id);
+  ): Promise<TransacaoAutor> {
+    const transaction = await this.transactionRepository.findByIdWithAuthor(id);
     if (!transaction) {
       throw new NotFoundError(`Transação com id ${id} não encontrada`);
     }
 
     logger.info(`Atualizando transação com id ${id}`);
 
-    const updatedFields = { ...transaction };
+    const { autor: creator, ...updatedFields } = transaction;
     if (valor !== undefined) {
       updatedFields.valor = valor;
     }
@@ -120,7 +116,7 @@ export class TransactionService {
       await this.transactionRepository.updateTransaction(id, updatedFields);
 
     if (autor) {
-      await this.transactionChangeRepository.updateTransaction(
+      await this.transactionRepository.logUpdateTransaction(
         autor,
         transaction,
         updatedTransaction
@@ -132,37 +128,48 @@ export class TransactionService {
       updatedTransaction
     );
 
-    return updatedTransaction;
+    return { autor: creator, ...updatedTransaction };
   }
 
   async searchTransactions(
     query?: string,
     from?: Date,
     to?: Date
-  ): Promise<Transacao[]> {
+  ): Promise<TransacaoAutor[]> {
     if (!query && !from && !to) {
-      return await this.transactionRepository.getTransactions();
+      return await this.transactionRepository.getTransactionsWithAuthor();
     }
 
     if (!from && !to) {
       // query only
-      return await this.transactionRepository.getTransactionsByQuery(query);
+      return await this.transactionRepository.getTransactionsByQueryWithAuthor(
+        query
+      );
     }
 
     from = from || new Date(0);
     to = to || new Date();
 
     if (!query) {
-      return await this.transactionRepository.getTransactionsBetweenDates(
+      return await this.transactionRepository.getTransactionsBetweenDatesWithAuthor(
         from,
         to
       );
     } else {
-      return await this.transactionRepository.getTransactionsByQueryAndDates(
+      return await this.transactionRepository.getTransactionsByQueryAndDatesWithAuthor(
         query,
         from,
         to
       );
     }
+  }
+
+  async getTransactionLogs(id: number): Promise<AlteracaoTransacao[]> {
+    const transaction = await this.getTransactionById(id);
+    if (!transaction) {
+      throw new NotFoundError(`Transação com id ${id} não encontrada`);
+    }
+
+    return await this.transactionRepository.getTransactionChanges(transaction);
   }
 }

@@ -183,4 +183,13 @@ export class AccountService {
 
     await this.accountRepository.updateSaldo(acc.id, newSaldo);
   }
+
+  async getAccountLogs(id: number) {
+    const conta = await this.getAccountById(id);
+    if (!conta) {
+      throw new NotFoundError(`Conta com id ${id} não encontrada`);
+    }
+
+    return this.accountChangeRepository.getAccountChanges(conta);
+  }
 }

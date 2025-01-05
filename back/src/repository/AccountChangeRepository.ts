@@ -1,4 +1,10 @@
-import { Conta, PrismaClient, TipoAlteracaoConta, User } from "@prisma/client";
+import {
+  AlteracaoConta,
+  Conta,
+  PrismaClient,
+  TipoAlteracaoConta,
+  User,
+} from "@prisma/client";
 
 class AccountChangeRepository {
   private prisma: PrismaClient;
@@ -63,6 +69,17 @@ class AccountChangeRepository {
 
         novoNome: newAcc.nome,
         novaDescricao: newAcc.descricao,
+      },
+    });
+  }
+
+  async getAccountChanges(acc: Conta): Promise<AlteracaoConta[]> {
+    return this.prisma.alteracaoConta.findMany({
+      where: {
+        contaId: acc.id,
+      },
+      orderBy: {
+        data: "desc",
       },
     });
   }
