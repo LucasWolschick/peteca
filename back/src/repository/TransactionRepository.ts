@@ -25,36 +25,60 @@ export class TransactionRepository {
     data: Date,
     referencia: string,
     tipo: TipoTransacao,
-    conta: Conta
+    conta: Conta,
+    autor: User
   ): Promise<Transacao> {
-    const transacao = await this.prisma.transacao.create({
-      data: {
-        valor,
-        data,
-        referencia,
-        tipo,
-
-        conta: {
-          connect: conta,
+    return this.prisma.$transaction(async (tx) => {
+      // Criação da transação
+      const transacao = await tx.transacao.create({
+        data: {
+          valor,
+          data,
+          referencia,
+          tipo,
+          conta: {
+            connect: { id: conta.id },
+          },
+          ativo: true,
         },
-      },
+      });
+
+      // Criação da alteração associada à transação
+      await tx.alteracaoTransacao.create({
+        data: {
+          data: new Date(),
+          tipo: TipoAlteracaoTransacao.CRIADA,
+          transacao: {
+            connect: { id: transacao.id },
+          },
+          autor: {
+            connect: { id: autor.id },
+          },
+          novoValor: valor,
+          novaData: data,
+          novaReferencia: referencia,
+          novoTipo: tipo,
+          novaConta: {
+            connect: { id: conta.id },
+          },
+        },
+      });
+
+      return transacao;
     });
-    return transacao;
   }
+
 
   async getTransactions(): Promise<Transacao[]> {
     return this.prisma.transacao.findMany({ where: { ativo: true } });
   }
 
   async getTransactionsWithAuthor(): Promise<TransacaoAutor[]> {
-    // intended: take whoever created the transaction
-    // SELECT * FROM transacao WHERE ativo = true
-    // JOIN alteracaoTransacao ON transacao.id = alteracaoTransacao.transacaoId
-    // JOIN user ON alteracaoTransacao.autorId = user.id
-    // WHERE alteracaoTransacao.tipo = 'CRIADA'
-    // but in prisma
+    console.log("Buscando transações com autor...");
+    const result = await this.prisma.transacao.findMany();
+    console.log("Todas as transações encontradas (sem filtros):", result);
 
-    const transactionWithAuthorData = await this.prisma.transacao.findMany({
+    const filteredResult = await this.prisma.transacao.findMany({
       where: {
         ativo: true,
         alteracaoTransacao: {
@@ -76,14 +100,16 @@ export class TransactionRepository {
       },
     });
 
-    return transactionWithAuthorData.map((transaction) => {
+    console.log("Transações após aplicar filtros:", filteredResult);
+    return filteredResult.map((transaction) => {
       const { alteracaoTransacao, ...rest } = transaction;
       return {
         ...rest,
-        autor: alteracaoTransacao[0].autor,
+        autor: alteracaoTransacao[0]?.autor,
       };
     });
   }
+
 
   async findById(id: number): Promise<Transacao | null> {
     return this.prisma.transacao.findUnique({

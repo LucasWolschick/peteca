@@ -60,13 +60,17 @@ router.get(
   requireCaixinhaPermission(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log("Iniciando GET /transactions...");
       const transactions = await transactionService.getTransactions();
+      console.log("Resultado do serviço:", transactions);
       res.status(200).json(transactions);
     } catch (error) {
+      console.error("Erro ao buscar transações:", error);
       next(error);
     }
   }
 );
+
 
 router.get(
   "/filter",
@@ -110,7 +114,8 @@ router.post(
         data,
         referencia || "",
         tipo,
-        conta
+        conta,
+        checkAuthenticated(req)
       );
       res.status(201).json(newTransaction);
     } catch (error) {
@@ -152,14 +157,19 @@ router.get(
 // TODO: make these fields optional
 router.put(
   "/:id",
-  updateTransactionValidator,
+  [
+    param("id").isInt({ gt: 0 }).withMessage("O id deve ser um inteiro válido."),
+    ...updateTransactionValidator,
+  ],
   requireCaixinhaPermission(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { id } = req.params;
+      console.log("Atualizando transação com id:", id);
+
       const { valor, data, referencia, tipo, conta } = req.body;
-      const id = parseInt(req.params.id);
       const updatedTransaction = await transactionService.updateTransaction(
-        id,
+        parseInt(id, 10),
         checkAuthenticated(req),
         {
           valor,
@@ -171,10 +181,14 @@ router.put(
       );
       res.status(200).json(updatedTransaction);
     } catch (error) {
+      console.error("Erro ao atualizar transação:", error);
       next(error);
     }
   }
 );
+
+
+
 
 router.delete(
   "/:id",

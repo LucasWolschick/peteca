@@ -37,7 +37,7 @@ router.get(
   requireCaixinhaPermission(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accounts = accountService.getAccounts();
+      const accounts = await accountService.getAccounts();
       res.status(200).json(accounts);
     } catch (error) {
       next(error);
