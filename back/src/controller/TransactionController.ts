@@ -120,6 +120,21 @@ router.post(
 );
 
 router.get(
+  "/:id/logs",
+  [param("id").toInt(10)],
+  requireCaixinhaPermission(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = parseInt(req.params.id);
+      const logs = await transactionService.getTransactionLogs(id);
+      res.status(200).json(logs);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
   "/:id",
   [param("id").toInt(10)],
   requireCaixinhaPermission(),
