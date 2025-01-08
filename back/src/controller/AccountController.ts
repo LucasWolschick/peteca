@@ -13,27 +13,31 @@ const accountService = ServiceManager.getAccountService();
 
 function requireCaixinhaPermission() {
   return async (req: Request, res: Response, next: NextFunction) => {
-    validateInput(req);
-    const creator = checkAuthenticated(req);
-    if (
-      !(await permissionsService.userHasPermission(
-        creator.id,
-        "Gerir Caixinha"
-      ))
-    ) {
-      throw new UnauthorizedError(
-        "Você não tem permissão para alterar contas da caixinha"
-      );
+    try {
+      validateInput(req);
+      const creator = checkAuthenticated(req);
+      if (
+        !(await permissionsService.userHasPermission(
+          creator.id,
+          "Gerir Caixinha"
+        ))
+      ) {
+        throw new UnauthorizedError(
+          "Você não tem permissão para alterar transações da caixinha"
+        );
+      }
+      next();
+    } catch (error) {
+      next(error);
     }
   };
 }
-
 router.get(
   "/",
   requireCaixinhaPermission(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accounts = accountService.getAccounts();
+      const accounts = await accountService.getAccounts();
       res.status(200).json(accounts);
     } catch (error) {
       next(error);

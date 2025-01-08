@@ -1,4 +1,4 @@
-import { TipoMovimentacaoItem } from "@prisma/client";
+import { TipoMovimentacaoItem, TipoTransacao } from "@prisma/client";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -9,6 +9,7 @@ const generate = async () => {
       nome: "Gerir Cadastros",
     },
   });
+
 
   await prisma.permissoes.create({
     data: {
@@ -711,6 +712,30 @@ const generate = async () => {
           id: 1,
         },
       },
+    },
+  });
+
+  await prisma.conta.create({
+    data: {
+      nome: "Conta Principal",
+      descricao: "Conta principal da empresa",
+      saldo: 1000.00,
+      ativo: true,
+    },
+  });
+
+  await prisma.transacao.create({
+    data: {
+      valor: 150.75,
+      data: new Date("2023-10-01"),
+      referencia: "Compra de materiais",
+      tipo: TipoTransacao.DESPESA,
+      conta: {
+        connect: {
+          id: 1,
+        },
+      },
+      ativo: true,
     },
   });
 };

@@ -16,13 +16,15 @@ export class TransactionService {
     this.transactionRepository = RepositoryService.getTransactionRepository();
   }
 
+
   async createTransaction(
     valor: Decimal,
     data: Date,
     referencia: string,
     tipo: TipoTransacao,
     conta: Conta,
-    autor?: User
+    autor: User,
+
   ): Promise<TransacaoAutor> {
     logger.info(
       `Criando transação ${referencia} (valor=${valor}) para conta ${conta.nome}, tipo ${tipo}, data ${data}`
@@ -33,7 +35,8 @@ export class TransactionService {
       data,
       referencia,
       tipo,
-      conta
+      conta,
+      autor
     );
 
     if (autor) {
@@ -52,8 +55,12 @@ export class TransactionService {
   }
 
   async getTransactions(): Promise<TransacaoAutor[]> {
-    return await this.transactionRepository.getTransactionsWithAuthor();
+    console.log("Chamando o repositório para buscar transações...");
+    const result = await this.transactionRepository.getTransactionsWithAuthor();
+    console.log("Resultado do repositório:", result);
+    return result;
   }
+
 
   async deleteTransaction(id: number, autor?: User) {
     const exists = await this.transactionRepository.findById(id);
