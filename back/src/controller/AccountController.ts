@@ -52,7 +52,11 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { nome, descricao } = req.body;
-      const newAccount = await accountService.createAccount(nome, descricao);
+      const newAccount = await accountService.createAccount(
+        nome,
+        descricao,
+        checkAuthenticated(req)
+      );
       res.status(201).json(newAccount);
     } catch (error) {
       next(error);
@@ -106,7 +110,7 @@ router.put(
         id,
         nome,
         descricao,
-        (req as any).autor as User
+        checkAuthenticated(req)
       );
       res.status(200).json(updatedAccount);
     } catch (error) {
@@ -122,7 +126,7 @@ router.delete(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = parseInt(req.params.id);
-      await accountService.deleteAccount(id, (req as any).user as User);
+      await accountService.deleteAccount(id, checkAuthenticated(req));
       res.status(200).json({ message: "Conta deletada com sucesso" });
     } catch (error) {
       next(error);

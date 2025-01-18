@@ -10,7 +10,7 @@ import {
 import { Decimal } from "decimal.js";
 
 export interface TransacaoAutor extends Transacao {
-  autor: User;
+  autor?: Pick<User, "id" | "nome">;
 }
 
 export class TransactionRepository {
@@ -68,7 +68,6 @@ export class TransactionRepository {
     });
   }
 
-
   async getTransactions(): Promise<Transacao[]> {
     return this.prisma.transacao.findMany({ where: { ativo: true } });
   }
@@ -81,11 +80,11 @@ export class TransactionRepository {
     const filteredResult = await this.prisma.transacao.findMany({
       where: {
         ativo: true,
-        alteracaoTransacao: {
-          some: {
-            tipo: TipoAlteracaoTransacao.CRIADA,
-          },
-        },
+        // alteracaoTransacao: {
+        //   some: {
+        //     tipo: TipoAlteracaoTransacao.CRIADA,
+        //   },
+        // },
       },
       include: {
         alteracaoTransacao: {
@@ -94,7 +93,12 @@ export class TransactionRepository {
           },
           take: 1,
           include: {
-            autor: true,
+            autor: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
       },
@@ -110,7 +114,6 @@ export class TransactionRepository {
     });
   }
 
-
   async findById(id: number): Promise<Transacao | null> {
     return this.prisma.transacao.findUnique({
       where: {
@@ -125,11 +128,11 @@ export class TransactionRepository {
       where: {
         id,
         ativo: true,
-        alteracaoTransacao: {
-          some: {
-            tipo: TipoAlteracaoTransacao.CRIADA,
-          },
-        },
+        // alteracaoTransacao: {
+        //   some: {
+        //     tipo: TipoAlteracaoTransacao.CRIADA,
+        //   },
+        // },
       },
       include: {
         alteracaoTransacao: {
@@ -138,7 +141,12 @@ export class TransactionRepository {
           },
           take: 1,
           include: {
-            autor: true,
+            autor: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
       },
@@ -151,7 +159,7 @@ export class TransactionRepository {
     const { alteracaoTransacao, ...rest } = transactionWithAuthorData;
     return {
       ...rest,
-      autor: alteracaoTransacao[0].autor,
+      autor: alteracaoTransacao[0]?.autor,
     };
   }
 
@@ -166,11 +174,11 @@ export class TransactionRepository {
           lte: endDate,
         },
         ativo: true,
-        alteracaoTransacao: {
-          some: {
-            tipo: TipoAlteracaoTransacao.CRIADA,
-          },
-        },
+        // alteracaoTransacao: {
+        //   some: {
+        //     tipo: TipoAlteracaoTransacao.CRIADA,
+        //   },
+        // },
       },
       include: {
         alteracaoTransacao: {
@@ -179,7 +187,12 @@ export class TransactionRepository {
           },
           take: 1,
           include: {
-            autor: true,
+            autor: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
       },
@@ -189,7 +202,7 @@ export class TransactionRepository {
       const { alteracaoTransacao, ...rest } = transaction;
       return {
         ...rest,
-        autor: alteracaoTransacao[0].autor,
+        autor: alteracaoTransacao[0]?.autor,
       };
     });
   }
@@ -205,6 +218,8 @@ export class TransactionRepository {
               contains: query,
               mode: "insensitive",
             },
+          },
+          {
             conta: {
               nome: {
                 contains: query,
@@ -214,11 +229,11 @@ export class TransactionRepository {
           },
         ],
         ativo: true,
-        alteracaoTransacao: {
-          some: {
-            tipo: TipoAlteracaoTransacao.CRIADA,
-          },
-        },
+        // alteracaoTransacao: {
+        //   some: {
+        //     tipo: TipoAlteracaoTransacao.CRIADA,
+        //   },
+        // },
       },
       include: {
         alteracaoTransacao: {
@@ -227,7 +242,12 @@ export class TransactionRepository {
           },
           take: 1,
           include: {
-            autor: true,
+            autor: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
       },
@@ -237,7 +257,7 @@ export class TransactionRepository {
       const { alteracaoTransacao, ...rest } = transaction;
       return {
         ...rest,
-        autor: alteracaoTransacao[0].autor,
+        autor: alteracaoTransacao[0]?.autor,
       };
     });
   }
@@ -253,17 +273,19 @@ export class TransactionRepository {
           gte: startDate,
           lte: endDate,
         },
-        alteracaoTransacao: {
-          some: {
-            tipo: TipoAlteracaoTransacao.CRIADA,
-          },
-        },
+        // alteracaoTransacao: {
+        //   some: {
+        //     tipo: TipoAlteracaoTransacao.CRIADA,
+        //   },
+        // },
         OR: [
           {
             referencia: {
               contains: query,
               mode: "insensitive",
             },
+          },
+          {
             conta: {
               nome: {
                 contains: query,
@@ -281,7 +303,12 @@ export class TransactionRepository {
           },
           take: 1,
           include: {
-            autor: true,
+            autor: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
       },
@@ -291,7 +318,7 @@ export class TransactionRepository {
       const { alteracaoTransacao, ...rest } = transaction;
       return {
         ...rest,
-        autor: alteracaoTransacao[0].autor,
+        autor: alteracaoTransacao[0]?.autor,
       };
     });
   }
