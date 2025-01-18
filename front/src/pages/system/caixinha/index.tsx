@@ -1,20 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import dynamic from "next/dynamic";
 import SystemTemplate from "../_systemtemplate";
 import Title from "@/components/system/Title";
 import Link from "next/link";
-import { useTransaction } from "@/hooks/useTransaction";
-import { useAccount } from "@/hooks/useAccount";
-import { useUser } from "@/hooks/useUser";
+import {useTransaction} from "@/hooks/useTransaction";
+import {useAccount} from "@/hooks/useAccount";
+import {useUser} from "@/hooks/useUser";
 
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+const Chart = dynamic(() => import("react-apexcharts"), {ssr: false});
 
 const Caixinha = () => {
-  const { transactions, getAllTransactions } = useTransaction();
-  const { accounts, getAllAccounts } = useAccount();
-  const { user, getUser } = useUser();
+  const {transactions, getAllTransactions} = useTransaction();
+  const {accounts, getAllAccounts} = useAccount();
+  const {user, getUser} = useUser();
   const [isClient, setIsClient] = useState(false);
   const [saldo, setSaldo] = useState(0);
+  const [from, setFrom] = useState<Date | null>(null);
+  const [to, setTo] = useState<Date | null>(null);
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (e.target.id === 'startDate') {
+      setFrom(value ? new Date(value) : null);
+    } else if (e.target.id === 'endDate') {
+      setTo(value ? new Date(value) : null);
+    }
+  };
+
+  const handleSearch = async () => {
+
+  };
 
   const [chartData, setChartData] = useState<{
     series: { name: string; data: number[] }[];
@@ -116,8 +131,8 @@ const Caixinha = () => {
       setChartData((prevData) => ({
         ...prevData,
         series: [
-          { ...prevData.series[0], data: entradas },
-          { ...prevData.series[1], data: saidas },
+          {...prevData.series[0], data: entradas},
+          {...prevData.series[1], data: saidas},
         ],
         options: {
           ...prevData.options,
@@ -135,14 +150,14 @@ const Caixinha = () => {
 
   return (
     <SystemTemplate>
-      <Title title="Caixinha" />
+      <Title title="Caixinha"/>
       <div className="d-flex flex-column flex-md-row justify-content-between gap-4">
         {/* Coluna 1 */}
         <div className="col-md-4 mb-4">
           <div className="mb-4">
             <span
               className="text-uppercase fw-bold"
-              style={{ color: "#E0972F" }}
+              style={{color: "#E0972F"}}
             >
               Saldo
             </span>
@@ -150,7 +165,7 @@ const Caixinha = () => {
           </div>
           <div className="mb-4">
             <span
-              style={{ color: "#E0972F" }}
+              style={{color: "#E0972F"}}
               className="text-uppercase fw-bold"
             >
               Contas
@@ -168,7 +183,7 @@ const Caixinha = () => {
           </div>
           <div className="mb-4">
             <span
-              style={{ color: "#E0972F" }}
+              style={{color: "#E0972F"}}
               className="text-uppercase fw-bold"
             >
               Pendências
@@ -185,7 +200,7 @@ const Caixinha = () => {
 
           <div className="mb-4 d-flex justify-content-between items-center">
             <span
-              style={{ color: "#E0972F" }}
+              style={{color: "#E0972F"}}
               className="text-uppercase fw-bold"
             >
               Subtotal
@@ -225,7 +240,9 @@ const Caixinha = () => {
                 type="date"
                 id="startDate"
                 className="form-control me-2"
-                style={{ width: "auto" }}
+                style={{width: "auto"}}
+                onChange={handleDateChange}
+                value={from ? from.toISOString().split('T')[0] : ''}
               />
               <label htmlFor="endDate" className="me-2">
                 a
@@ -234,9 +251,14 @@ const Caixinha = () => {
                 type="date"
                 id="endDate"
                 className="form-control me-2"
-                style={{ width: "auto" }}
+                style={{width: "auto"}}
+                onChange={handleDateChange}
+                value={to ? to.toISOString().split('T')[0] : ''}
               />
-              <button className="btn btn-primary">Emitir Extrato</button>
+              <button className="btn btn-primary"
+                      onClick={handleSearch}
+              >Emitir Extrato
+              </button>
             </div>
             <input
               type="text"
@@ -248,31 +270,31 @@ const Caixinha = () => {
           <div className="table-responsive bg-white mb-4">
             <table className="table table-striped">
               <thead className="table-dark">
-                <tr>
-                  <th>Conta</th>
-                  <th>Data</th>
-                  <th>Valor</th>
-                  <th>Referência</th>
-                  <th>Tipo</th>
-                  <th>Ações</th>
-                </tr>
+              <tr>
+                <th>Conta</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Referência</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+              </tr>
               </thead>
               <tbody>
-                {transactions.map((transaction) => (
-                  <tr key={transaction.id}>
-                    <td>{transaction.autor?.nome || "Desconhecido"}</td>
-                    <td>{new Date(transaction.data).toLocaleDateString()}</td>
-                    <td>
-                      {transaction.tipo === "RECEITA" ? "+" : "-"}R${" "}
-                      {parseFloat(transaction.valor).toFixed(2)}
-                    </td>
-                    <td>{transaction.referencia}</td>
-                    <td>{transaction.tipo}</td>
-                    <td>
-                      <button className="btn btn-warning btn-sm">Editar</button>
-                    </td>
-                  </tr>
-                ))}
+              {transactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>{transaction.autor?.nome || "Desconhecido"}</td>
+                  <td>{new Date(transaction.data).toLocaleDateString()}</td>
+                  <td>
+                    {transaction.tipo === "RECEITA" ? "+" : "-"}R${" "}
+                    {parseFloat(transaction.valor).toFixed(2)}
+                  </td>
+                  <td>{transaction.referencia}</td>
+                  <td>{transaction.tipo}</td>
+                  <td>
+                    <button className="btn btn-warning btn-sm">Editar</button>
+                  </td>
+                </tr>
+              ))}
               </tbody>
             </table>
           </div>
