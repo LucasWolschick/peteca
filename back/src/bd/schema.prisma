@@ -27,6 +27,7 @@ model User {
   relatoriosCaixinha RelatorioCaixinha[]
   movimentacoesConta AlteracaoConta[]
   alteracoesConta    AlteracaoTransacao[]
+  extratosCaixinha   ExtratoCaixinha[]
 }
 
 model Permissoes {
@@ -196,6 +197,17 @@ model AlteracaoTransacao {
 }
 
 model RelatorioCaixinha {
+  id        Int      @id @default(autoincrement())
+  data      DateTime @db.Date
+  inicio    DateTime @db.Date
+  fim       DateTime @db.Date
+  relatorio Bytes
+
+  autorId Int
+  autor   User @relation(fields: [autorId], references: [id])
+}
+
+model ExtratoCaixinha {
   id        Int      @id @default(autoincrement())
   data      DateTime @db.Date
   inicio    DateTime @db.Date

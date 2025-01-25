@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Extrato</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      header {
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-family: monospace;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+      th {
+        background-color: #f4f4f4;
+      }
+
+      .total {
+        font-weight: bold;
+        background-color: #e8e8e8
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h2>{{university}}</h2>
+      <h1>Extrato de Transações - Peteca</h1>
+      <p>Emitido: {{date}}, por {{user}}</p>
+      <p>Filtro: {{filter}}</p>
+      <p>Intervalo: {{from}} - {{to}}</p>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Tipo</th>
+          <th>Descrição</th>
+          <th>Valor</th>
+          <th>Autor</th>
+          <th>Conta</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each transactions}}
+        <tr>
+          <td>{{date}}</td>
+          <td>{{kind}}</td>
+          <td>{{description}}</td>
+          <td>{{value}}</td>
+          <td>{{author}}</td>
+          <td>{{account}}</td>
+          <td>{{subtotal}}</td>
+        </tr>
+        {{/each}}
+        <tr class="total">
+          <td colspan="2"></td>
+          <td>*** Total:</td>
+          <td colspan="4">{{totalMoved}}</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <center>
+      <button onclick="window.print()">
+        Imprimir
+      </button>
+    </center>
+  </body>
+</html>

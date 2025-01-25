@@ -6,7 +6,7 @@ import {
   User,
 } from "@prisma/client";
 
-class AccountChangeRepository {
+export class AccountChangeRepository {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -84,5 +84,3 @@ class AccountChangeRepository {
     });
   }
 }
-
-export default AccountChangeRepository;

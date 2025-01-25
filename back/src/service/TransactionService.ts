@@ -12,6 +12,7 @@ import logger from "../logger";
 import { NotFoundError } from "../errors";
 import { ServiceManager } from "./ServiceManager";
 import { FinancialReportRepository } from "../repository/FinancialReportRepository";
+import { FinancialStatementRepository } from "../repository/FinancialStatementRepository";
 
 // Remove campos sensíveis do autor de algum objeto
 function filterAuthor<T extends { autor?: Pick<User, "id" | "nome"> }>(
@@ -31,11 +32,14 @@ function filterAuthor<T extends { autor?: Pick<User, "id" | "nome"> }>(
 export class TransactionService {
   private transactionRepository: TransactionRepository;
   private financialReportRepository: FinancialReportRepository;
+  private financialStatementRepository: FinancialStatementRepository;
 
   constructor() {
     this.transactionRepository = RepositoryService.getTransactionRepository();
     this.financialReportRepository =
       RepositoryService.getFinancialReportRepository();
+    this.financialStatementRepository =
+      RepositoryService.getFinancialStatementRepository();
   }
 
   async createTransaction(
@@ -215,6 +219,17 @@ export class TransactionService {
         new Date(0), // min date
         to
       );
+    const contas = await ServiceManager.getAccountService().getAccounts();
+    const contaMap = new Map(
+      contas.map((c) => [
+        c.id,
+        {
+          id: c.id,
+          nome: c.nome,
+          saldo: new Decimal(0),
+        },
+      ])
+    );
 
     let previousSum = new Decimal(0);
 
@@ -234,6 +249,16 @@ export class TransactionService {
           [TipoTransacao.RECEITA]: receitas,
           [TipoTransacao.DESPESA]: despesas,
         }[t.tipo] || pendencias;
+
+      if (t.tipo === TipoTransacao.RECEITA) {
+        contaMap.get(t.contaId).saldo = contaMap
+          .get(t.contaId)
+          ?.saldo.plus(t.valor);
+      } else {
+        contaMap.get(t.contaId).saldo = contaMap
+          .get(t.contaId)
+          ?.saldo.minus(t.valor);
+      }
       if (t.data < from) {
         if (t.tipo === TipoTransacao.RECEITA) {
           previousSum = previousSum.plus(t.valor);
@@ -308,12 +333,25 @@ export class TransactionService {
         total: "R$ " + totalPendencias.toFixed(2),
       },
       montanteFinal,
+      {
+        title: "Saldo por Conta",
+        items: Array.from(contaMap.values()).map((c) => ({
+          description: c.nome,
+          subtotal: "R$ " + c.saldo.toFixed(2),
+          value: c.saldo,
+        })),
+        total:
+          "R$ " +
+          Array.from(contaMap.values())
+            .reduce((acc, c) => acc.plus(c.saldo), new Decimal(0))
+            .toFixed(2),
+      },
     ];
 
     const now = new Date();
 
     const data = {
-      university: "Universidade Federal de Maringá - Centro de Tecnologia",
+      university: "Universidade Estadual de Maringá - Centro de Tecnologia",
       time: now.toLocaleTimeString(),
       date: now.toLocaleDateString(),
       user: author?.nome || "(desconhecido)",
@@ -356,5 +394,95 @@ export class TransactionService {
 
   async getReportsInfo() {
     return await this.financialReportRepository.getFinancialReportsInfo();
+  }
+
+  async emitStatement(query?: string, from?: Date, to?: Date, author?: User) {
+    if (!from) {
+      from = new Date(0);
+    }
+    if (!to) {
+      to = new Date();
+    }
+
+    // data
+    const accounts = await ServiceManager.getAccountService().getAccounts();
+    const idNameMap = new Map(accounts.map((a) => [a.id, a.nome]));
+    const transactions = await this.searchTransactions(query, from, to);
+    const formattedKinds = {
+      [TipoTransacao.RECEITA]: "Receita",
+      [TipoTransacao.DESPESA]: "Despesa",
+      [TipoTransacao.PENDENCIA]: "Pendente",
+    } as const;
+
+    const limit = (s: string, limit: number = 40) => {
+      if (s.length <= limit) return s;
+      return s.slice(0, limit - 3) + "...";
+    };
+
+    let balance = new Decimal(0);
+    const info = transactions.map((t) => {
+      if (t.tipo === TipoTransacao.RECEITA) {
+        balance = balance.plus(t.valor);
+      } else {
+        balance = balance.minus(t.valor);
+      }
+      return {
+        date: t.data.toLocaleDateString(),
+        kind: formattedKinds[t.tipo],
+        description: limit(t.referencia || `Movimentação ${t.id}`),
+        value:
+          (t.tipo === TipoTransacao.RECEITA ? " " : "-") + t.valor.toFixed(2),
+        author: limit(t.autor?.nome || "", 20),
+        account: limit(idNameMap.get(t.contaId) ?? "", 20),
+        subtotal: balance.toFixed(2),
+      };
+    });
+
+    const now = new Date();
+    const format = {
+      university: "Universidade Estadual de Maringá",
+
+      date: now.toLocaleString(),
+      user: author?.nome || "(desconhecido)",
+
+      filter: query || "nenhum",
+      from: from?.toLocaleDateString() || "início",
+      to: to?.toLocaleDateString() || "agora",
+
+      transactions: info,
+
+      totalMoved: "R$ " + balance.toFixed(2),
+    };
+
+    // template
+    const template = await fs.readFile("src/templates/statement.hbs", "utf-8");
+    const compiled = Handlebars.compile(template);
+    const string = compiled(format);
+
+    // save to db
+    const statement =
+      await this.financialStatementRepository.createFinancialStatement({
+        emitDate: now,
+        start: from,
+        end: to,
+        data: string,
+        author,
+      });
+
+    return filterAuthor(statement);
+  }
+
+  async getStatement(id: number) {
+    const report =
+      await this.financialStatementRepository.getFinancialStatementById(id);
+    if (!report) {
+      throw new NotFoundError(`Extrato com id ${id} não encontrado`);
+    }
+
+    return report;
+  }
+
+  async getStatementsInfo() {
+    return await this.financialStatementRepository.getFinancialStatementsInfo();
   }
 }

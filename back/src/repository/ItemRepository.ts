@@ -4,7 +4,7 @@ import {
   TipoMovimentacaoItem,
 } from "@prisma/client";
 
-class ItemRepository {
+export class ItemRepository {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -118,5 +118,3 @@ class ItemRepository {
     return x;
   }
 }
-
-export default ItemRepository;

@@ -149,6 +149,70 @@ router.get(
   }
 );
 
+router.get(
+  "/statements",
+  requireCaixinhaPermission(),
+  async (req, res, next) => {
+    try {
+      const statements = await transactionService.getStatementsInfo();
+      res.status(200).json(statements);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/statements/create",
+  [
+    body("from").optional().toDate(),
+    body("to").optional().toDate(),
+    body("q").optional(),
+  ],
+  requireCaixinhaPermission(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { q, from, to } = req.body;
+      const statement = await transactionService.emitStatement(
+        q,
+        from,
+        to,
+        checkAuthenticated(req)
+      );
+
+      // redirect to the report using its id /statements/:id
+      res.status(201).location(`/api/transactions/statements/${statement.id}`);
+      res.send(`
+        <html>
+          <head><title>Recurso Criado</title></head>
+          <body>
+            <p>Extrato criado com sucesso</p>
+            <a href="/api/transactions/statements/${statement.id}">Ver extrato</a>
+          </body>
+        </html>
+      `);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/statements/:id",
+  [param("id").toInt(10)],
+  requireCaixinhaPermission(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = parseInt(req.params.id);
+      const statements = await transactionService.getStatement(id);
+      res.set("Content-Type", "text/html");
+      res.send(new TextDecoder().decode(statements.relatorio));
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.post(
   "/create",
   createTransactionValidator,

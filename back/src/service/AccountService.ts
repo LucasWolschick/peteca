@@ -1,6 +1,6 @@
 import { Conta, TipoTransacao, Transacao, User } from "@prisma/client";
-import AccountChangeRepository from "../repository/AccountChangeRepository";
-import AccountRepository from "../repository/AccountRepository";
+import { AccountChangeRepository } from "../repository/AccountChangeRepository";
+import { AccountRepository } from "../repository/AccountRepository";
 import RepositoryService from "./RepositoryService";
 import logger from "../logger";
 import { NotFoundError } from "../errors";

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,6 +17,7 @@
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
+        font-family: monospace;
       }
       th,
       td {
@@ -71,5 +72,11 @@
       </table>
     </section>
     {{/each}}
+
+    <center>
+      <button onclick="window.print()">
+        Imprimir
+      </button>
+    </center>
   </body>
 </html>
