@@ -1,5 +1,6 @@
 import AccountChangeRepository from "../repository/AccountChangeRepository";
 import AccountRepository from "../repository/AccountRepository";
+import { FinancialReportRepository } from "../repository/FinancialReportRepository";
 import ItemRepository from "../repository/ItemRepository";
 import MovimentacaoItemRepository from "../repository/MovimentacaoItemRepository";
 import { PermissionsRepository } from "../repository/PermissionsRepository";
@@ -18,6 +19,7 @@ class RepositoryService {
   private accountRepository: AccountRepository | null = null;
   private accountChangeRepository: AccountChangeRepository | null = null;
   private transactionRepository: TransactionRepository | null = null;
+  private financialReportRepository: FinancialReportRepository | null = null;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
@@ -71,6 +73,14 @@ class RepositoryService {
     if (!this.transactionRepository)
       this.transactionRepository = new TransactionRepository(this.prisma);
     return this.transactionRepository;
+  }
+
+  getFinancialReportRepository(): FinancialReportRepository {
+    if (!this.financialReportRepository)
+      this.financialReportRepository = new FinancialReportRepository(
+        this.prisma
+      );
+    return this.financialReportRepository;
   }
 }
 

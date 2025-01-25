@@ -196,9 +196,11 @@ model AlteracaoTransacao {
 }
 
 model RelatorioCaixinha {
-  id            Int      @id @default(autoincrement())
-  data          DateTime @db.Date
-  pathRelatorio String   @db.VarChar()
+  id        Int      @id @default(autoincrement())
+  data      DateTime @db.Date
+  inicio    DateTime @db.Date
+  fim       DateTime @db.Date
+  relatorio Bytes
 
   autorId Int
   autor   User @relation(fields: [autorId], references: [id])

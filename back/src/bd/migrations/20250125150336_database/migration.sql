@@ -149,7 +149,9 @@ CREATE TABLE "AlteracaoTransacao" (
 CREATE TABLE "RelatorioCaixinha" (
     "id" SERIAL NOT NULL,
     "data" DATE NOT NULL,
-    "pathRelatorio" VARCHAR NOT NULL,
+    "inicio" DATE NOT NULL,
+    "fim" DATE NOT NULL,
+    "relatorio" BYTEA NOT NULL,
     "autorId" INTEGER NOT NULL,
 
     CONSTRAINT "RelatorioCaixinha_pkey" PRIMARY KEY ("id")

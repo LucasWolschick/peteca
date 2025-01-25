@@ -31,8 +31,13 @@ export class AccountService {
     return acc;
   }
 
-  async getAccountById(id: number): Promise<Conta | null> {
-    return await this.accountRepository.findById(id);
+  async getAccountById(id: number): Promise<Conta> {
+    const acc = await this.accountRepository.findById(id);
+    if (!acc) {
+      throw new NotFoundError(`Conta com id ${id} não encontrada`);
+    }
+
+    return acc;
   }
 
   async getAccounts(): Promise<Conta[]> {
