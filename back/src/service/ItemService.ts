@@ -1,8 +1,8 @@
 import { Item, TipoMovimentacaoItem, User } from "@prisma/client";
 import logger from "../logger";
-import ItemRepository from "../repository/ItemRepository";
+import { ItemRepository } from "../repository/ItemRepository";
 import RepositoryService from "../service/RepositoryService";
-import MovimentacaoItemRepository from "../repository/MovimentacaoItemRepository";
+import { MovimentacaoItemRepository } from "../repository/MovimentacaoItemRepository";
 
 export class ItemService {
   private itemRepository: ItemRepository;

@@ -149,10 +149,24 @@ CREATE TABLE "AlteracaoTransacao" (
 CREATE TABLE "RelatorioCaixinha" (
     "id" SERIAL NOT NULL,
     "data" DATE NOT NULL,
-    "pathRelatorio" VARCHAR NOT NULL,
+    "inicio" DATE NOT NULL,
+    "fim" DATE NOT NULL,
+    "relatorio" BYTEA NOT NULL,
     "autorId" INTEGER NOT NULL,
 
     CONSTRAINT "RelatorioCaixinha_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ExtratoCaixinha" (
+    "id" SERIAL NOT NULL,
+    "data" DATE NOT NULL,
+    "inicio" DATE NOT NULL,
+    "fim" DATE NOT NULL,
+    "relatorio" BYTEA NOT NULL,
+    "autorId" INTEGER NOT NULL,
+
+    CONSTRAINT "ExtratoCaixinha_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -199,3 +213,6 @@ ALTER TABLE "AlteracaoTransacao" ADD CONSTRAINT "AlteracaoTransacao_autorId_fkey
 
 -- AddForeignKey
 ALTER TABLE "RelatorioCaixinha" ADD CONSTRAINT "RelatorioCaixinha_autorId_fkey" FOREIGN KEY ("autorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExtratoCaixinha" ADD CONSTRAINT "ExtratoCaixinha_autorId_fkey" FOREIGN KEY ("autorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

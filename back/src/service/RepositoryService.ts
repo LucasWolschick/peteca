@@ -1,7 +1,9 @@
-import AccountChangeRepository from "../repository/AccountChangeRepository";
-import AccountRepository from "../repository/AccountRepository";
-import ItemRepository from "../repository/ItemRepository";
-import MovimentacaoItemRepository from "../repository/MovimentacaoItemRepository";
+import { AccountChangeRepository } from "../repository/AccountChangeRepository";
+import { AccountRepository } from "../repository/AccountRepository";
+import { FinancialReportRepository } from "../repository/FinancialReportRepository";
+import { FinancialStatementRepository } from "../repository/FinancialStatementRepository";
+import { ItemRepository } from "../repository/ItemRepository";
+import { MovimentacaoItemRepository } from "../repository/MovimentacaoItemRepository";
 import { PermissionsRepository } from "../repository/PermissionsRepository";
 import { TokenRepository } from "../repository/TokenRepository";
 import { TransactionRepository } from "../repository/TransactionRepository";
@@ -18,6 +20,9 @@ class RepositoryService {
   private accountRepository: AccountRepository | null = null;
   private accountChangeRepository: AccountChangeRepository | null = null;
   private transactionRepository: TransactionRepository | null = null;
+  private financialReportRepository: FinancialReportRepository | null = null;
+  private financialStatementRepository: FinancialStatementRepository | null =
+    null;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
@@ -71,6 +76,22 @@ class RepositoryService {
     if (!this.transactionRepository)
       this.transactionRepository = new TransactionRepository(this.prisma);
     return this.transactionRepository;
+  }
+
+  getFinancialReportRepository(): FinancialReportRepository {
+    if (!this.financialReportRepository)
+      this.financialReportRepository = new FinancialReportRepository(
+        this.prisma
+      );
+    return this.financialReportRepository;
+  }
+
+  getFinancialStatementRepository(): FinancialStatementRepository {
+    if (!this.financialStatementRepository)
+      this.financialStatementRepository = new FinancialStatementRepository(
+        this.prisma
+      );
+    return this.financialStatementRepository;
   }
 }
 

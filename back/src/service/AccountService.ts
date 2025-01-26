@@ -1,6 +1,6 @@
 import { Conta, TipoTransacao, Transacao, User } from "@prisma/client";
-import AccountChangeRepository from "../repository/AccountChangeRepository";
-import AccountRepository from "../repository/AccountRepository";
+import { AccountChangeRepository } from "../repository/AccountChangeRepository";
+import { AccountRepository } from "../repository/AccountRepository";
 import RepositoryService from "./RepositoryService";
 import logger from "../logger";
 import { NotFoundError } from "../errors";
@@ -31,8 +31,13 @@ export class AccountService {
     return acc;
   }
 
-  async getAccountById(id: number): Promise<Conta | null> {
-    return await this.accountRepository.findById(id);
+  async getAccountById(id: number): Promise<Conta> {
+    const acc = await this.accountRepository.findById(id);
+    if (!acc) {
+      throw new NotFoundError(`Conta com id ${id} não encontrada`);
+    }
+
+    return acc;
   }
 
   async getAccounts(): Promise<Conta[]> {
