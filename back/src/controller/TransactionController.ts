@@ -22,7 +22,6 @@ const createTransactionValidator = [
 ];
 
 const updateTransactionValidator = [
-  body("id").isInt(),
   body("valor")
     .optional()
     .isDecimal()
