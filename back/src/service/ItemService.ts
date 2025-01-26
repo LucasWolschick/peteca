@@ -106,7 +106,7 @@ export class ItemService {
 
     // map logs to list of item deltas (dicts)
     const logs = (await this.itemRepository.getLogs(from, to))
-      .filter((log) => from <= log.data && log.data <= to)
+      // .filter((log) => from <= log.data && log.data <= to)
       .map((log) => {
         const tipo = log.tipo;
 

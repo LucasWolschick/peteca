@@ -286,7 +286,13 @@ router.put(
       const { id } = req.params;
       console.log("Atualizando transação com id:", id);
 
-      const { valor, data, referencia, tipo, conta } = req.body;
+      const { valor, data, referencia, conta } = req.body;
+      const tipo =
+        req.body.tipo === "receita"
+          ? TipoTransacao.RECEITA
+          : req.body.tipo === "despesa"
+            ? TipoTransacao.DESPESA
+            : TipoTransacao.PENDENCIA;
       const updatedTransaction = await transactionService.updateTransaction(
         parseInt(id, 10),
         checkAuthenticated(req),

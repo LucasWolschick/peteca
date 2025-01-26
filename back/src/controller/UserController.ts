@@ -18,7 +18,7 @@ const atualizaValidator = [
   body("ra").optional().notEmpty(),
   body("matricula").optional({ checkFalsy: true }),
   body("email").isEmail(),
-  body("aniversario").optional().isISO8601(),
+  body("aniversario").optional().toDate(),
 ];
 
 const cadastroValidator = [...atualizaValidator];

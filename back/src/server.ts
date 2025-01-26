@@ -25,6 +25,7 @@ app.use(
   cors({
     origin: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
+    exposedHeaders: ["Location"],
   })
 );
 app.use((req, res, next) => {

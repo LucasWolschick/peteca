@@ -1,34 +1,87 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import SystemTemplate from "../_systemtemplate";
 import Title from "@/components/system/Title";
 import Link from "next/link";
-import {useTransaction} from "@/hooks/useTransaction";
-import {useAccount} from "@/hooks/useAccount";
-import {useUser} from "@/hooks/useUser";
+import { useTransaction } from "@/hooks/useTransaction";
+import { useAccount } from "@/hooks/useAccount";
+import { useUser } from "@/hooks/useUser";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import router from "next/router";
 
-const Chart = dynamic(() => import("react-apexcharts"), {ssr: false});
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const Caixinha = () => {
-  const {transactions, getAllTransactions} = useTransaction();
-  const {accounts, getAllAccounts} = useAccount();
-  const {user, getUser} = useUser();
+  const {
+    transactions,
+    getAllTransactions,
+    generateReport,
+    downloadReport,
+    generateStatement,
+    downloadStatement,
+  } = useTransaction();
+
+  const { accounts, getAllAccounts } = useAccount();
+  const { user, getUser } = useUser();
   const [isClient, setIsClient] = useState(false);
   const [saldo, setSaldo] = useState(0);
   const [from, setFrom] = useState<Date | null>(null);
   const [to, setTo] = useState<Date | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [pendencias, setPendencias] = useState<any[]>([]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (e.target.id === 'startDate') {
+    if (e.target.id === "startDate") {
       setFrom(value ? new Date(value) : null);
-    } else if (e.target.id === 'endDate') {
+    } else if (e.target.id === "endDate") {
       setTo(value ? new Date(value) : null);
     }
   };
 
-  const handleSearch = async () => {
+  const filteredTransactions = transactions.filter((transaction) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      transaction.autor?.nome?.toLowerCase().includes(search) ||
+      transaction.referencia.toLowerCase().includes(search) ||
+      transaction.tipo.toLowerCase().includes(search)
+    );
+  });
 
+  const handleEmitirRelatorio = async () => {
+    if (!from || !to) {
+      alert("Por favor, selecione o período para emitir o relatório");
+      return;
+    }
+
+    try {
+      const fromDate = from.toISOString().split("T")[0];
+      const toDate = to.toISOString().split("T")[0];
+      const reportUrl = await generateReport(fromDate, toDate);
+      await downloadReport(reportUrl);
+      console.log(reportUrl);
+    } catch (error) {
+      console.log("Erro ao gerar relatório:", error);
+      alert("Erro ao gerar relatório");
+    }
+  };
+
+  const handleEmitirExtrato = async () => {
+    try {
+      const fromDate = from?.toISOString().split("T")[0];
+      const toDate = to?.toISOString().split("T")[0];
+      const statementUrl = await generateStatement(
+        fromDate,
+        toDate,
+        searchTerm
+      );
+      await downloadStatement(statementUrl);
+      console.log(statementUrl);
+    } catch (error) {
+      console.log("Erro ao gerar extrato:", error);
+      alert("Erro ao gerar extrato");
+    }
   };
 
   const [chartData, setChartData] = useState<{
@@ -38,11 +91,16 @@ const Caixinha = () => {
         type: "line";
         toolbar: { show: boolean };
         style: { fontFamily: string; color: string };
+        background: "transparent";
       };
       xaxis: {
         categories: string[];
         style: { fontSize: string; color: string };
       };
+      yaxis: {
+        labels: { style: { colors: string } };
+      };
+      theme: { mode: "dark" };
       title: {
         text: string;
         align: "center";
@@ -71,12 +129,23 @@ const Caixinha = () => {
           fontFamily: "inherit",
           color: "#fff",
         },
+        background: "transparent",
+      },
+      theme: {
+        mode: "dark",
       },
       xaxis: {
         categories: [], // Categorias do eixo x
         style: {
           fontSize: "14px",
           color: "#fff",
+        },
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: "#fff",
+          },
         },
       },
       title: {
@@ -97,9 +166,11 @@ const Caixinha = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await getAllTransactions();
-      await getAllAccounts();
-      await getUser();
+      await Promise.allSettled([
+        getAllTransactions(),
+        getAllAccounts(),
+        getUser(),
+      ]);
     };
     fetchData();
   }, []);
@@ -131,8 +202,8 @@ const Caixinha = () => {
       setChartData((prevData) => ({
         ...prevData,
         series: [
-          {...prevData.series[0], data: entradas},
-          {...prevData.series[1], data: saidas},
+          { ...prevData.series[0], data: entradas },
+          { ...prevData.series[1], data: saidas },
         ],
         options: {
           ...prevData.options,
@@ -144,20 +215,28 @@ const Caixinha = () => {
       }));
     };
 
+    const filtrarPendencias = () => {
+      const pendencias = transactions.filter(
+        (transaction) => transaction.tipo === "PENDENCIA"
+      );
+      setPendencias(pendencias);
+    };
+
+    filtrarPendencias();
     calculateSaldo();
     updateChartData();
   }, [transactions]);
 
   return (
     <SystemTemplate>
-      <Title title="Caixinha"/>
+      <Title title="Caixinha" />
       <div className="d-flex flex-column flex-md-row justify-content-between gap-4">
         {/* Coluna 1 */}
         <div className="col-md-4 mb-4">
           <div className="mb-4">
             <span
               className="text-uppercase fw-bold"
-              style={{color: "#E0972F"}}
+              style={{ color: "#E0972F" }}
             >
               Saldo
             </span>
@@ -165,7 +244,7 @@ const Caixinha = () => {
           </div>
           <div className="mb-4">
             <span
-              style={{color: "#E0972F"}}
+              style={{ color: "#E0972F" }}
               className="text-uppercase fw-bold"
             >
               Contas
@@ -183,24 +262,25 @@ const Caixinha = () => {
           </div>
           <div className="mb-4">
             <span
-              style={{color: "#E0972F"}}
+              style={{ color: "#E0972F" }}
               className="text-uppercase fw-bold"
             >
               Pendências
             </span>
-            <div className="d-flex justify-content-between items-center">
-              <p className="text-danger">Empréstimo Pinheiro</p>
-              <p> -R$ 100,00</p>
-            </div>
-            <div className="d-flex justify-content-between items-center">
-              <p className="text-danger">Aluguel RV</p>
-              <p> -R$ 3240,00</p>
-            </div>
+            {pendencias.map((pendencia) => (
+              <div
+                className="d-flex justify-content-between items-center"
+                key={pendencia.id}
+              >
+                <p className="text-danger">{pendencia.referencia}</p>
+                <p> -R$ {parseFloat(pendencia.valor).toFixed(2)}</p>
+              </div>
+            ))}
           </div>
 
           <div className="mb-4 d-flex justify-content-between items-center">
             <span
-              style={{color: "#E0972F"}}
+              style={{ color: "#E0972F" }}
               className="text-uppercase fw-bold"
             >
               Subtotal
@@ -222,7 +302,7 @@ const Caixinha = () => {
             <Link href="/system/caixinha/transacao" className="btn btn-primary">
               Lançar Transação
             </Link>
-            <Link href="#" className="btn btn-secondary">
+            <Link href="/system/caixinha/contas" className="btn btn-secondary">
               Editar Contas
             </Link>
           </div>
@@ -240,9 +320,9 @@ const Caixinha = () => {
                 type="date"
                 id="startDate"
                 className="form-control me-2"
-                style={{width: "auto"}}
+                style={{ width: "auto" }}
                 onChange={handleDateChange}
-                value={from ? from.toISOString().split('T')[0] : ''}
+                value={from ? from.toISOString().split("T")[0] : ""}
               />
               <label htmlFor="endDate" className="me-2">
                 a
@@ -251,50 +331,59 @@ const Caixinha = () => {
                 type="date"
                 id="endDate"
                 className="form-control me-2"
-                style={{width: "auto"}}
+                style={{ width: "auto" }}
                 onChange={handleDateChange}
-                value={to ? to.toISOString().split('T')[0] : ''}
+                value={to ? to.toISOString().split("T")[0] : ""}
               />
-              <button className="btn btn-primary"
-                      onClick={handleSearch}
-              >Emitir Extrato
+              <button className="btn btn-primary" onClick={handleEmitirExtrato}>
+                Emitir Extrato
               </button>
             </div>
             <input
               type="text"
               placeholder="Buscar..."
               className="form-control"
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
           <div className="table-responsive bg-white mb-4">
             <table className="table table-striped">
               <thead className="table-dark">
-              <tr>
-                <th>Conta</th>
-                <th>Data</th>
-                <th>Valor</th>
-                <th>Referência</th>
-                <th>Tipo</th>
-                <th>Ações</th>
-              </tr>
+                <tr>
+                  <th>Conta</th>
+                  <th>Data</th>
+                  <th>Valor</th>
+                  <th>Referência</th>
+                  <th>Tipo</th>
+                  <th>Ações</th>
+                </tr>
               </thead>
               <tbody>
-              {transactions.map((transaction) => (
-                <tr key={transaction.id}>
-                  <td>{transaction.autor?.nome || "Desconhecido"}</td>
-                  <td>{new Date(transaction.data).toLocaleDateString()}</td>
-                  <td>
-                    {transaction.tipo === "RECEITA" ? "+" : "-"}R${" "}
-                    {parseFloat(transaction.valor).toFixed(2)}
-                  </td>
-                  <td>{transaction.referencia}</td>
-                  <td>{transaction.tipo}</td>
-                  <td>
-                    <button className="btn btn-warning btn-sm">Editar</button>
-                  </td>
-                </tr>
-              ))}
+                {filteredTransactions.map((transaction) => (
+                  <tr key={transaction.id}>
+                    <td>{transaction.autor?.nome || "Desconhecido"}</td>
+                    <td>{new Date(transaction.data).toLocaleDateString()}</td>
+                    <td>
+                      {transaction.tipo === "RECEITA" ? "+" : "-"}R${" "}
+                      {parseFloat(transaction.valor).toFixed(2)}
+                    </td>
+                    <td>{transaction.referencia}</td>
+                    <td>{transaction.tipo}</td>
+                    <td>
+                      <button
+                        className="btn btn-warning btn-sm"
+                        onClick={() =>
+                          router.push(
+                            `/system/caixinha/EditarTransacao/${transaction.id}`
+                          )
+                        }
+                      >
+                        Editar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -340,7 +429,12 @@ const Caixinha = () => {
 
             {/* Botão alinhado no centro */}
             <div className="text-end">
-              <button className="btn btn-primary">Emitir Relatório</button>
+              <button
+                className="btn btn-primary"
+                onClick={handleEmitirRelatorio}
+              >
+                Emitir Relatório
+              </button>
             </div>
           </div>
         </div>

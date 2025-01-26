@@ -32,8 +32,10 @@ export default function Historico() {
 
   useEffect(() => {
     const fetchLogs = async () => {
-      const response = await itemsAPI.getLogs("2023-09-15", "2024-03-18");
-      console.log(response.data);
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const now = new Date();
+      const response = await itemsAPI.getLogs(thirtyDaysAgo, now);
       setLogs(response.data);
     };
 
