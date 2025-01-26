@@ -10,7 +10,6 @@ const generate = async () => {
     },
   });
 
-
   await prisma.permissoes.create({
     data: {
       nome: "Gerir Estoque",
@@ -719,7 +718,7 @@ const generate = async () => {
     data: {
       nome: "Conta Principal",
       descricao: "Conta principal da empresa",
-      saldo: 1000.00,
+      saldo: 0.0,
       ativo: true,
     },
   });

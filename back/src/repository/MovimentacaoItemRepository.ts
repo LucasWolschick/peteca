@@ -6,7 +6,7 @@ import {
   User,
 } from "@prisma/client";
 
-class ItemRepository {
+export class MovimentacaoItemRepository {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -131,5 +131,3 @@ class ItemRepository {
     return x;
   }
 }
-
-export default ItemRepository;

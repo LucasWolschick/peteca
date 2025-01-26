@@ -1,7 +1,7 @@
 import { Conta, PrismaClient } from "@prisma/client";
 import Decimal from "decimal.js";
 
-class AccountRepository {
+export class AccountRepository {
   private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
@@ -78,5 +78,3 @@ class AccountRepository {
     });
   }
 }
-
-export default AccountRepository;
