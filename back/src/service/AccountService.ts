@@ -51,10 +51,10 @@ export class AccountService {
     }
 
     logger.info(`Deletando conta com id ${id}`);
-    await this.accountRepository.deleteAccount(id);
+    const response = await this.accountRepository.deleteAccount(id);
 
     if (autor) {
-      await this.accountChangeRepository.deleteAccount(exists, autor);
+      await this.accountChangeRepository.deleteAccount(response, autor);
     }
   }
 

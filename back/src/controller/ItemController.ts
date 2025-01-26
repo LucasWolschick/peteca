@@ -99,8 +99,8 @@ router.post(
 );
 
 const verifyLogs = [
-  query("from").optional().isISO8601().toDate(),
-  query("to").optional().isISO8601().toDate(),
+  query("from").optional().toDate(),
+  query("to").optional().toDate(),
 ];
 
 router.get(
@@ -122,6 +122,7 @@ router.get(
       const { from, to } = req.query;
 
       const logs = await itemService.getLogs(from as any, to as any);
+      console.log(logs)
       res.status(200).json(logs);
     } catch (e) {
       next(e);

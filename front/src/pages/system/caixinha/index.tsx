@@ -29,6 +29,7 @@ const Caixinha = () => {
   const [from, setFrom] = useState<Date | null>(null);
   const [to, setTo] = useState<Date | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [pendencias, setPendencias] = useState<any[]>([]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -90,11 +91,16 @@ const Caixinha = () => {
         type: "line";
         toolbar: { show: boolean };
         style: { fontFamily: string; color: string };
+        background: "transparent";
       };
       xaxis: {
         categories: string[];
         style: { fontSize: string; color: string };
       };
+      yaxis: {
+        labels: { style: { colors: string } };
+      };
+      theme: { mode: "dark" };
       title: {
         text: string;
         align: "center";
@@ -123,12 +129,23 @@ const Caixinha = () => {
           fontFamily: "inherit",
           color: "#fff",
         },
+        background: "transparent",
+      },
+      theme: {
+        mode: "dark",
       },
       xaxis: {
         categories: [], // Categorias do eixo x
         style: {
           fontSize: "14px",
           color: "#fff",
+        },
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: "#fff",
+          },
         },
       },
       title: {
@@ -149,9 +166,11 @@ const Caixinha = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await getAllTransactions();
-      await getAllAccounts();
-      await getUser();
+      await Promise.allSettled([
+        getAllTransactions(),
+        getAllAccounts(),
+        getUser(),
+      ]);
     };
     fetchData();
   }, []);
@@ -196,6 +215,14 @@ const Caixinha = () => {
       }));
     };
 
+    const filtrarPendencias = () => {
+      const pendencias = transactions.filter(
+        (transaction) => transaction.tipo === "PENDENCIA"
+      );
+      setPendencias(pendencias);
+    };
+
+    filtrarPendencias();
     calculateSaldo();
     updateChartData();
   }, [transactions]);
@@ -240,14 +267,15 @@ const Caixinha = () => {
             >
               Pendências
             </span>
-            <div className="d-flex justify-content-between items-center">
-              <p className="text-danger">Empréstimo Pinheiro</p>
-              <p> -R$ 100,00</p>
-            </div>
-            <div className="d-flex justify-content-between items-center">
-              <p className="text-danger">Aluguel RV</p>
-              <p> -R$ 3240,00</p>
-            </div>
+            {pendencias.map((pendencia) => (
+              <div
+                className="d-flex justify-content-between items-center"
+                key={pendencia.id}
+              >
+                <p className="text-danger">{pendencia.referencia}</p>
+                <p> -R$ {parseFloat(pendencia.valor).toFixed(2)}</p>
+              </div>
+            ))}
           </div>
 
           <div className="mb-4 d-flex justify-content-between items-center">

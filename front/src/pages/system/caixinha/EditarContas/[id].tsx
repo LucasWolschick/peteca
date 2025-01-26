@@ -1,42 +1,48 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import SystemTemplate from "../_systemtemplate";
+import SystemTemplate from "../../_systemtemplate";
 import Title from "@/components/system/Title";
+import { useAccount } from "@/hooks/useAccount";
 
 const EditarContas = () => {
   const router = useRouter();
   const { id } = router.query; // Obtém o ID da conta da URL
+  const { getAccountById, updateAccount } = useAccount();
 
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
 
   useEffect(() => {
-    // buscar os dados da conta pelo ID e preencher os estados
-    // Exemplo:
-    // fetch(`/api/contas/${id}`)
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     setNome(data.nome);
-    //     setDescricao(data.descricao);
-    //   });
+    const fetchData = async () => {
+      try {
+        const Account = await getAccountById(id as string);
+        setNome(Account.nome);
+        setDescricao(Account.descricao);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
   }, [id]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // enviar os dados atualizados para a API
-    // Exemplo:
-    // fetch(`/api/contas/${id}`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ nome, descricao }),
-    // });
+    const updatedAccount = {
+      nome,
+      descricao,
+    };
+
+    try {
+      updateAccount(id as string, updatedAccount);
+      router.push("/system/caixinha/contas");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <SystemTemplate>
-      <Title title={`Editar Conta ${id}`} />
+      <Title title={`Editar Conta ${nome}`} />
       <form onSubmit={handleSubmit} className=" mt-4 col-md-6 mx-auto ">
         <div className="mb-3">
           <label htmlFor="nome" className="form-label">
@@ -48,7 +54,6 @@ const EditarContas = () => {
             className="form-control"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            placeholder="Digite o nome da conta"
           />
         </div>
         <div className="mb-3">
@@ -60,7 +65,6 @@ const EditarContas = () => {
             className="form-control"
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
-            placeholder="Digite a descrição da conta"
           />
         </div>
         <button type="submit" className="btn btn-primary w-100">

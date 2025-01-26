@@ -3,6 +3,8 @@ import SystemTemplate from "../_systemtemplate";
 import Title from "@/components/system/Title";
 import styles from "./transacao.module.css";
 import { useTransaction } from "@/hooks/useTransaction";
+import { useAccount } from "@/hooks/useAccount";
+import router from "next/router";
 
 const Transacao = () => {
   const {
@@ -12,6 +14,13 @@ const Transacao = () => {
     loading,
     error,
   } = useTransaction();
+
+  const { accounts, getAllAccounts } = useAccount();
+
+  useEffect(() => {
+    getAllAccounts();
+  }, []);
+
   const [valor, setValor] = useState("");
   const [banco, setBanco] = useState("");
   const [referencia, setReferencia] = useState("");
@@ -20,10 +29,13 @@ const Transacao = () => {
   const [saldo, setSaldo] = useState(0);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      await getAllTransactions();
-    };
-    fetchTransactions();
+    if (accounts.length > 0) {
+      setBanco(accounts[0].id.toString());
+    }
+  }, [accounts]);
+
+  useEffect(() => {
+    getAllTransactions();
   }, []);
 
   useEffect(() => {
@@ -51,6 +63,7 @@ const Transacao = () => {
     };
     console.log("Enviando dados da transação:", transactionData);
     await createTransaction(transactionData);
+    router.push("/system/caixinha");
   };
 
   return (
@@ -76,14 +89,18 @@ const Transacao = () => {
           </div>
           <div className={styles.input_field}>
             <label htmlFor="banco">Banco: </label>
-            <input
-              type="text"
+            <select
               name="banco"
               id="banco"
-              placeholder="Insira o ID da conta"
-              value={banco}
               onChange={(e) => setBanco(e.target.value)}
-            />
+              className={styles.input_field}
+            >
+              {accounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.nome}
+                </option>
+              ))}
+            </select>
           </div>
           <div className={styles.buttons}>
             <label htmlFor="botao">Tipo de Transação: </label>

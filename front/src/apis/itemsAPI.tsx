@@ -65,9 +65,9 @@ export const itemsAPI = {
     });
   },
 
-  getLogs: async function (from: string, to: string) {
+  getLogs: async function (from: Date, to: Date) {
     return await api.request({
-      url: `/api/items/logs?from=${from}&to=${to}`,
+      url: `/api/items/logs?from=${from.toISOString()}&to=${to.toISOString()}`,
       method: "GET",
     });
   },

@@ -4,6 +4,8 @@ import SystemTemplate from "../../_systemtemplate"; // Ajuste o caminho se neces
 import Title from "@/components/system/Title";
 import styles from "../transacao.module.css"; // Ajuste o caminho se necessário
 import { useTransaction } from "@/hooks/useTransaction";
+import { useAccount } from "@/hooks/useAccount";
+import Dialog from "@/components/system/Dialog";
 
 const EditarTransacao = () => {
   const router = useRouter();
@@ -14,7 +16,14 @@ const EditarTransacao = () => {
     transactions,
     loading,
     error,
+    deleteTransaction,
   } = useTransaction();
+
+  const { accounts, getAllAccounts } = useAccount();
+
+  useEffect(() => {
+    getAllAccounts();
+  }, []);
 
   const [valor, setValor] = useState("");
   const [banco, setBanco] = useState("");
@@ -24,15 +33,22 @@ const EditarTransacao = () => {
     "RECEITA"
   );
 
+  const [showDeleteMModal, setShowDeleteModal] = useState(false);
+  const openDeleteModal = () => setShowDeleteModal(true);
+  const closeDeleteModal = () => setShowDeleteModal(false);
+
   // Buscar os dados da transação ao carregar a página
   useEffect(() => {
+    if (accounts.length > 0) {
+      setBanco(accounts[0].id.toString());
+    }
     if (id) {
       const fetchTransaction = async () => {
         await getTransactionById(id as string);
       };
       fetchTransaction();
     }
-  }, [id]);
+  }, [id, accounts]);
 
   // Preencher os campos com os dados da transação carregada
   useEffect(() => {
@@ -65,6 +81,11 @@ const EditarTransacao = () => {
     router.push("/system/caixinha"); // Redirecionar após atualizar
   };
 
+  const confirmDeleteTransaction = async () => {
+    await deleteTransaction(id as string);
+    router.push("/system/caixinha");
+  };
+
   return (
     <SystemTemplate>
       <Title title="Editar Transação" />
@@ -83,14 +104,18 @@ const EditarTransacao = () => {
           </div>
           <div className={styles.input_field}>
             <label htmlFor="banco">Banco: </label>
-            <input
-              type="text"
+            <select
               name="banco"
               id="banco"
-              placeholder="Insira o ID da conta"
-              value={banco}
               onChange={(e) => setBanco(e.target.value)}
-            />
+              className={styles.input_field}
+            >
+              {accounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.nome}
+                </option>
+              ))}
+            </select>
           </div>
           <div className={styles.buttons}>
             <label htmlFor="botao">Tipo de Transação: </label>
@@ -142,11 +167,22 @@ const EditarTransacao = () => {
           </div>
         </div>
 
-        <div className={styles.botao_transacao}>
-          <button onClick={handleUpdateTransaction} disabled={loading}>
+        <div className="d-flex justify-content-between gap-3 mt-3 w-50 align-items-center flex-column">
+          <Dialog
+            text="Tem certeza que deseja deletar a transação?"
+            buttonText="Deletar"
+            onConfirm={confirmDeleteTransaction}
+          />
+
+          <button
+            className="btn btn-primary btn-sm rounded-5 col-lg-8 "
+            onClick={handleUpdateTransaction}
+            disabled={loading}
+          >
             {loading ? "Atualizando..." : "Salvar Alterações"}
           </button>
         </div>
+
         {error && <p className={styles.error}>{error}</p>}
       </div>
     </SystemTemplate>

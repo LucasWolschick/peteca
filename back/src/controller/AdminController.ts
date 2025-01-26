@@ -23,8 +23,8 @@ declare module "express-serve-static-core" {
 }
 
 const logsValidator = [
-  query("from").optional().isISO8601().toDate(),
-  query("to").optional().isISO8601().toDate(),
+  query("from").optional().toDate(),
+  query("to").optional().toDate(),
   query("limit").optional().toInt(),
   query("level").optional().isIn(["debug", "info", "warn", "error"]),
 ];
