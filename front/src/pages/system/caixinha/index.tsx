@@ -8,17 +8,19 @@ import { useAccount } from "@/hooks/useAccount";
 import { useUser } from "@/hooks/useUser";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import router from "next/router";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const Caixinha = () => {
-  const { transactions, getAllTransactions } = useTransaction();
+  const { transactions, getAllTransactions, generateReport } = useTransaction();
   const { accounts, getAllAccounts } = useAccount();
   const { user, getUser } = useUser();
   const [isClient, setIsClient] = useState(false);
   const [saldo, setSaldo] = useState(0);
   const [from, setFrom] = useState<Date | null>(null);
   const [to, setTo] = useState<Date | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -29,7 +31,31 @@ const Caixinha = () => {
     }
   };
 
-  const handleSearch = async () => {};
+  const filteredTransactions = transactions.filter((transaction) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      transaction.autor?.nome?.toLowerCase().includes(search) ||
+      transaction.referencia.toLowerCase().includes(search) ||
+      transaction.tipo.toLowerCase().includes(search)
+    );
+  });
+
+  const handleEmitirRelatorio = async () => {
+    if (!from || !to) {
+      alert("Por favor, selecione o período para emitir o relatório");
+      return;
+    }
+
+    try {
+      const fromDate = from.toISOString().split("T")[0];
+      const toDate = to.toISOString().split("T")[0];
+      const reportUrl = await generateReport(fromDate, toDate);
+      router.push(reportUrl);
+    } catch (error) {
+      console.log("Erro ao gerar relatório:", error);
+      alert("Erro ao gerar relatório");
+    }
+  };
 
   const [chartData, setChartData] = useState<{
     series: { name: string; data: number[] }[];
@@ -255,14 +281,13 @@ const Caixinha = () => {
                 onChange={handleDateChange}
                 value={to ? to.toISOString().split("T")[0] : ""}
               />
-              <button className="btn btn-primary" onClick={handleSearch}>
-                Emitir Extrato
-              </button>
+              <button className="btn btn-primary">Emitir Extrato</button>
             </div>
             <input
               type="text"
               placeholder="Buscar..."
               className="form-control"
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
@@ -279,7 +304,7 @@ const Caixinha = () => {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((transaction) => (
+                {filteredTransactions.map((transaction) => (
                   <tr key={transaction.id}>
                     <td>{transaction.autor?.nome || "Desconhecido"}</td>
                     <td>{new Date(transaction.data).toLocaleDateString()}</td>
@@ -290,7 +315,16 @@ const Caixinha = () => {
                     <td>{transaction.referencia}</td>
                     <td>{transaction.tipo}</td>
                     <td>
-                      <button className="btn btn-warning btn-sm">Editar</button>
+                      <button
+                        className="btn btn-warning btn-sm"
+                        onClick={() =>
+                          router.push(
+                            `/system/caixinha/EditarTransacao/${transaction.id}`
+                          )
+                        }
+                      >
+                        Editar
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -339,7 +373,12 @@ const Caixinha = () => {
 
             {/* Botão alinhado no centro */}
             <div className="text-end">
-              <button className="btn btn-primary">Emitir Relatório</button>
+              <button
+                className="btn btn-primary"
+                onClick={handleEmitirRelatorio}
+              >
+                Emitir Relatório
+              </button>
             </div>
           </div>
         </div>

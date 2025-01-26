@@ -92,6 +92,21 @@ export const useTransaction = () => {
     });
   };
 
+  const generateReport = async (from: string, to: string) => {
+    try {
+      const config = getTokenConfig();
+      const response = await axios.post(
+        "http://localhost:8080/api/transactions/reports/create",
+        { from, to },
+        config
+      );
+      return response.headers.location;
+    } catch (error) {
+      console.log("Erro na geração do relatório:", error);
+      setError("Algo deu errado na geração do relatório");
+    }
+  };
+
   return {
     transactions,
     loading,
@@ -102,5 +117,6 @@ export const useTransaction = () => {
     getTransactionById,
     updateTransaction,
     deleteTransaction,
+    generateReport,
   };
 };
