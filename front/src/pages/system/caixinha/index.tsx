@@ -13,7 +13,15 @@ import router from "next/router";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const Caixinha = () => {
-  const { transactions, getAllTransactions, generateReport } = useTransaction();
+  const {
+    transactions,
+    getAllTransactions,
+    generateReport,
+    downloadReport,
+    generateStatement,
+    downloadStatement,
+  } = useTransaction();
+
   const { accounts, getAllAccounts } = useAccount();
   const { user, getUser } = useUser();
   const [isClient, setIsClient] = useState(false);
@@ -50,10 +58,28 @@ const Caixinha = () => {
       const fromDate = from.toISOString().split("T")[0];
       const toDate = to.toISOString().split("T")[0];
       const reportUrl = await generateReport(fromDate, toDate);
-      router.push(reportUrl);
+      await downloadReport(reportUrl);
+      console.log(reportUrl);
     } catch (error) {
       console.log("Erro ao gerar relatório:", error);
       alert("Erro ao gerar relatório");
+    }
+  };
+
+  const handleEmitirExtrato = async () => {
+    try {
+      const fromDate = from?.toISOString().split("T")[0];
+      const toDate = to?.toISOString().split("T")[0];
+      const statementUrl = await generateStatement(
+        fromDate,
+        toDate,
+        searchTerm
+      );
+      await downloadStatement(statementUrl);
+      console.log(statementUrl);
+    } catch (error) {
+      console.log("Erro ao gerar extrato:", error);
+      alert("Erro ao gerar extrato");
     }
   };
 
@@ -281,7 +307,9 @@ const Caixinha = () => {
                 onChange={handleDateChange}
                 value={to ? to.toISOString().split("T")[0] : ""}
               />
-              <button className="btn btn-primary">Emitir Extrato</button>
+              <button className="btn btn-primary" onClick={handleEmitirExtrato}>
+                Emitir Extrato
+              </button>
             </div>
             <input
               type="text"
