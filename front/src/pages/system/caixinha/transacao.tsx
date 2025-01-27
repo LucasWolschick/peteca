@@ -69,16 +69,17 @@ const Transacao = () => {
   return (
     <SystemTemplate>
       <Title title="Caixinha" />
-      <div className={styles.container}>
-        <div className={styles.saldo}>
+      <div className="container">
+        <div className="text-center">
           <h2>SALDO</h2>
           <h2>R$ {saldo.toFixed(2)}</h2>
         </div>
 
-        <div className={styles.inputs}>
-          <div className={styles.input_field}>
+        <div className="row text-center">
+          <div className="col-12">
             <label htmlFor="valor">Valor: </label>
             <input
+              className="form-control"
               type="text"
               name="valor"
               id="valor"
@@ -87,13 +88,13 @@ const Transacao = () => {
               onChange={(e) => setValor(e.target.value)}
             />
           </div>
-          <div className={styles.input_field}>
+          <div className="col-12">
             <label htmlFor="banco">Banco: </label>
             <select
+              className="form-control"
               name="banco"
               id="banco"
               onChange={(e) => setBanco(e.target.value)}
-              className={styles.input_field}
             >
               {accounts.map((account) => (
                 <option key={account.id} value={account.id}>
@@ -127,9 +128,10 @@ const Transacao = () => {
               Pendência
             </button>
           </div>
-          <div className={styles.input_field}>
+          <div className="col-12">
             <label htmlFor="referencia">Referencia: </label>
             <input
+              className="form-control"
               type="text"
               name="referencia"
               id="referencia"
@@ -138,9 +140,10 @@ const Transacao = () => {
               onChange={(e) => setReferencia(e.target.value)}
             />
           </div>
-          <div className={styles.input_field}>
+          <div className="col-12">
             <label htmlFor="data">Data: </label>
             <input
+              className="form-control"
               type="date"
               name="data"
               id="data"
