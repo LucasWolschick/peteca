@@ -9,8 +9,8 @@ export default function Index() {
 
   useEffect(() => {
     if (isLogged === undefined) return;
-    
-    if (isLogged) {
+
+    if (!isLogged) {
       router.push("/login");
     } else {
       router.push("/system");

@@ -1,6 +1,6 @@
 import CardUserList from "@/components/system/CardUserList";
 import Title from "@/components/system/Title";
-import SystemTemplate from "../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import { useContext, useEffect, useState } from "react";
 import { UsuarioAPI } from "@/apis/usuarioAPI";
 import { useRouter } from "next/router";
@@ -32,13 +32,13 @@ export default function List() {
         setUsers(
           response.data.map(
             (user) =>
-            ({
-              id: user.id,
-              nome: user.nome,
-              email: user.email,
-              data_nascimento: user.data_nascimento,
-              imagem: user.imagem,
-            } as User)
+              ({
+                id: user.id,
+                nome: user.nome,
+                email: user.email,
+                data_nascimento: user.data_nascimento,
+                imagem: user.imagem,
+              } as User)
           )
         );
       })
@@ -51,7 +51,7 @@ export default function List() {
   return (
     <SystemTemplate>
       <div className="container-fluid">
-        <Title title="Usuários" />
+        <Title title="Usuários" backRoute="/system/inicio" />
         <div className="row mt-3 align-items-center justify-content-center overflow-auto ">
           <div className="col-12 overflow-auto">
             <div
@@ -73,8 +73,8 @@ export default function List() {
                       editUser={
                         canEdit
                           ? () => {
-                            router.push("/system/usuarios/edit/" + user.id);
-                          }
+                              router.push("/system/usuarios/edit/" + user.id);
+                            }
                           : undefined
                       }
                     />

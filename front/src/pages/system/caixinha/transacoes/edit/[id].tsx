@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import SystemTemplate from "../../_systemtemplate"; // Ajuste o caminho se necessário
+import SystemTemplate from "@/pages/system/_systemtemplate"; // Ajuste o caminho se necessário
 import Title from "@/components/system/Title";
-import styles from "../transacao.module.css"; // Ajuste o caminho se necessário
 import { useTransaction } from "@/hooks/useTransaction";
 import { useAccount } from "@/hooks/useAccount";
 import Dialog from "@/components/system/Dialog";
@@ -88,7 +87,7 @@ const EditarTransacao = () => {
 
   return (
     <SystemTemplate>
-      <Title title="Editar Transação" />
+      <Title title="Editar Transação" backRoute="/system/caixinha" />
       <div className="container">
         <div className="text-center">
           <div className="col-12">
@@ -120,7 +119,7 @@ const EditarTransacao = () => {
               ))}
             </select>
           </div>
-          <div className={styles.buttons}>
+          <div>
             <label htmlFor="botao">Tipo de Transação: </label>
             <button
               onClick={() => setTipo("RECEITA")}
@@ -188,7 +187,7 @@ const EditarTransacao = () => {
           </button>
         </div>
 
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <p>{error}</p>}
       </div>
     </SystemTemplate>
   );

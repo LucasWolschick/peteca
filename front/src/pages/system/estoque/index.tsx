@@ -3,7 +3,7 @@ import DialogEditItem from "@/components/system/DialogEditItem";
 import ItemEntry from "@/components/system/ItemEntry";
 import Title from "@/components/system/Title";
 import { useEffect, useState } from "react";
-import SystemTemplate from "../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import { Item, itemsAPI } from "@/apis/itemsAPI";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -64,7 +64,7 @@ export default function Index() {
   return (
     <SystemTemplate>
       <div className="container-fluid">
-        <Title title="Estoque" />
+        <Title title="Estoque" backRoute="/system/inicio" />
         <div className="mb-3 row">
           <div className="col-lg-6">
             <input
@@ -79,7 +79,11 @@ export default function Index() {
             />
           </div>
           <div className="col-lg-3 mt-3 mt-lg-0">
-            <select value={filterOption} onChange={handleFilterChange} className="form-select">
+            <select
+              value={filterOption}
+              onChange={handleFilterChange}
+              className="form-select"
+            >
               <option value="">Filtrar por...</option>
               <option value="Quantidade">Quantidade</option>
               <option value="Local">Local</option>
@@ -151,7 +155,7 @@ export default function Index() {
           {/* <Link href="/system/historico"> */}
           <Link
             className="text-decoration-none text-black btn btn-info btn-sm rounded-5 col-lg-3 col-10 mt-2 mt-lg-0"
-            href="/system/historico"
+            href="/system/estoque/historico"
           >
             Ver Histórico
           </Link>

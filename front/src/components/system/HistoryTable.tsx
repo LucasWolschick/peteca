@@ -1,5 +1,5 @@
 import { itemsAPI } from "@/apis/itemsAPI";
-import { Log } from "@/pages/system/caixinha/historico";
+import { Log } from "@/pages/system/estoque/historico";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";

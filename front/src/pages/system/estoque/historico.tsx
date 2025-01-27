@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { itemsAPI } from "@/apis/itemsAPI";
-import SystemTemplate from "../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import Title from "@/components/system/Title";
 import ItemEntry from "@/components/system/ItemEntry";
 import moment from "moment";
@@ -45,7 +45,7 @@ export default function Historico() {
   return (
     <SystemTemplate>
       <div className="container-fluid">
-        <Title title="Histórico de Transações" />
+        <Title title="Histórico de Movimentações" />
         <HistoryTable />
         <div className="mt-3 d-flex justify-content-center">
           <Link

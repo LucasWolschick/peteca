@@ -5,16 +5,22 @@ import { useRouter } from "next/router";
 export default function Title(props: TitleProps) {
   const router = useRouter();
 
+  const handleBack = () => {
+    if (props.backRoute) {
+      router.push(props.backRoute);
+    } else {
+      const pathSegments = router.asPath.split("/").filter(Boolean);
+      pathSegments.pop();
+      const newPath = "/" + pathSegments.join("/");
+      router.push(newPath || "/");
+    }
+  };
+
   return (
     <>
       <a
         className="text-warning text-decoration-none d-flex align-items-center"
-        onClick={() => {
-          const pathSegments = router.asPath.split("/").filter(Boolean);
-          pathSegments.pop();
-          const newPath = "/" + pathSegments.join("/");
-          router.push(newPath || "/");
-        }}
+        onClick={handleBack}
         style={{ cursor: "pointer" }}
       >
         <FontAwesomeIcon icon={faChevronLeft} size="2x" /> Voltar
@@ -26,4 +32,5 @@ export default function Title(props: TitleProps) {
 
 export interface TitleProps {
   title: string;
+  backRoute?: string;
 }

@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
-import SystemTemplate from "../../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import { useRouter } from "next/router";
 import { SystemContext } from "@/SystemContext";
 import { Permission, PermissionsAPI } from "@/apis/permissionsAPI";
@@ -127,7 +127,10 @@ export default function Create() {
   return (
     <SystemTemplate>
       <div className="container-fluid">
-        <Title title={criando ? "Cadastrar usuário" : "Editar usuário"} />
+        <Title
+          title={criando ? "Cadastrar usuário" : "Editar usuário"}
+          backRoute="/system/usuarios"
+        />
         <form
           className="row mt-3 align-items-center"
           method="post"

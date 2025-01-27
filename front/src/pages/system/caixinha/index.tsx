@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import SystemTemplate from "../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import Title from "@/components/system/Title";
 import Link from "next/link";
-import {useTransaction} from "@/hooks/useTransaction";
-import {useAccount} from "@/hooks/useAccount";
-import {useUser} from "@/hooks/useUser";
+import { useTransaction } from "@/hooks/useTransaction";
+import { useAccount } from "@/hooks/useAccount";
+import { useUser } from "@/hooks/useUser";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import router from "next/router";
 
-const Chart = dynamic(() => import("react-apexcharts"), {ssr: false});
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const Caixinha = () => {
   const {
@@ -22,8 +22,8 @@ const Caixinha = () => {
     downloadStatement,
   } = useTransaction();
 
-  const {accounts, getAllAccounts} = useAccount();
-  const {user, getUser} = useUser();
+  const { accounts, getAllAccounts } = useAccount();
+  const { user, getUser } = useUser();
   const [isClient, setIsClient] = useState(false);
   const [saldo, setSaldo] = useState(0);
   const [from, setFrom] = useState<Date | null>(null);
@@ -202,8 +202,8 @@ const Caixinha = () => {
       setChartData((prevData) => ({
         ...prevData,
         series: [
-          {...prevData.series[0], data: entradas},
-          {...prevData.series[1], data: saidas},
+          { ...prevData.series[0], data: entradas },
+          { ...prevData.series[1], data: saidas },
         ],
         options: {
           ...prevData.options,
@@ -229,14 +229,14 @@ const Caixinha = () => {
 
   return (
     <SystemTemplate>
-      <Title title="Caixinha"/>
+      <Title title="Caixinha" backRoute="/system/inicio" />
       <div className="d-flex flex-column flex-md-row justify-content-between gap-4">
         {/* Coluna 1 */}
         <div className="col-md-4 mb-4">
           <div className="mb-4">
             <span
               className="text-uppercase fw-bold"
-              style={{color: "#E0972F"}}
+              style={{ color: "#E0972F" }}
             >
               Saldo
             </span>
@@ -244,7 +244,7 @@ const Caixinha = () => {
           </div>
           <div className="mb-4">
             <span
-              style={{color: "#E0972F"}}
+              style={{ color: "#E0972F" }}
               className="text-uppercase fw-bold"
             >
               Contas
@@ -262,7 +262,7 @@ const Caixinha = () => {
           </div>
           <div className="mb-4">
             <span
-              style={{color: "#E0972F"}}
+              style={{ color: "#E0972F" }}
               className="text-uppercase fw-bold"
             >
               Pendências
@@ -280,7 +280,7 @@ const Caixinha = () => {
 
           <div className="mb-4 d-flex justify-content-between items-center">
             <span
-              style={{color: "#E0972F"}}
+              style={{ color: "#E0972F" }}
               className="text-uppercase fw-bold"
             >
               Subtotal
@@ -299,7 +299,10 @@ const Caixinha = () => {
             />
           )}
           <div className="d-grid gap-2">
-            <Link href="/system/caixinha/transacao" className="btn btn-primary">
+            <Link
+              href="/system/caixinha/transacoes/new"
+              className="btn btn-primary"
+            >
               Lançar Transação
             </Link>
             <Link href="/system/caixinha/contas" className="btn btn-secondary">
@@ -344,7 +347,10 @@ const Caixinha = () => {
               className="form-control"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="btn btn-primary mt-2" onClick={handleEmitirExtrato}>
+            <button
+              className="btn btn-primary mt-2"
+              onClick={handleEmitirExtrato}
+            >
               Emitir Extrato
             </button>
           </div>
@@ -352,40 +358,40 @@ const Caixinha = () => {
           <div className="table-responsive bg-white mb-4">
             <table className="table table-striped">
               <thead className="table-dark">
-              <tr>
-                <th>Conta</th>
-                <th>Data</th>
-                <th>Valor</th>
-                <th>Referência</th>
-                <th>Tipo</th>
-                <th>Ações</th>
-              </tr>
+                <tr>
+                  <th>Conta</th>
+                  <th>Data</th>
+                  <th>Valor</th>
+                  <th>Referência</th>
+                  <th>Tipo</th>
+                  <th>Ações</th>
+                </tr>
               </thead>
               <tbody>
-              {filteredTransactions.map((transaction) => (
-                <tr key={transaction.id}>
-                  <td>{transaction.autor?.nome || "Desconhecido"}</td>
-                  <td>{new Date(transaction.data).toLocaleDateString()}</td>
-                  <td>
-                    {transaction.tipo === "RECEITA" ? "+" : "-"}R${" "}
-                    {parseFloat(transaction.valor).toFixed(2)}
-                  </td>
-                  <td>{transaction.referencia}</td>
-                  <td>{transaction.tipo}</td>
-                  <td>
-                    <button
-                      className="btn btn-warning btn-sm"
-                      onClick={() =>
-                        router.push(
-                          `/system/caixinha/EditarTransacao/${transaction.id}`
-                        )
-                      }
-                    >
-                      Editar
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                {filteredTransactions.map((transaction) => (
+                  <tr key={transaction.id}>
+                    <td>{transaction.autor?.nome || "Desconhecido"}</td>
+                    <td>{new Date(transaction.data).toLocaleDateString()}</td>
+                    <td>
+                      {transaction.tipo === "RECEITA" ? "+" : "-"}R${" "}
+                      {parseFloat(transaction.valor).toFixed(2)}
+                    </td>
+                    <td>{transaction.referencia}</td>
+                    <td>{transaction.tipo}</td>
+                    <td>
+                      <button
+                        className="btn btn-warning btn-sm"
+                        onClick={() =>
+                          router.push(
+                            `/system/caixinha/contas/edit/${transaction.id}`
+                          )
+                        }
+                      >
+                        Editar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

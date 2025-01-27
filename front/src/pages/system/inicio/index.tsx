@@ -1,4 +1,4 @@
-import SystemTemplate from "../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import { AuthContext } from "@/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import { itemsAPI } from "@/apis/itemsAPI";
@@ -11,7 +11,7 @@ import HistoryTable from "@/components/system/HistoryTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import { Log } from "../caixinha/historico";
+import { Log } from "../estoque/historico";
 
 type ValuePiece = Date | null;
 

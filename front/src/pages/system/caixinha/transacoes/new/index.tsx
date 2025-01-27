@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import SystemTemplate from "../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import Title from "@/components/system/Title";
-import styles from "./transacao.module.css";
 import { useTransaction } from "@/hooks/useTransaction";
 import { useAccount } from "@/hooks/useAccount";
 import router from "next/router";
@@ -61,21 +60,20 @@ const Transacao = () => {
       tipo,
       conta: parseInt(banco),
     };
-    console.log("Enviando dados da transação:", transactionData);
     await createTransaction(transactionData);
     router.push("/system/caixinha");
   };
 
   return (
     <SystemTemplate>
-      <Title title="Caixinha" />
+      <Title title="Criar Transação" backRoute="/system/caixinha" />
       <div className="container">
         <div className="text-center">
           <h2>SALDO</h2>
           <h2>R$ {saldo.toFixed(2)}</h2>
         </div>
 
-        <div className="row text-center">
+        <div className="row g-2 col-md-7 mx-auto text-center">
           <div className="col-12">
             <label htmlFor="valor">Valor: </label>
             <input
@@ -94,8 +92,10 @@ const Transacao = () => {
               className="form-control"
               name="banco"
               id="banco"
+              value={banco}
               onChange={(e) => setBanco(e.target.value)}
             >
+              <option value="">Selecione um banco...</option>
               {accounts.map((account) => (
                 <option key={account.id} value={account.id}>
                   {account.nome}
@@ -103,27 +103,29 @@ const Transacao = () => {
               ))}
             </select>
           </div>
-          <div className={styles.buttons}>
-            <label htmlFor="botao">Tipo de Transação: </label>
+          <div className="col-12 d-flex justify-content-center gap-3 my-3">
+            <label className="align-self-center mb-0">Tipo de Transação:</label>
             <button
               onClick={() => setTipo("receita")}
-              style={{
-                backgroundColor: tipo === "receita" ? "green" : "black",
-              }}
+              className={`btn ${
+                tipo === "receita" ? "btn-success" : "btn-secondary"
+              }`}
             >
               Entrada
             </button>
             <button
               onClick={() => setTipo("despesa")}
-              style={{ backgroundColor: tipo === "despesa" ? "red" : "black" }}
+              className={`btn ${
+                tipo === "despesa" ? "btn-danger" : "btn-secondary"
+              }`}
             >
               Saída
             </button>
             <button
               onClick={() => setTipo("pendencia")}
-              style={{
-                backgroundColor: tipo === "pendencia" ? "orange" : "black",
-              }}
+              className={`btn ${
+                tipo === "pendencia" ? "btn-warning" : "btn-secondary"
+              }`}
             >
               Pendência
             </button>
@@ -152,17 +154,21 @@ const Transacao = () => {
             />
           </div>
         </div>
-        <div className={styles.subtotal}>
-          <h2 className={styles.valor}>SUBTOTAL</h2>
-          <h2>R$ {valor ? parseFloat(valor).toFixed(2) : "0.00"}</h2>
+        <div className="d-flex justify-content-center align-items-center my-3">
+          <h2 className="me-3">SUBTOTAL</h2>
+          <h2>{valor ? `R$ ${parseFloat(valor).toFixed(2)}` : "R$ 0.00"}</h2>
         </div>
 
-        <div className={styles.botao_transacao}>
-          <button onClick={handleCreateTransaction} disabled={loading}>
+        <div className="text-center">
+          <button
+            className="btn btn-primary"
+            onClick={handleCreateTransaction}
+            disabled={loading}
+          >
             {loading ? "Processando..." : "Lançar Transação"}
           </button>
+          {error && <p className="text-danger mt-2">{error}</p>}
         </div>
-        {error && <p className={styles.error}>{error}</p>}
       </div>
     </SystemTemplate>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Table, Form } from "react-bootstrap";
-import SystemTemplate from "../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import Title from "@/components/system/Title";
 import Link from "next/link";
 import { useAccount } from "@/hooks/useAccount";
@@ -50,14 +50,19 @@ const contas = () => {
                     <td>{account.nome}</td>
                     <td>
                       <Link
-                        href={`/system/caixinha/EditarContas?id=${account.id}`}
+                        href={`/system/caixinha/contas/edit/${account.id}`}
                         passHref
                       >
-                        <Button variant="primary" size="sm" className="me-2 mb-2">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="me-2 mb-2"
+                        >
                           Editar
                         </Button>
                       </Link>
-                      <Button className="mb-2"
+                      <Button
+                        className="mb-2"
                         variant="danger"
                         size="sm"
                         onClick={() => handleDeleteAccount(account.id)}
@@ -102,7 +107,9 @@ const contas = () => {
               <Button variant="primary" className="me-2 mb-2" type="submit">
                 Adicionar Conta
               </Button>
-              <Button variant="secondary" className="mb-2">Cancelar</Button>
+              <Button variant="secondary" className="mb-2">
+                Cancelar
+              </Button>
             </Form>
           </Col>
         </Row>

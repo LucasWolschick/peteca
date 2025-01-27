@@ -5,7 +5,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SystemTemplate from "../../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { User, UsuarioAPI } from "@/apis/usuarioAPI";
@@ -54,7 +54,7 @@ export default function Details() {
     return (
       <SystemTemplate>
         <div className="container-fluid">
-          <Title title="Usuário" />
+          <Title title="Usuário" backRoute="/system/usuarios" />
         </div>
         <div>
           <p>Carregando...</p>
@@ -66,7 +66,7 @@ export default function Details() {
   return (
     <SystemTemplate>
       <div className="container-fluid">
-        <Title title="Usuário" />
+        <Title title="Usuário" backRoute="/system/usuarios" />
       </div>
       <div className="row mt-3 align-items-center">
         <div className="col-md-3">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import SystemTemplate from "../../_systemtemplate";
+import SystemTemplate from "@/pages/system/_systemtemplate";
 import Title from "@/components/system/Title";
 import { useAccount } from "@/hooks/useAccount";
 
@@ -42,7 +42,10 @@ const EditarContas = () => {
 
   return (
     <SystemTemplate>
-      <Title title={`Editar Conta ${nome}`} />
+      <Title
+        title={`Editar Conta ${nome}`}
+        backRoute="/system/caixinha/contas"
+      />
       <form onSubmit={handleSubmit} className=" mt-4 col-md-6 mx-auto ">
         <div className="mb-3">
           <label htmlFor="nome" className="form-label">
