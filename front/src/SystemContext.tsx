@@ -1,6 +1,7 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { SystemAPI } from "./apis/systemAPI";
 import { Permission } from "./apis/permissionsAPI";
+import { AuthContext } from "./AuthContext";
 
 interface SystemContextData {
   permissions: Permission[];
@@ -15,10 +16,14 @@ export const SystemContext = createContext<SystemContextData>({
 export const SystemProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { loggedUser } = useContext(AuthContext);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [color, setColor] = useState("azul");
 
   useEffect(() => {
+    if (loggedUser === undefined || loggedUser === null) {
+      return;
+    }
     SystemAPI.getConfigurations()
       .then((response) => {
         setPermissions(response.data.permissoes);
@@ -27,7 +32,7 @@ export const SystemProvider: React.FC<{ children: React.ReactNode }> = ({
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [loggedUser]);
 
   return (
     <SystemContext.Provider

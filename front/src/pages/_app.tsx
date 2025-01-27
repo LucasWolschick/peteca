@@ -19,8 +19,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <meta name="description" content="SGI para grupos PET" />
         <link rel="icon" href="/images/favicon.ico" sizes="any" />
       </Head>
-      <SystemProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <SystemProvider>
           <main
             role="main"
             className={"min-vh-100 overflow-hidden " + inter.className}
@@ -29,8 +29,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
             </div>
           </main>
-        </AuthProvider>
-      </SystemProvider>
+        </SystemProvider>
+      </AuthProvider>
     </React.StrictMode>
   );
 }
