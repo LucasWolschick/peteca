@@ -33,9 +33,9 @@ const contas = () => {
     <SystemTemplate>
       <Title title="Contas Bancárias" />
       <Container className="mt-4">
-        <Row className="align-items-start">
+        <Row>
           {/* Lista de contas */}
-          <Col md={6} className="mb-4">
+          <Col md={7} lg={6} className="mb-4">
             <h4 className="mt-4">Lista de Contas</h4>
             <Table striped bordered hover>
               <thead className="table-dark">
@@ -48,16 +48,16 @@ const contas = () => {
                 {accounts.map((account) => (
                   <tr key={account.id}>
                     <td>{account.nome}</td>
-                    <td className="d-flex gap-2">
+                    <td>
                       <Link
                         href={`/system/caixinha/EditarContas?id=${account.id}`}
                         passHref
                       >
-                        <Button variant="primary" size="sm">
+                        <Button variant="primary" size="sm" className="me-2 mb-2">
                           Editar
                         </Button>
                       </Link>
-                      <Button
+                      <Button className="mb-2"
                         variant="danger"
                         size="sm"
                         onClick={() => handleDeleteAccount(account.id)}
@@ -72,7 +72,7 @@ const contas = () => {
           </Col>
 
           {/* Formulário para criar nova conta */}
-          <Col md={6}>
+          <Col md={5} lg={6}>
             <h4>Nova Conta</h4>
             <Form
               onSubmit={(e) => {
@@ -99,10 +99,10 @@ const contas = () => {
                   onChange={(e) => setDescricao(e.target.value)}
                 />
               </Form.Group>
-              <Button variant="primary" className="me-2" type="submit">
+              <Button variant="primary" className="me-2 mb-2" type="submit">
                 Adicionar Conta
               </Button>
-              <Button variant="secondary">Cancelar</Button>
+              <Button variant="secondary" className="mb-2">Cancelar</Button>
             </Form>
           </Col>
         </Row>
