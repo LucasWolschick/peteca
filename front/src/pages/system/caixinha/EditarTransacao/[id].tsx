@@ -39,16 +39,16 @@ const EditarTransacao = () => {
 
   // Buscar os dados da transação ao carregar a página
   useEffect(() => {
-    if (accounts.length > 0) {
-      setBanco(accounts[0].id.toString());
-    }
+    // if (accounts.length > 0) {
+    //   setBanco(accounts[0].id.toString());
+    // }
     if (id) {
       const fetchTransaction = async () => {
         await getTransactionById(id as string);
       };
       fetchTransaction();
     }
-  }, [id, accounts]);
+  }, [id]);
 
   // Preencher os campos com os dados da transação carregada
   useEffect(() => {
@@ -56,7 +56,7 @@ const EditarTransacao = () => {
       const transaction = transactions[0]; // A transação carregada
 
       setValor(parseFloat(transaction.valor || 0).toFixed(2)); // Valor com fallback
-      setBanco(transaction.conta ? transaction.conta.toString() : ""); // Banco com fallback
+      setBanco(transaction.conta ? transaction.contaId.toString() : ""); // Banco com fallback
       setTipo(transaction.tipo ? transaction.tipo : "RECEITA"); // Tipo com fallback
       setReferencia(transaction.referencia || ""); // Referência com fallback
       setData(
@@ -109,8 +109,10 @@ const EditarTransacao = () => {
               name="banco"
               id="banco"
               onChange={(e) => setBanco(e.target.value)}
+              value={banco}
               className="form-control"
-              >
+            >
+              <option value="">Selecione um banco...</option>
               {accounts.map((account) => (
                 <option key={account.id} value={account.id}>
                   {account.nome}
