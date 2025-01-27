@@ -89,11 +89,12 @@ const EditarTransacao = () => {
   return (
     <SystemTemplate>
       <Title title="Editar Transação" />
-      <div className={styles.container}>
-        <div className={styles.inputs}>
-          <div className={styles.input_field}>
+      <div className="container">
+        <div className="text-center">
+          <div className="col-12">
             <label htmlFor="valor">Valor: </label>
             <input
+              className="form-control"
               type="text"
               name="valor"
               id="valor"
@@ -102,14 +103,14 @@ const EditarTransacao = () => {
               onChange={(e) => setValor(e.target.value)}
             />
           </div>
-          <div className={styles.input_field}>
+          <div className="col-12">
             <label htmlFor="banco">Banco: </label>
             <select
               name="banco"
               id="banco"
               onChange={(e) => setBanco(e.target.value)}
-              className={styles.input_field}
-            >
+              className="form-control"
+              >
               {accounts.map((account) => (
                 <option key={account.id} value={account.id}>
                   {account.nome}
@@ -144,9 +145,10 @@ const EditarTransacao = () => {
               Pendência
             </button>
           </div>
-          <div className={styles.input_field}>
+          <div className="col-12">
             <label htmlFor="referencia">Referência: </label>
             <input
+              className="form-control"
               type="text"
               name="referencia"
               id="referencia"
@@ -155,9 +157,10 @@ const EditarTransacao = () => {
               onChange={(e) => setReferencia(e.target.value)}
             />
           </div>
-          <div className={styles.input_field}>
+          <div className="col-12">
             <label htmlFor="data">Data: </label>
             <input
+              className="form-control"
               type="date"
               name="data"
               id="data"
@@ -167,7 +170,7 @@ const EditarTransacao = () => {
           </div>
         </div>
 
-        <div className="d-flex justify-content-between gap-3 mt-3 w-50 align-items-center flex-column">
+        <div className="d-flex justify-content-between gap-3 mt-3 align-items-center flex-column">
           <Dialog
             text="Tem certeza que deseja deletar a transação?"
             buttonText="Deletar"
@@ -175,7 +178,7 @@ const EditarTransacao = () => {
           />
 
           <button
-            className="btn btn-primary btn-sm rounded-5 col-lg-8 "
+            className="btn btn-primary btn-sm rounded-5 col-lg-8 col-md-12 col-8"
             onClick={handleUpdateTransaction}
             disabled={loading}
           >
