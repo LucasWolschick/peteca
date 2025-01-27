@@ -7,8 +7,6 @@ import Dialog from "@/components/system/Dialog";
 
 const Contas = () => {
   const [accounts, setAccounts] = useState<Conta[]>([]);
-  const [showDialog, setShowDialog] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<Conta | null>(null);
 
   useEffect(() => {
     const getAllAccounts = async () => {
@@ -18,24 +16,10 @@ const Contas = () => {
     getAllAccounts();
   }, []);
 
-  const handleDeleteClick = (account: Conta) => {
-    setSelectedAccount(account);
-    setShowDialog(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (selectedAccount) {
-      await accountAPI.deleteAccount(selectedAccount.id);
-      const updatedAccounts = (await accountAPI.getAccounts()).data;
-      setAccounts(updatedAccounts);
-      setShowDialog(false);
-      setSelectedAccount(null);
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setShowDialog(false);
-    setSelectedAccount(null);
+  const handleConfirmDelete = async (id: number) => {
+    await accountAPI.deleteAccount(id);
+    const updatedAccounts = (await accountAPI.getAccounts()).data;
+    setAccounts(updatedAccounts);
   };
 
   return (
@@ -72,7 +56,7 @@ const Contas = () => {
                       <Dialog
                         text={`Tem certeza que deseja remover a conta "${account.nome}"? Isso também irá deletar todas as transações associadas.`}
                         buttonText="Deletar"
-                        onConfirm={handleConfirmDelete}
+                        onConfirm={() => handleConfirmDelete(account.id)}
                         className="btn btn-danger btn-sm me-2 mb-2"
                       />
                     </td>

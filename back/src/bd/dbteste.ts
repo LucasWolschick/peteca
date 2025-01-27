@@ -713,30 +713,6 @@ const generate = async () => {
       },
     },
   });
-
-  await prisma.conta.create({
-    data: {
-      nome: "Conta Principal",
-      descricao: "Conta principal da empresa",
-      saldo: 0.0,
-      ativo: true,
-    },
-  });
-
-  await prisma.transacao.create({
-    data: {
-      valor: 150.75,
-      data: new Date("2023-10-01"),
-      referencia: "Compra de materiais",
-      tipo: TipoTransacao.DESPESA,
-      conta: {
-        connect: {
-          id: 1,
-        },
-      },
-      ativo: true,
-    },
-  });
 };
 
 generate().then(async () => {

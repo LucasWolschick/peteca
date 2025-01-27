@@ -86,33 +86,12 @@ const Caixinha = () => {
 
   const [chartData, setChartData] = useState<{
     series: { name: string; data: number[] }[];
-    options: {
-      chart: {
-        type: "line";
-        toolbar: { show: boolean };
-        style: { fontFamily: string; color: string };
-        background: "transparent";
-      };
-      xaxis: {
-        categories: string[];
-        style: { fontSize: string; color: string };
-      };
-      yaxis: {
-        labels: { style: { colors: string } };
-      };
-      theme: { mode: "dark" };
-      title: {
-        text: string;
-        align: "center";
-        style: { fontSize: string; color: string };
-      };
-      colors: string[];
-    };
+    options: ApexCharts.ApexOptions;
   }>({
     series: [
       {
         name: "Entradas",
-        data: [], // Dados do gráfico
+        data: [],
       },
       {
         name: "Saídas",
@@ -121,42 +100,24 @@ const Caixinha = () => {
     ],
     options: {
       chart: {
-        type: "line" as "line", // Tipo de gráfico (line, bar, pie, etc.)
-        toolbar: {
-          show: false, // Oculta a barra de ferramentas
-        },
-        style: {
-          fontFamily: "inherit",
-          color: "#fff",
-        },
+        type: "line",
+        toolbar: { show: false },
         background: "transparent",
       },
-      theme: {
-        mode: "dark",
-      },
+      theme: { mode: "dark" },
       xaxis: {
-        categories: [], // Categorias do eixo x
-        style: {
-          fontSize: "14px",
-          color: "#fff",
-        },
+        type: "datetime",
+        categories: [],
       },
       yaxis: {
-        labels: {
-          style: {
-            colors: "#fff",
-          },
-        },
+        labels: { style: { colors: "#fff" } },
       },
       title: {
         text: "Entradas e Saídas",
-        align: "center" as "center",
-        style: {
-          fontSize: "20px",
-          color: "#fff",
-        },
+        align: "center",
+        style: { color: "#fff" },
       },
-      colors: ["#00E396", "#FF4560"], // Cores das linhas
+      colors: ["#00E396", "#FF4560"],
     },
   });
 
@@ -179,7 +140,10 @@ const Caixinha = () => {
       const saldoAtual = transactions.reduce((acc, transaction) => {
         if (transaction.tipo === "RECEITA") {
           return acc + parseFloat(transaction.valor);
-        } else if (transaction.tipo === "DESPESA") {
+        } else if (
+          transaction.tipo === "DESPESA" ||
+          transaction.tipo === "PENDENCIA"
+        ) {
           return acc - parseFloat(transaction.valor);
         }
         return acc;
@@ -188,14 +152,36 @@ const Caixinha = () => {
     };
 
     const updateChartData = () => {
-      const entradas = transactions
-        .filter((transaction) => transaction.tipo === "RECEITA")
-        .map((transaction) => parseFloat(transaction.valor));
-      const saidas = transactions
-        .filter((transaction) => transaction.tipo === "DESPESA")
-        .map((transaction) => parseFloat(transaction.valor));
-      const categorias = transactions.map((transaction) =>
-        new Date(transaction.data).toLocaleDateString()
+      const dataByDate: Record<string, { entradas: number; saidas: number }> =
+        transactions.reduce((acc: any, t) => {
+          const date = new Date(t.data);
+
+          // Ensure the date is valid
+          if (isNaN(date.getTime())) return acc;
+
+          const dateKey = date.toISOString().split("T")[0]; // Use only the date part
+          if (!acc[dateKey]) acc[dateKey] = { entradas: 0, saidas: 0 };
+
+          if (t.tipo === "RECEITA") {
+            acc[dateKey].entradas += parseFloat(t.valor);
+          } else if (t.tipo === "DESPESA" || t.tipo === "PENDENCIA") {
+            acc[dateKey].saidas += parseFloat(t.valor);
+          }
+          return acc;
+        }, {});
+
+      // Convert date keys to timestamps for proper sorting and charting
+      const sortedDates = Object.keys(dataByDate)
+        .map((date) => new Date(date))
+        .sort((a, b) => a.getTime() - b.getTime());
+
+      const categorias = sortedDates.map((date) => date.toISOString());
+
+      const entradas = sortedDates.map(
+        (date) => dataByDate[date.toISOString().split("T")[0]].entradas
+      );
+      const saidas = sortedDates.map(
+        (date) => dataByDate[date.toISOString().split("T")[0]].saidas
       );
 
       setChartData((prevData) => ({
@@ -209,6 +195,7 @@ const Caixinha = () => {
           xaxis: {
             ...prevData.options.xaxis,
             categories: categorias,
+            type: "datetime",
           },
         },
       }));

@@ -324,6 +324,7 @@ router.delete(
       await transactionService.deleteTransaction(id);
       res.status(204).send();
     } catch (error) {
+      console.log("error deleting transaction");
       next(error);
     }
   }
