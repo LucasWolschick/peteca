@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import dynamic from "next/dynamic";
 import SystemTemplate from "../_systemtemplate";
 import Title from "@/components/system/Title";
 import Link from "next/link";
-import { useTransaction } from "@/hooks/useTransaction";
-import { useAccount } from "@/hooks/useAccount";
-import { useUser } from "@/hooks/useUser";
+import {useTransaction} from "@/hooks/useTransaction";
+import {useAccount} from "@/hooks/useAccount";
+import {useUser} from "@/hooks/useUser";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import router from "next/router";
 
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+const Chart = dynamic(() => import("react-apexcharts"), {ssr: false});
 
 const Caixinha = () => {
   const {
@@ -22,8 +22,8 @@ const Caixinha = () => {
     downloadStatement,
   } = useTransaction();
 
-  const { accounts, getAllAccounts } = useAccount();
-  const { user, getUser } = useUser();
+  const {accounts, getAllAccounts} = useAccount();
+  const {user, getUser} = useUser();
   const [isClient, setIsClient] = useState(false);
   const [saldo, setSaldo] = useState(0);
   const [from, setFrom] = useState<Date | null>(null);
@@ -202,8 +202,8 @@ const Caixinha = () => {
       setChartData((prevData) => ({
         ...prevData,
         series: [
-          { ...prevData.series[0], data: entradas },
-          { ...prevData.series[1], data: saidas },
+          {...prevData.series[0], data: entradas},
+          {...prevData.series[1], data: saidas},
         ],
         options: {
           ...prevData.options,
@@ -229,14 +229,14 @@ const Caixinha = () => {
 
   return (
     <SystemTemplate>
-      <Title title="Caixinha" />
+      <Title title="Caixinha"/>
       <div className="d-flex flex-column flex-md-row justify-content-between gap-4">
         {/* Coluna 1 */}
         <div className="col-md-4 mb-4">
           <div className="mb-4">
             <span
               className="text-uppercase fw-bold"
-              style={{ color: "#E0972F" }}
+              style={{color: "#E0972F"}}
             >
               Saldo
             </span>
@@ -244,7 +244,7 @@ const Caixinha = () => {
           </div>
           <div className="mb-4">
             <span
-              style={{ color: "#E0972F" }}
+              style={{color: "#E0972F"}}
               className="text-uppercase fw-bold"
             >
               Contas
@@ -262,7 +262,7 @@ const Caixinha = () => {
           </div>
           <div className="mb-4">
             <span
-              style={{ color: "#E0972F" }}
+              style={{color: "#E0972F"}}
               className="text-uppercase fw-bold"
             >
               Pendências
@@ -280,7 +280,7 @@ const Caixinha = () => {
 
           <div className="mb-4 d-flex justify-content-between items-center">
             <span
-              style={{ color: "#E0972F" }}
+              style={{color: "#E0972F"}}
               className="text-uppercase fw-bold"
             >
               Subtotal
@@ -309,35 +309,34 @@ const Caixinha = () => {
         </div>
 
         {/* Coluna 2 */}
-        <div className="col-md-7">
+        <div className="col-md-7 col-12">
           <div className="mb-4">
             <span className="text-uppercase fw-bold">Período</span>
-            <div className="d-flex align-items-center mb-2 mt-2">
-              <label htmlFor="startDate" className="me-2">
-                De:
-              </label>
-              <input
-                type="date"
-                id="startDate"
-                className="form-control me-2"
-                style={{ width: "auto" }}
-                onChange={handleDateChange}
-                value={from ? from.toISOString().split("T")[0] : ""}
-              />
-              <label htmlFor="endDate" className="me-2">
-                a
-              </label>
-              <input
-                type="date"
-                id="endDate"
-                className="form-control me-2"
-                style={{ width: "auto" }}
-                onChange={handleDateChange}
-                value={to ? to.toISOString().split("T")[0] : ""}
-              />
-              <button className="btn btn-primary" onClick={handleEmitirExtrato}>
-                Emitir Extrato
-              </button>
+            <div className="row align-items-center mb-2 mt-2">
+              <div className="col-lg-6">
+                <label htmlFor="startDate" className="me-2">
+                  De:
+                </label>
+                <input
+                  type="date"
+                  id="startDate"
+                  className="form-control me-2"
+                  onChange={handleDateChange}
+                  value={from ? from.toISOString().split("T")[0] : ""}
+                />
+              </div>
+              <div className="col-lg-6">
+                <label htmlFor="endDate" className="me-2">
+                  a
+                </label>
+                <input
+                  type="date"
+                  id="endDate"
+                  className="form-control me-2"
+                  onChange={handleDateChange}
+                  value={to ? to.toISOString().split("T")[0] : ""}
+                />
+              </div>
             </div>
             <input
               type="text"
@@ -345,53 +344,56 @@ const Caixinha = () => {
               className="form-control"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <button className="btn btn-primary mt-2" onClick={handleEmitirExtrato}>
+              Emitir Extrato
+            </button>
           </div>
 
           <div className="table-responsive bg-white mb-4">
             <table className="table table-striped">
               <thead className="table-dark">
-                <tr>
-                  <th>Conta</th>
-                  <th>Data</th>
-                  <th>Valor</th>
-                  <th>Referência</th>
-                  <th>Tipo</th>
-                  <th>Ações</th>
-                </tr>
+              <tr>
+                <th>Conta</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Referência</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+              </tr>
               </thead>
               <tbody>
-                {filteredTransactions.map((transaction) => (
-                  <tr key={transaction.id}>
-                    <td>{transaction.autor?.nome || "Desconhecido"}</td>
-                    <td>{new Date(transaction.data).toLocaleDateString()}</td>
-                    <td>
-                      {transaction.tipo === "RECEITA" ? "+" : "-"}R${" "}
-                      {parseFloat(transaction.valor).toFixed(2)}
-                    </td>
-                    <td>{transaction.referencia}</td>
-                    <td>{transaction.tipo}</td>
-                    <td>
-                      <button
-                        className="btn btn-warning btn-sm"
-                        onClick={() =>
-                          router.push(
-                            `/system/caixinha/EditarTransacao/${transaction.id}`
-                          )
-                        }
-                      >
-                        Editar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+              {filteredTransactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>{transaction.autor?.nome || "Desconhecido"}</td>
+                  <td>{new Date(transaction.data).toLocaleDateString()}</td>
+                  <td>
+                    {transaction.tipo === "RECEITA" ? "+" : "-"}R${" "}
+                    {parseFloat(transaction.valor).toFixed(2)}
+                  </td>
+                  <td>{transaction.referencia}</td>
+                  <td>{transaction.tipo}</td>
+                  <td>
+                    <button
+                      className="btn btn-warning btn-sm"
+                      onClick={() =>
+                        router.push(
+                          `/system/caixinha/EditarTransacao/${transaction.id}`
+                        )
+                      }
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              ))}
               </tbody>
             </table>
           </div>
 
           <div>
             {/* Adicionando o container flexível para os valores */}
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <div className="text-center">
+            <div className="row justify-content-between align-items-center mb-3">
+              <div className="text-center col-md-6">
                 <p className="mb-1">Entradas:</p>
                 <p className="fw-bold">
                   R${" "}
@@ -401,7 +403,7 @@ const Caixinha = () => {
                     .toFixed(2)}
                 </p>
               </div>
-              <div className="text-center">
+              <div className="text-center col-md-6">
                 <p className="mb-1">Saídas:</p>
                 <p className="fw-bold">
                   R${" "}
@@ -411,7 +413,7 @@ const Caixinha = () => {
                     .toFixed(2)}
                 </p>
               </div>
-              <div className="text-center">
+              <div className="text-center col-md-6">
                 <p className="mb-1">Pendências:</p>
                 <p className="fw-bold text-danger">
                   -R${" "}
@@ -421,14 +423,14 @@ const Caixinha = () => {
                     .toFixed(2)}
                 </p>
               </div>
-              <div className="text-center">
+              <div className="text-center col-md-6">
                 <p className="mb-1">Subtotal:</p>
                 <p className="fw-bold text-danger">R$ {saldo.toFixed(2)}</p>
               </div>
             </div>
 
             {/* Botão alinhado no centro */}
-            <div className="text-end">
+            <div className="text-center">
               <button
                 className="btn btn-primary"
                 onClick={handleEmitirRelatorio}
