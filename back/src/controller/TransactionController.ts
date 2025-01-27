@@ -14,7 +14,9 @@ const transactionService = ServiceManager.getTransactionService();
 const accountService = ServiceManager.getAccountService();
 
 const createTransactionValidator = [
-  body("valor").isNumeric(),
+  body("valor")
+    .isDecimal()
+    .customSanitizer((value) => new Decimal(value)),
   body("data").toDate(),
   body("referencia").optional(),
   body("tipo").isIn(["receita", "despesa", "pendencia"]),
@@ -291,8 +293,8 @@ router.put(
         req.body.tipo === "receita"
           ? TipoTransacao.RECEITA
           : req.body.tipo === "despesa"
-            ? TipoTransacao.DESPESA
-            : TipoTransacao.PENDENCIA;
+          ? TipoTransacao.DESPESA
+          : TipoTransacao.PENDENCIA;
       const updatedTransaction = await transactionService.updateTransaction(
         parseInt(id, 10),
         checkAuthenticated(req),

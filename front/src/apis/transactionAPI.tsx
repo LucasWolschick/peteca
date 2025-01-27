@@ -1,9 +1,10 @@
 import { AxiosResponse } from "axios";
 import { api } from "./configs/axiosConfigs";
-import { TipoTransacao } from "@prisma/client";
 import Decimal from "decimal.js";
 
-export type Transaction = {
+export type TipoTransacao = "RECEITA" | "DESPESA" | "PENDENCIA";
+
+export type Transacao = {
   id: number;
   valor: Decimal;
   data: Date;
@@ -27,18 +28,25 @@ export type CreateTransactionDTO = {
   conta: number;
 };
 
-export type UpdateTransactionDTO = Partial<{
-  valor: number;
+export type UpdateTransactionDTO = Partial<CreateTransactionDTO>;
+
+export type Report = {
+  id: number;
   data: Date;
-  referencia: string;
-  tipo: "receita" | "despesa" | "pendencia";
-  conta: number;
-}>;
+  inicio: Date;
+  fim: Date;
+  autor: {
+    id: number;
+    nome: string;
+  };
+};
+
+export type Statement = Report;
 
 export const transactionAPI = {
-  getAll: async function (): Promise<AxiosResponse<Transaction[]>> {
+  getAll: async function (): Promise<AxiosResponse<Transacao[]>> {
     return await api.request({
-      url: "/api/transaction",
+      url: "/api/transactions",
       method: "GET",
     });
   },
@@ -47,14 +55,14 @@ export const transactionAPI = {
     from?: Date,
     to?: Date,
     q?: string
-  ): Promise<AxiosResponse<Transaction[]>> {
+  ): Promise<AxiosResponse<Transacao[]>> {
     const transactions = await api.request({
-      url: `/api/transaction/filter`,
+      url: `/api/transactions/filter`,
       method: "GET",
       params: { from, to, q },
     });
 
-    transactions.data = transactions.data.map((transaction: Transaction) => ({
+    transactions.data = transactions.data.map((transaction: Transacao) => ({
       ...transaction,
       data: new Date(transaction.data),
       valor: new Decimal(transaction.valor),
@@ -63,9 +71,9 @@ export const transactionAPI = {
     return transactions;
   },
 
-  getById: async function (id: number): Promise<AxiosResponse<Transaction>> {
+  getById: async function (id: number): Promise<AxiosResponse<Transacao>> {
     const response = await api.request({
-      url: `/api/transaction/${id}`,
+      url: `/api/transactions/${id}`,
       method: "GET",
     });
 
@@ -77,16 +85,16 @@ export const transactionAPI = {
 
   getLogs: async function (id: number): Promise<AxiosResponse<any[]>> {
     return await api.request({
-      url: `/api/transaction/${id}/logs`,
+      url: `/api/transactions/${id}/logs`,
       method: "GET",
     });
   },
 
   create: async function (
     data: CreateTransactionDTO
-  ): Promise<AxiosResponse<Transaction>> {
+  ): Promise<AxiosResponse<Transacao>> {
     return await api.request({
-      url: "/api/transaction/create",
+      url: "/api/transactions/create",
       method: "POST",
       data,
     });
@@ -95,9 +103,9 @@ export const transactionAPI = {
   update: async function (
     id: number,
     data: UpdateTransactionDTO
-  ): Promise<AxiosResponse<Transaction>> {
+  ): Promise<AxiosResponse<Transacao>> {
     return await api.request({
-      url: `/api/transaction/${id}`,
+      url: `/api/transactions/${id}`,
       method: "PUT",
       data,
     });
@@ -105,8 +113,83 @@ export const transactionAPI = {
 
   delete: async function (id: number): Promise<AxiosResponse<void>> {
     return await api.request({
-      url: `/api/transaction/${id}`,
+      url: `/api/transactions/${id}`,
       method: "DELETE",
+    });
+  },
+
+  getReports: async function (): Promise<AxiosResponse<Report[]>> {
+    const reports = await api.request({
+      url: "/api/transactions/reports",
+      method: "GET",
+    });
+
+    reports.data = reports.data.map((report: Report) => ({
+      ...report,
+      data: new Date(report.data),
+      inicio: new Date(report.inicio),
+      fim: new Date(report.fim),
+    }));
+
+    return reports;
+  },
+
+  createReport: async function (
+    from: Date,
+    to: Date
+  ): Promise<AxiosResponse<string>> {
+    const response = await api.request({
+      url: "/api/transactions/reports/create",
+      method: "POST",
+      data: { from, to },
+    });
+
+    return response.headers.location;
+  },
+
+  getReportHtml: async function (id: number): Promise<AxiosResponse<string>> {
+    return await api.request({
+      url: `/api/transactions/reports/${id}`,
+      method: "GET",
+    });
+  },
+
+  getStatements: async function (): Promise<AxiosResponse<Statement[]>> {
+    const statements = await api.request({
+      url: "/api/transactions/statements",
+      method: "GET",
+    });
+
+    statements.data = statements.data.map((statement: Statement) => ({
+      ...statement,
+      data: new Date(statement.data),
+      inicio: new Date(statement.inicio),
+      fim: new Date(statement.fim),
+    }));
+
+    return statements;
+  },
+
+  createStatement: async function (
+    from?: Date,
+    to?: Date,
+    q?: string
+  ): Promise<AxiosResponse<string>> {
+    const response = await api.request({
+      url: "/api/transactions/statements/create",
+      method: "POST",
+      data: { from, to, q },
+    });
+
+    return response.headers.location;
+  },
+
+  getStatementHtml: async function (
+    id: number
+  ): Promise<AxiosResponse<string>> {
+    return await api.request({
+      url: `/api/transactions/statements/${id}`,
+      method: "GET",
     });
   },
 };
