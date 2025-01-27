@@ -3,16 +3,20 @@ import { AccountChangeRepository } from "../repository/AccountChangeRepository";
 import { AccountRepository } from "../repository/AccountRepository";
 import RepositoryService from "./RepositoryService";
 import logger from "../logger";
-import { NotFoundError } from "../errors";
+import { ConflictError, NotFoundError } from "../errors";
+import { TransactionRepository } from "../repository/TransactionRepository";
+import { ServiceManager } from "./ServiceManager";
 
 export class AccountService {
   private accountRepository: AccountRepository;
   private accountChangeRepository: AccountChangeRepository;
+  private transactionRepository: TransactionRepository;
 
   constructor() {
     this.accountRepository = RepositoryService.getAccountRepository();
     this.accountChangeRepository =
       RepositoryService.getAccountChangeRepository();
+    this.transactionRepository = RepositoryService.getTransactionRepository();
   }
 
   async createAccount(
@@ -48,6 +52,20 @@ export class AccountService {
     const exists = await this.accountRepository.findById(id);
     if (!exists) {
       throw new NotFoundError(`Conta com id ${id} não encontrada`);
+    }
+
+    const associatedTransactions =
+      await this.transactionRepository.findByAccountId(id);
+    if (associatedTransactions.length > 0) {
+      logger.info(
+        `Removendo transações associadas à conta ${id} a ser deletada`
+      );
+      const transactionService = ServiceManager.getTransactionService();
+      await Promise.allSettled(
+        associatedTransactions.map((t) =>
+          transactionService.deleteTransaction(t.id, autor)
+        )
+      );
     }
 
     logger.info(`Deletando conta com id ${id}`);
@@ -113,6 +131,7 @@ export class AccountService {
   ) {
     const oldAcc = await this.getAccountById(oldTransaction.contaId);
     if (!oldAcc) {
+      // don't update the old account
       throw new NotFoundError(
         `Conta com id ${oldTransaction.contaId} não encontrada`
       );

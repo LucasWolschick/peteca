@@ -24,7 +24,10 @@ export default function Dialog(props: DialogProps) {
   return (
     <>
       <button
-        className="btn btn-danger btn-sm rounded-5 col-lg-8 col-md-12 col-8"
+        className={
+          props.className ||
+          "btn btn-danger btn-sm rounded-5 col-lg-8 col-md-12 col-8"
+        }
         onClick={handleShow}
       >
         {props.buttonText}
@@ -66,4 +69,5 @@ export interface DialogProps {
   text: string;
   buttonText: string;
   onConfirm: () => void;
+  className?: string;
 }

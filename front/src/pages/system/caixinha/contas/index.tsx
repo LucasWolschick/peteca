@@ -1,43 +1,57 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Table, Form } from "react-bootstrap";
+import Link from "next/link";
 import SystemTemplate from "@/pages/system/_systemtemplate";
 import Title from "@/components/system/Title";
-import Link from "next/link";
-import { useAccount } from "@/hooks/useAccount";
+import { Conta, accountAPI } from "@/apis/accountAPI";
+import Dialog from "@/components/system/Dialog";
 
-const contas = () => {
-  const { accounts, getAllAccounts, createAccount, deleteAccount } =
-    useAccount();
-  const [nome, setNome] = useState("");
-  const [descricao, setDescricao] = useState("");
+const Contas = () => {
+  const [accounts, setAccounts] = useState<Conta[]>([]);
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<Conta | null>(null);
 
-  // Carrega todas as contas ao montar o componente
   useEffect(() => {
+    const getAllAccounts = async () => {
+      const response = await accountAPI.getAccounts();
+      setAccounts(response.data);
+    };
     getAllAccounts();
   }, []);
 
-  // Cria uma nova conta
-  const handleAddAccount = async () => {
-    await createAccount({ nome, descricao });
-    setNome("");
-    setDescricao("");
+  const handleDeleteClick = (account: Conta) => {
+    setSelectedAccount(account);
+    setShowDialog(true);
   };
 
-  // Remove uma conta pelo ID
-  const handleDeleteAccount = async (id: string) => {
-    await deleteAccount(id);
-    getAllAccounts();
+  const handleConfirmDelete = async () => {
+    if (selectedAccount) {
+      await accountAPI.deleteAccount(selectedAccount.id);
+      const updatedAccounts = (await accountAPI.getAccounts()).data;
+      setAccounts(updatedAccounts);
+      setShowDialog(false);
+      setSelectedAccount(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDialog(false);
+    setSelectedAccount(null);
   };
 
   return (
     <SystemTemplate>
       <Title title="Contas Bancárias" />
-      <Container className="mt-4">
-        <Row>
-          {/* Lista de contas */}
-          <Col md={7} lg={6} className="mb-4">
+      <div className="container mt-4">
+        <div className="row">
+          <div className="col-md-12 mb-4">
+            <Link
+              href="/system/caixinha/contas/new"
+              className="btn btn-success mb-2"
+            >
+              Adicionar Nova Conta
+            </Link>
             <h4 className="mt-4">Lista de Contas</h4>
-            <Table striped bordered hover>
+            <table className="table table-striped table-bordered table-hover">
               <thead className="table-dark">
                 <tr>
                   <th>Nome</th>
@@ -51,71 +65,26 @@ const contas = () => {
                     <td>
                       <Link
                         href={`/system/caixinha/contas/edit/${account.id}`}
-                        passHref
+                        className="btn btn-primary btn-sm me-2 mb-2"
                       >
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          className="me-2 mb-2"
-                        >
-                          Editar
-                        </Button>
+                        Editar
                       </Link>
-                      <Button
-                        className="mb-2"
-                        variant="danger"
-                        size="sm"
-                        onClick={() => handleDeleteAccount(account.id)}
-                      >
-                        Remover
-                      </Button>
+                      <Dialog
+                        text={`Tem certeza que deseja remover a conta "${account.nome}"? Isso também irá deletar todas as transações associadas.`}
+                        buttonText="Deletar"
+                        onConfirm={handleConfirmDelete}
+                        className="btn btn-danger btn-sm me-2 mb-2"
+                      />
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </Table>
-          </Col>
-
-          {/* Formulário para criar nova conta */}
-          <Col md={5} lg={6}>
-            <h4>Nova Conta</h4>
-            <Form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleAddAccount();
-              }}
-            >
-              <Form.Group className="mb-3" controlId="formNome">
-                <Form.Label>Nome da Conta</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Digite o nome da conta"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formDescricao">
-                <Form.Label>Descrição</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  placeholder="Digite a descrição da conta"
-                  value={descricao}
-                  onChange={(e) => setDescricao(e.target.value)}
-                />
-              </Form.Group>
-              <Button variant="primary" className="me-2 mb-2" type="submit">
-                Adicionar Conta
-              </Button>
-              <Button variant="secondary" className="mb-2">
-                Cancelar
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-      </Container>
+            </table>
+          </div>
+        </div>
+      </div>
     </SystemTemplate>
   );
 };
 
-export default contas;
+export default Contas;

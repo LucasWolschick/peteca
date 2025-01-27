@@ -4,11 +4,8 @@ import SystemTemplate from "@/pages/system/_systemtemplate";
 import Title from "@/components/system/Title";
 import Link from "next/link";
 import { useTransaction } from "@/hooks/useTransaction";
-import { useAccount } from "@/hooks/useAccount";
-import { useUser } from "@/hooks/useUser";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import router from "next/router";
+import { Conta, accountAPI } from "@/apis/accountAPI";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -22,8 +19,7 @@ const Caixinha = () => {
     downloadStatement,
   } = useTransaction();
 
-  const { accounts, getAllAccounts } = useAccount();
-  const { user, getUser } = useUser();
+  const [accounts, setAccounts] = useState<Conta[]>([]);
   const [isClient, setIsClient] = useState(false);
   const [saldo, setSaldo] = useState(0);
   const [from, setFrom] = useState<Date | null>(null);
@@ -42,11 +38,15 @@ const Caixinha = () => {
 
   const filteredTransactions = transactions.filter((transaction) => {
     const search = searchTerm.toLowerCase();
-    return (
+    const queryIncluded =
       transaction.autor?.nome?.toLowerCase().includes(search) ||
       transaction.referencia.toLowerCase().includes(search) ||
-      transaction.tipo.toLowerCase().includes(search)
-    );
+      transaction.tipo.toLowerCase().includes(search);
+
+    const fromIncluded = !from || new Date(transaction.data) >= from;
+    const toIncluded = !to || new Date(transaction.data) <= to;
+
+    return queryIncluded && fromIncluded && toIncluded;
   });
 
   const handleEmitirRelatorio = async () => {
@@ -168,8 +168,7 @@ const Caixinha = () => {
     const fetchData = async () => {
       await Promise.allSettled([
         getAllTransactions(),
-        getAllAccounts(),
-        getUser(),
+        accountAPI.getAccounts().then((response) => setAccounts(response.data)),
       ]);
     };
     fetchData();
@@ -249,16 +248,15 @@ const Caixinha = () => {
             >
               Contas
             </span>
-            {Array.isArray(accounts) &&
-              accounts.map((account) => (
-                <div
-                  className="d-flex justify-content-between items-center"
-                  key={account.id}
-                >
-                  <p>{account.nome}</p>
-                  <p>R$ {parseFloat(account.saldo).toFixed(2)}</p>
-                </div>
-              ))}
+            {accounts.map((account) => (
+              <div
+                className="d-flex justify-content-between items-center"
+                key={account.id}
+              >
+                <p>{account.nome}</p>
+                <p>R$ {account.saldo.toFixed(2)}</p>
+              </div>
+            ))}
           </div>
           <div className="mb-4">
             <span
@@ -315,44 +313,56 @@ const Caixinha = () => {
         <div className="col-md-7 col-12">
           <div className="mb-4">
             <span className="text-uppercase fw-bold">Período</span>
-            <div className="row align-items-center mb-2 mt-2">
-              <div className="col-lg-6">
-                <label htmlFor="startDate" className="me-2">
+            <div className="row align-items-center mb-2 mt-2 gap-2">
+              <div className="col-lg-12">
+                <input
+                  type="text"
+                  placeholder="Filtro..."
+                  className="form-control"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div className="col-lg d-flex align-items-center">
+                <label
+                  htmlFor="startDate"
+                  className="me-2 mb-0"
+                  style={{ width: "30px" }}
+                >
                   De:
                 </label>
                 <input
                   type="date"
                   id="startDate"
-                  className="form-control me-2"
+                  className="form-control"
                   onChange={handleDateChange}
                   value={from ? from.toISOString().split("T")[0] : ""}
                 />
               </div>
-              <div className="col-lg-6">
-                <label htmlFor="endDate" className="me-2">
-                  a
+              <div className="col-lg d-flex align-items-center">
+                <label
+                  htmlFor="endDate"
+                  className="me-2 mb-0"
+                  style={{ width: "30px" }}
+                >
+                  A:
                 </label>
                 <input
                   type="date"
                   id="endDate"
-                  className="form-control me-2"
+                  className="form-control"
                   onChange={handleDateChange}
                   value={to ? to.toISOString().split("T")[0] : ""}
                 />
               </div>
+              <div className="col-lg-12" style={{ minWidth: "150px" }}>
+                <button
+                  className="btn btn-primary w-100"
+                  onClick={handleEmitirExtrato}
+                >
+                  Emitir Extrato
+                </button>
+              </div>
             </div>
-            <input
-              type="text"
-              placeholder="Buscar..."
-              className="form-control"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button
-              className="btn btn-primary mt-2"
-              onClick={handleEmitirExtrato}
-            >
-              Emitir Extrato
-            </button>
           </div>
 
           <div className="table-responsive bg-white mb-4">
@@ -383,7 +393,7 @@ const Caixinha = () => {
                         className="btn btn-warning btn-sm"
                         onClick={() =>
                           router.push(
-                            `/system/caixinha/contas/edit/${transaction.id}`
+                            `/system/caixinha/transacoes/edit/${transaction.id}`
                           )
                         }
                       >
@@ -431,7 +441,7 @@ const Caixinha = () => {
               </div>
               <div className="text-center col-md-6">
                 <p className="mb-1">Subtotal:</p>
-                <p className="fw-bold text-danger">R$ {saldo.toFixed(2)}</p>
+                <p className="fw-bold">R$ {saldo.toFixed(2)}</p>
               </div>
             </div>
 

@@ -10,10 +10,7 @@ export type Transacao = {
   data: Date;
   referencia: string;
   tipo: TipoTransacao;
-  conta: {
-    id: number;
-    nome: string;
-  };
+  contaId: number;
   criadoPor: {
     id: number;
     nome: string;

@@ -114,6 +114,15 @@ export class TransactionRepository {
     });
   }
 
+  async findByAccountId(accountId: number): Promise<Transacao[]> {
+    return this.prisma.transacao.findMany({
+      where: {
+        contaId: accountId,
+        ativo: true,
+      },
+    });
+  }
+
   async findById(id: number): Promise<Transacao | null> {
     return this.prisma.transacao.findUnique({
       where: {

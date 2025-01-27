@@ -24,11 +24,18 @@ export type AlteracaoConta = {
 };
 
 export const accountAPI = {
-  getAccounts: async function (): Promise<Conta[]> {
-    return await api.request({
+  getAccounts: async function (): Promise<AxiosResponse<Conta[]>> {
+    const response = await api.request({
       url: `/api/accounts`,
       method: "GET",
     });
+
+    response.data = response.data.map((acc: any) => ({
+      ...acc,
+      saldo: new Decimal(acc.saldo),
+    }));
+
+    return response;
   },
 
   criar: async function (
